@@ -34,5 +34,5 @@ halving_amount = get_amount_of_halving(first_factor)
 # Multiply the second factor by the halving amount twice
 doubling_value = second_factor * halving_amount * halving_amount
 
-# Add the second factor once again and print to console
+# Add the second factor once again and print to the console
 print(doubling_value + second_factor)
