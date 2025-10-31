@@ -62,11 +62,11 @@ def is_prime(number: int, current_iterations) -> (bool, int):
     # required to safely determine if the given number is a prime.
     #
     # 1. If the number is even, it is divisible by 2 → not a prime number, return False
-    # 2. Compute the integer square root; no divisor greater than sqrt(number) needs checking
+    # 2. Compute the integer square root. No divisor greater than sqrt(number) needs checking
     #     * A number cannot have two or more factors both greater than its square root because
     #       their product would exceed the original number
-    # 3. Try only odd divisors from 3 up to that limit. If it divides evenly -> not a prime number, return False
-    #    * All even numbers are excluded in step 1
+    # 3. Try only odd divisors from 3 up to that limit.
+    #    If it divides evenly -> not a prime number, step 1 already returns False in this case
     # 4. If no divisor was found in the previous steps -> is a prime number, return True
     if number % 2 == 0:
         return False, current_iterations
