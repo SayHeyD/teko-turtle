@@ -31,13 +31,13 @@ class Menu:
 
         awaiting_valid_input = True
 
-        error_msg = 'Please enter a valid number! (1 - 6)'
+        error_msg = 'Please enter a valid number! (1 - 8)'
 
         while awaiting_valid_input:
             try:
                 self.__selected_option = int(input('Enter your choice: '))
 
-                if 1 <= self.__selected_option <= 6:
+                if 1 <= self.__selected_option <= 8:
                     awaiting_valid_input = False
                 else:
                     print(error_msg)
