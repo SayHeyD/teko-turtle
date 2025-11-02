@@ -1,5 +1,6 @@
 from ui.list_students import ListStudents
 from ui.month_with_most_birthdays import MonthWithMostBirthdays
+from ui.people_with_same_birthday import PeopleWithSameBirthday
 from ui.add_student import AddStudent
 from ui.update_student import UpdateStudent
 from ui.delete_student import DeleteStudent
@@ -21,6 +22,7 @@ class Menu:
         print()
         print('1. List students')
         print('2. Month with most birthdays')
+        print('3. People with the same birthday')
         print('3. Add new student')
         print('4. Update a student')
         print('5. Delete a student')
@@ -47,12 +49,14 @@ class Menu:
         elif self.__selected_option == 2:
             MonthWithMostBirthdays(self.__database).execute()
         elif self.__selected_option == 3:
-            AddStudent(self.__database).execute()
+            PeopleWithSameBirthday(self.__database).execute()
         elif self.__selected_option == 4:
-            UpdateStudent(self.__database).execute()
+            AddStudent(self.__database).execute()
         elif self.__selected_option == 5:
-            DeleteStudent(self.__database).execute()
+            UpdateStudent(self.__database).execute()
         elif self.__selected_option == 6:
+            DeleteStudent(self.__database).execute()
+        elif self.__selected_option == 7:
             CsvExport(self.__database).execute()
         else:
             exit()
