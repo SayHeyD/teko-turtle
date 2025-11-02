@@ -73,6 +73,10 @@ class Database:
 
     # Public methods
 
+    def get_students(self) -> list[Student]:
+        self.__students = self.__read_data()
+        return self.__students
+
     def get_student(self, student_id: str|uuid.UUID) -> Student|None:
         self.__students = self.__read_data()
 
