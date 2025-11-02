@@ -11,12 +11,12 @@ class PeopleWithSameBirthday:
 
     def __find_students_with_same_birthday(self) -> list[Student]:
         all_students = self.__database.get_students()
-        by_month_day: dict[tuple[int, int], list[Student]] = {}
+        by_date: dict[tuple[int, int, int], list[Student]] = {}
         for s in all_students:
-            key = (s.get_age().get_month(), s.get_age().get_day())
-            by_month_day.setdefault(key, []).append(s)
+            key = (s.get_age().get_year(), s.get_age().get_month(), s.get_age().get_day())
+            by_date.setdefault(key, []).append(s)
         duplicates: list[Student] = []
-        for group in by_month_day.values():
+        for group in by_date.values():
             if len(group) >= 2:
                 duplicates.extend(group)
         return duplicates
@@ -27,7 +27,7 @@ class PeopleWithSameBirthday:
         Table(headers, rows).print_table()
 
     def execute(self) -> None:
-        # Find students that share the same birthday (same month and day, any year)
+        # Find students that share the exact same birthdate (year, month, and day)
         self.__students = self.__find_students_with_same_birthday()
 
         if len(self.__students) == 0:
