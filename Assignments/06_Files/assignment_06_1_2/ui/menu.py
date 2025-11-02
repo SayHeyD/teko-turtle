@@ -23,11 +23,11 @@ class Menu:
         print('1. List students')
         print('2. Month with most birthdays')
         print('3. People with the same birthday')
-        print('3. Add new student')
-        print('4. Update a student')
-        print('5. Delete a student')
-        print('6. Export to CSV')
-        print('7. Exit')
+        print('4. Add new student')
+        print('5. Update a student')
+        print('6. Delete a student')
+        print('7. Export to CSV')
+        print('8. Exit')
 
         awaiting_valid_input = True
 
