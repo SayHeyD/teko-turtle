@@ -81,18 +81,57 @@ class ListStudents:
         print(f'| {student.get_age().get_month()}'.ljust(column_lengths[4]), end=' ')
         print(f'| {student.get_age().get_day()}'.ljust(column_lengths[5]) + ' |')
 
-    def __print_table(self, students: list[Student]) -> None:
+    def __print_table(self) -> None:
         self.__print_header_row()
 
-        for student in students:
+        for student in self.__students:
             self.__print_data_row(student)
 
         self.__print_seperator_row()
 
+    def __sort_students(self) -> None:
+
+        descending = True
+
+        while True:
+            sorting_attribute = input('Sort by: Firstname [0], Lastname [1], Age [2]: ')
+            if sorting_attribute in ['0', '1', '2', '3']:
+                break
+            else:
+                print('Invalid sorting attribute!')
+
+        while True:
+            sort_direction = input('Sort direction: Ascending [1], Descending [2]: ')
+            if sort_direction in ['1', '2']:
+                break
+            else:
+                print('Invalid sorting direction!')
+
+
+        if sort_direction == '2':
+            descending = False
+
+        if sorting_attribute == '0':
+            self.__students.sort(key=lambda student: student.get_firstname(), reverse=descending)
+        elif sorting_attribute == '1':
+            self.__students.sort(key=lambda student: student.get_lastname(), reverse=descending)
+        elif sorting_attribute == '2':
+            self.__students.sort(key=lambda student: student.get_age().to_date(), reverse=descending)
+
+        self.__print_table()
+
     def execute(self) -> None:
         self.__students = self.__database.get_students()
 
-        self.__print_table(self.__students)
+        self.__print_table()
 
-        input('Press Enter to return to main menu')
-        menu.Menu(self.__database).draw()
+        while True:
+            print('Actions: [Enter] - Return to main menu. | [s] - Sort students')
+            action = input()
+
+            if action == 's':
+                self.__sort_students()
+            elif action == '':
+                menu.Menu(self.__database).draw()
+            else:
+                print('Invalid action!')

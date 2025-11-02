@@ -42,3 +42,6 @@ class Birthdate:
 
     def get_day(self):
         return self.__day
+
+    def to_date(self):
+        return datetime.date(self.__year, self.__month, self.__day)
