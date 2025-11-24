@@ -2,30 +2,29 @@
 
 ## Setup
 
-1. Create virtual environment
-    ```shell
-    python3 -m venv ./.venv
-    ```
-2. Activate venv
-    ```shell
-    source ./.venv/bin/activate
-    ```
-3. Install dependencies for development
-    ```shell
-    pip3 install '.[dev]'
-    ```
+### Dev
+
+```shell
+make install-dev
+```
+
+### Prod
+
+```shell
+make install
+```
    
 ## Commands
 
 * Lint
     ```shell
-    pylint .
+    make lint
     ```
 * Fix codestyle (does not fix all linting errors automatically)
     ```shell
-    autopep8 --in-place --aggressive --aggressive **/*.py
+    make lint-fix
     ```
 * Running tests
     ```shell
-    pytest
+    make test
     ```
