@@ -29,7 +29,7 @@ dev = [
     "pytest==9.0.1"
 ]
 
-[pytest]
+[tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src"]
 addopts = ["--import-mode=importlib"]
