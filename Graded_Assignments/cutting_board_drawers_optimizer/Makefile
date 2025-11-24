@@ -1,20 +1,26 @@
---setup:
-	@python3 -m venv ./.venv
-	@. ./.venv/bin/activate
+.PHONY: setup-venv install install-dev lint format lint-fix test
 
-install: --setup
-	pip3 install '.'
+VENV := .venv
+PYTHON := $(VENV)/bin/python
+PIP := $(PYTHON) -m pip
 
-install-dev: --setup
-	pip3 install '.[dev]'
+setup-venv:
+	@test -d $(VENV) || python3 -m venv $(VENV)
+	@$(PIP) install --upgrade pip setuptools wheel
 
-lint: --setup
-	pylint ./src/
+install: setup-venv
+	$(PIP) install -e .
 
-format:
-	autopep8 --in-place --aggressive --aggressive **/*.py
+install-dev: setup-venv
+	$(PIP) install -e '.[dev]'
 
-lint-fix: --setup format lint
+lint: setup-venv
+	$(PYTHON) -m pylint ./src/
 
-test: --setup
-	pytest
+format: setup-venv
+	$(PYTHON) -m autopep8 --in-place --aggressive --aggressive **/*.py
+
+lint-fix: format lint
+
+test: setup-venv
+	$(PYTHON) -m pytest
