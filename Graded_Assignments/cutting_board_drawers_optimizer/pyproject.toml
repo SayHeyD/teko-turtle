@@ -1,0 +1,32 @@
+[project]
+name = "cutting_board_drawers_optimizer"
+version = "0.0.0"
+requires-python = ">= 3.13"
+readme = "README.md"
+license = "MIT"
+authors = [
+    {name = "David Docampo", email = "david@docampo.ch"},
+]
+dependencies = [
+
+]
+
+[project.optional-dependencies]
+dev = [
+    "astroid==4.0.2",
+    "dill==0.4.0",
+    "isort==7.0.0",
+    "mccabe==0.7.0",
+    "platformdirs==4.5.0",
+    "pylint==4.0.3",
+    "tomlkit==0.13.3",
+    "autopep8==2.3.2",
+    "pycodestyle-2.14.0",
+]
+
+[tool.setuptools]
+packages = ["drawers_and_cutting_board"]
+
+[project.urls]
+Repository = "https://github.com/SayHeyD/teko-turtle.git"
+Issues = "https://github.com/SayHeyD/teko-turtle/issues"
