@@ -21,11 +21,18 @@ dev = [
     "pylint==4.0.3",
     "tomlkit==0.13.3",
     "autopep8==2.3.2",
-    "pycodestyle-2.14.0",
+    "pycodestyle==2.14.0",
+    "iniconfig==2.3.0",
+    "packaging==25.0",
+    "pluggy==1.6.0",
+    "pygments==2.19.2",
+    "pytest==9.0.1"
 ]
 
-[tool.setuptools]
-packages = ["drawers_and_cutting_board"]
+[pytest]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = ["--import-mode=importlib"]
 
 [project.urls]
 Repository = "https://github.com/SayHeyD/teko-turtle.git"

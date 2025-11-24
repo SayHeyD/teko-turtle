@@ -25,3 +25,7 @@
     ```shell
     autopep8 --in-place --aggressive --aggressive **/*.py
     ```
+* Running tests
+    ```shell
+    pytest
+    ```
