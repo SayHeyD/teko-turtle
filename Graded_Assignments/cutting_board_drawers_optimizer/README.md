@@ -12,7 +12,7 @@
     ```
 3. Install dependencies for development
     ```shell
-    pip3 install .[dev]
+    pip3 install '.[dev]'
     ```
    
 ## Commands
