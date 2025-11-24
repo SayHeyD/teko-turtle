@@ -2,6 +2,7 @@
 Programm for optimizing cutting board layouts across multiple kitchen drawers
 """
 
+
 def main() -> None:
     """
     Main entrypoint for the program.

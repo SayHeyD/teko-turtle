@@ -2,10 +2,12 @@
 Module containing the cutting board class
 """
 
+
 class CuttingBoard:
     """
     For managing cutting boards inputted by the users
     """
+
     def __init__(self,
                  length: int = 0,
                  width: int = 0,

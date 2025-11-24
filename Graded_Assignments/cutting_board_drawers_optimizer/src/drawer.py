@@ -1,10 +1,13 @@
 """
 Drawer class module
 """
+
+
 class Drawer:
     """
     For managing kitchen drawers inputted by the users
     """
+
     def __init__(self,
                  length: int = 0,
                  width: int = 0,
