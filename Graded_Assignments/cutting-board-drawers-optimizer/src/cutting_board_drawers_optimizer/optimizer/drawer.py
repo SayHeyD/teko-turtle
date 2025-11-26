@@ -3,3 +3,29 @@ class Drawer:
         self.__length: int = length
         self.__width: int = width
         self.__max_load: int = max_load
+
+        self.__validate_construction_parameters()
+
+    def __validate_construction_parameters(self):
+        invalid_parameters = []
+
+        if self.__length <= 0:
+            invalid_parameters.append("length")
+
+        if self.__width <= 0:
+            invalid_parameters.append("width")
+
+        if self.__max_load <= 0:
+            invalid_parameters.append("max_load")
+
+        if len(invalid_parameters) > 0:
+            raise ValueError(f"Invalid parameters: {', '.join(invalid_parameters)}. All values must be greater than 0")
+
+    def get_length_in_centimeters(self) -> int:
+        return self.__length
+
+    def get_width_in_centimeters(self) -> int:
+        return self.__width
+
+    def get_max_load_in_grams(self) -> int:
+        return self.__max_load
