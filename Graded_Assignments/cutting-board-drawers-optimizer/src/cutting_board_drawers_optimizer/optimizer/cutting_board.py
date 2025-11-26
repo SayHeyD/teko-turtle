@@ -1,6 +1,3 @@
-from argparse import ArgumentError
-
-
 class CuttingBoard:
     def __init__(self, length: int, width: int, weight: int, price: int):
 
@@ -28,6 +25,15 @@ class CuttingBoard:
 
         if len(invalid_parameters) > 0:
             raise ValueError(f"Invalid parameters: {', '.join(invalid_parameters)}. All values must be greater than 0")
+
+    def get_length_in_centimeters(self) -> int:
+        return self.__length
+
+    def get_width_in_centimeters(self) -> int:
+        return self.__width
+
+    def get_weight_in_grams(self) -> int:
+        return self.__weight
 
     def get_price_in_chf(self) -> str:
         return f"{self.__price / 100:.2f}"
