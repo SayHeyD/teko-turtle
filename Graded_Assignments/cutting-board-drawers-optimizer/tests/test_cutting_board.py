@@ -4,7 +4,7 @@ from cutting_board_drawers_optimizer.optimizer import CuttingBoard
 
 
 @pytest.fixture
-def get_cutting_board():
+def get_cutting_board() -> CuttingBoard:
     return CuttingBoard(65, 24, 2560, 2590)
 
 def test_that_cutting_board_constructor_raises_value_error_if_length_is_less_than_1():
