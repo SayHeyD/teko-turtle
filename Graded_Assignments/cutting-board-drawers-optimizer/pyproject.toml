@@ -23,6 +23,13 @@ classifiers = [
 ]
 dependencies = []
 
+[project.optional-dependencies]
+dev = []
+test = [
+  "pytest",
+  "pytest-cov"
+]
+
 [project.urls]
 Documentation = "https://github.com/David Docampo/cutting-board-drawers-optimizer#readme"
 Issues = "https://github.com/SayHeyD/teko-turtle/issues"
