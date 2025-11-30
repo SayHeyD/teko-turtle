@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from ui import CuttingBoardDrawersOptimizerApp
+from cutting_board_drawers_optimizer.ui import CuttingBoardDrawersOptimizerApp
 
 
 def main():
