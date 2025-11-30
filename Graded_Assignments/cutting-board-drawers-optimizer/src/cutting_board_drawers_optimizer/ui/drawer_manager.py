@@ -1,3 +1,5 @@
+from typing import ClassVar
+
 from textual.app import ComposeResult
 from textual.containers import Vertical
 from textual.widget import Widget
@@ -19,7 +21,7 @@ class DrawerManager(Widget):
     - A form to add new drawers
     """
 
-    ROWS = [
+    ROWS: ClassVar[list[tuple[str|int, str, str, str|float]]] = [
         ("Name", "Length", "Width", "Maximum Load"),
         (4, "Joseph Schooling", "Singapore", 50.39),
         (2, "Michael Phelps", "United States", 51.14),

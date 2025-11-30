@@ -1,3 +1,5 @@
+from typing import ClassVar
+
 from textual.app import ComposeResult
 from textual.containers import Vertical
 from textual.widget import Widget
@@ -19,7 +21,7 @@ class CuttingBoardManager(Widget):
     - A form to add new cutting boards
     """
 
-    ROWS = [
+    ROWS: ClassVar[list[tuple[str|int, str, str, str|int, str|float]]] = [
         ("Name", "Length", "Width", "Weight", "Price"),
         (4, "Joseph Schooling", "Singapore", 2000, 50.39),
         (2, "Michael Phelps", "United States", 2000, 51.14),

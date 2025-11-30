@@ -1,8 +1,9 @@
+from typing import ClassVar
+
+from cutting_board_manager import CuttingBoardManager
+from drawer_manager import DrawerManager
 from textual.app import App, ComposeResult
 from textual.widgets import Footer, Header, TabbedContent, TabPane
-
-from .cutting_board_manager import CuttingBoardManager
-from .drawer_manager import DrawerManager
 
 
 class CuttingBoardDrawersOptimizerApp(App):
@@ -40,7 +41,7 @@ class CuttingBoardDrawersOptimizerApp(App):
     }
     """
 
-    BINDINGS = [
+    BINDINGS: ClassVar[list[tuple[str, str, str]]] = [
         ('c', 'show_tab("cutting_boards")', 'Cutting Boards'),
         ('d', 'show_tab("drawers")', 'Drawers'),
     ]
