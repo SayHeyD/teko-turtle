@@ -21,7 +21,7 @@ class DrawerManager(Widget):
     - A form to add new drawers
     """
 
-    ROWS: ClassVar[list[tuple[str|int, str, str, str|float]]] = [
+    ROWS: ClassVar[list[tuple[str | int, str, str, str | float]]] = [
         ("Name", "Length", "Width", "Maximum Load"),
         (4, "Joseph Schooling", "Singapore", 50.39),
         (2, "Michael Phelps", "United States", 51.14),
@@ -38,14 +38,13 @@ class DrawerManager(Widget):
         with TabbedContent():
             with TabPane("Table", id="table_tab"):
                 yield DataTable(id="drawer_table")
-            with TabPane("Create", id="create_tab"):
-                with Vertical(id="drawer_form"):
-                    yield Label("Create Drawer")
-                    yield Input(placeholder="Name", id="d_name")
-                    yield Input(placeholder="Length", id="d_length")
-                    yield Input(placeholder="Width", id="d_width")
-                    yield Input(placeholder="Maximum Load", id="d_max_load")
-                    yield Button("Add", id="d_add")
+            with TabPane("Create", id="create_tab"), Vertical(id="drawer_form"):
+                yield Label("Create Drawer")
+                yield Input(placeholder="Name", id="d_name")
+                yield Input(placeholder="Length", id="d_length")
+                yield Input(placeholder="Width", id="d_width")
+                yield Input(placeholder="Maximum Load", id="d_max_load")
+                yield Button("Add", id="d_add")
 
     def on_mount(self) -> None:
         table = self.query_one("#drawer_table", DataTable)
@@ -62,6 +61,4 @@ class DrawerManager(Widget):
             length = self.query_one("#d_length", Input).value or ""
             width = self.query_one("#d_width", Input).value or ""
             max_load = self.query_one("#d_max_load", Input).value or ""
-            self.query_one("#drawer_table", DataTable).add_row(
-                name, length, width, max_load
-            )
+            self.query_one("#drawer_table", DataTable).add_row(name, length, width, max_load)

@@ -1,9 +1,10 @@
 from typing import ClassVar
 
-from cutting_board_manager import CuttingBoardManager
-from drawer_manager import DrawerManager
 from textual.app import App, ComposeResult
 from textual.widgets import Footer, Header, TabbedContent, TabPane
+
+from cutting_board_drawers_optimizer.ui.cutting_board_manager import CuttingBoardManager
+from cutting_board_drawers_optimizer.ui.drawer_manager import DrawerManager
 
 
 class CuttingBoardDrawersOptimizerApp(App):
@@ -42,27 +43,24 @@ class CuttingBoardDrawersOptimizerApp(App):
     """
 
     BINDINGS: ClassVar[list[tuple[str, str, str]]] = [
-        ('c', 'show_tab("cutting_boards")', 'Cutting Boards'),
-        ('d', 'show_tab("drawers")', 'Drawers'),
+        ("c", 'show_tab("cutting_boards")', "Cutting Boards"),
+        ("d", 'show_tab("drawers")', "Drawers"),
     ]
 
     def compose(self) -> ComposeResult:
         """Application widget composition."""
         self.title = "Cutting Board Drawers Optimizer"
 
-        yield Header(
-            show_clock=True,
-            icon='🔪'
-        )
+        yield Header(show_clock=True, icon="🔪")
 
-        with TabbedContent(id='tabs'):
-            with TabPane('Cutting Boards', id='cutting_boards'):
+        with TabbedContent(id="tabs"):
+            with TabPane("Cutting Boards", id="cutting_boards"):
                 yield CuttingBoardManager()
-            with TabPane('Drawers', id='drawers'):
+            with TabPane("Drawers", id="drawers"):
                 yield DrawerManager()
 
         yield Footer()
 
     def action_show_tab(self, tab: str) -> None:
         """Switch to specific tab via keyboard shortcut."""
-        self.query_one('#tabs', TabbedContent).active = tab
+        self.query_one("#tabs", TabbedContent).active = tab

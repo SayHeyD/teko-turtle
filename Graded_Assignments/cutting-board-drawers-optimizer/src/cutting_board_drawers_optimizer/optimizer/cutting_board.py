@@ -1,6 +1,5 @@
 class CuttingBoard:
     def __init__(self, length: int, width: int, weight: int, price: int):
-
         self.__length: int = length
         self.__width: int = width
         self.__weight: int = weight

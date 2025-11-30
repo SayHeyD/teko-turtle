@@ -21,7 +21,7 @@ class CuttingBoardManager(Widget):
     - A form to add new cutting boards
     """
 
-    ROWS: ClassVar[list[tuple[str|int, str, str, str|int, str|float]]] = [
+    ROWS: ClassVar[list[tuple[str | int, str, str, str | int, str | float]]] = [
         ("Name", "Length", "Width", "Weight", "Price"),
         (4, "Joseph Schooling", "Singapore", 2000, 50.39),
         (2, "Michael Phelps", "United States", 2000, 51.14),
@@ -73,15 +73,14 @@ class CuttingBoardManager(Widget):
         with TabbedContent():
             with TabPane("Table", id="table_tab"):
                 yield DataTable(id="cutting_board_table")
-            with TabPane("Create", id="create_tab"):
-                with Vertical(id="cutting_board_form"):
-                    yield Label("Create Cutting Board")
-                    yield Input(placeholder="Name", id="cb_name")
-                    yield Input(placeholder="Length", id="cb_length")
-                    yield Input(placeholder="Width", id="cb_width")
-                    yield Input(placeholder="Weight", id="cb_weight")
-                    yield Input(placeholder="Price", id="cb_price")
-                    yield Button("Add", id="cb_add")
+            with TabPane("Create", id="create_tab"), Vertical(id="cutting_board_form"):
+                yield Label("Create Cutting Board")
+                yield Input(placeholder="Name", id="cb_name")
+                yield Input(placeholder="Length", id="cb_length")
+                yield Input(placeholder="Width", id="cb_width")
+                yield Input(placeholder="Weight", id="cb_weight")
+                yield Input(placeholder="Price", id="cb_price")
+                yield Button("Add", id="cb_add")
 
     def on_mount(self) -> None:
         """Populate the table after mounting."""
@@ -101,7 +100,4 @@ class CuttingBoardManager(Widget):
             width = self.query_one("#cb_width", Input).value or ""
             weight = self.query_one("#cb_weight", Input).value or ""
             price = self.query_one("#cb_price", Input).value or ""
-            self.query_one("#cutting_board_table", DataTable).add_row(
-                name, length, width, weight, price
-            )
-
+            self.query_one("#cutting_board_table", DataTable).add_row(name, length, width, weight, price)
