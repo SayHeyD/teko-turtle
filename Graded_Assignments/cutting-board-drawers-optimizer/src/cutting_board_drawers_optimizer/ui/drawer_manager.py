@@ -1,14 +1,14 @@
 from textual.app import ComposeResult
+from textual.containers import Vertical
 from textual.widget import Widget
 from textual.widgets import (
+    Button,
     DataTable,
-    TabbedContent,
-    TabPane,
     Input,
     Label,
-    Button,
+    TabbedContent,
+    TabPane,
 )
-from textual.containers import Vertical
 
 
 class DrawerManager(Widget):

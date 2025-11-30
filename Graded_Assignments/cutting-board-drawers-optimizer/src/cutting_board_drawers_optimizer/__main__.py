@@ -1,5 +1,6 @@
 from ui import CuttingBoardDrawersOptimizerApp
 
+
 def main():
     CuttingBoardDrawersOptimizerApp().run()
 

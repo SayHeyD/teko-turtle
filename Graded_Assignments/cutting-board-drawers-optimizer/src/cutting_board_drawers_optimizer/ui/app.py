@@ -1,5 +1,6 @@
 from textual.app import App, ComposeResult
-from textual.widgets import Header, TabbedContent, TabPane, Footer
+from textual.widgets import Footer, Header, TabbedContent, TabPane
+
 from .cutting_board_manager import CuttingBoardManager
 from .drawer_manager import DrawerManager
 
