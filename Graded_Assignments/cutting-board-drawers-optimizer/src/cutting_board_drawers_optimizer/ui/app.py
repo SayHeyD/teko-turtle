@@ -8,8 +8,34 @@ class CuttingBoardDrawersOptimizerApp(App):
     """An app to optimize drawer space for cutting boards."""
 
     CSS = """
+    /* General button spacing */
     Button {
         margin: 1 2;
+    }
+
+    /* Make the top-level tabs fill the available space between Header and Footer */
+    #tabs {
+        height: 1fr;
+    }
+
+    /* Ensure each TabPane inside the top-level tabs expands */
+    #tabs TabPane {
+        height: 1fr;
+    }
+
+    /* Make manager widgets fill their parent tab */
+    CuttingBoardManager, DrawerManager {
+        height: 1fr;
+    }
+
+    /* Inside each manager, make their inner TabbedContent and tables fill space */
+    CuttingBoardManager TabbedContent, DrawerManager TabbedContent {
+        height: 1fr;
+    }
+
+    /* Make DataTable fill the full screen */
+    DataTable {
+        height: 1fr;
     }
     """
 
