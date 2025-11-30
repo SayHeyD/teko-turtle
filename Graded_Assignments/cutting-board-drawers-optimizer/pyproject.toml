@@ -21,13 +21,17 @@ classifiers = [
   "Programming Language :: Python :: Implementation :: CPython",
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
-dependencies = []
+dependencies = [
+  "textual==6.6.0"
+]
 
 [project.optional-dependencies]
-dev = []
+dev = [
+  "textual-dev==1.8.0"
+]
 test = [
-  "pytest",
-  "pytest-cov"
+  "pytest==9.0.1",
+  "pytest-cov==7.0.0"
 ]
 
 [project.urls]

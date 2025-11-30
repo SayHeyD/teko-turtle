@@ -1,8 +1,7 @@
-from optimizer import CuttingBoard
-
+from ui import CuttingBoardDrawersOptimizerApp
 
 def main():
-    print("hello world!")
+    CuttingBoardDrawersOptimizerApp().run()
 
 if __name__ == "__main__":
     main()
