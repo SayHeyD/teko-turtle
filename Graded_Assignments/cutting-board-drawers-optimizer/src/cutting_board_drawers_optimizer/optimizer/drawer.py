@@ -19,7 +19,9 @@ class Drawer:
             invalid_parameters.append("max_load")
 
         if len(invalid_parameters) > 0:
-            raise ValueError(f"Invalid parameters: {', '.join(invalid_parameters)}. All values must be greater than 0")
+            params = ", ".join(invalid_parameters)
+            message = f"Invalid parameters: {params}"
+            raise ValueError(message)
 
     def get_length_in_centimeters(self) -> int:
         return self.__length
