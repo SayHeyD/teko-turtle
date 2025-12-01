@@ -49,6 +49,14 @@ extra-dependencies = [
 [tool.hatch.envs.types.scripts]
 check = "mypy --install-types --non-interactive {args:src/cutting_board_drawers_optimizer tests}"
 
+[tool.hatch.envs.test]
+# Reuse your optional dependency group so pytest/pytest-cov are installed
+features = ["test"]
+
+[tool.hatch.envs.test.scripts]
+# Terminal summary + HTML output in the default `htmlcov/` directory
+cov-html = "pytest -q --cov --cov-report=term-missing --cov-report=html"
+
 [tool.coverage.run]
 source_pkgs = ["cutting_board_drawers_optimizer", "tests"]
 branch = true
@@ -67,3 +75,7 @@ exclude_lines = [
   "if __name__ == .__main__.:",
   "if TYPE_CHECKING:",
 ]
+
+[tool.coverage.html]
+directory = "cover"  # default is "htmlcov"
+title = "cutting-board-drawers-optimizer coverage"
