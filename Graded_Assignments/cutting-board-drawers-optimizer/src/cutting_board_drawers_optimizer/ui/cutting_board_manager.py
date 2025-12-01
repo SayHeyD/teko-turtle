@@ -12,6 +12,8 @@ from textual.widgets import (
     TabPane,
 )
 
+from cutting_board_drawers_optimizer.ui.cutting_board_table import CuttingBoardTable
+
 
 class CuttingBoardManager(Widget):
     """Manager widget for Cutting Boards.
@@ -69,10 +71,14 @@ class CuttingBoardManager(Widget):
         (10, "Darren Burns", "Scotland", 2000, 51.84),
     ]
 
+    BINDINGS: ClassVar[list[tuple[str, str, str]]] = [
+        ("ctrl+n", "switch_to_create_tab", "Create"),
+    ]
+
     def compose(self) -> ComposeResult:
         with TabbedContent():
             with TabPane("Table", id="table_tab"):
-                yield DataTable(id="cutting_board_table")
+                yield CuttingBoardTable(id="cutting_board_table")
             with TabPane("Create", id="create_tab"), Vertical(id="cutting_board_form"):
                 yield Label("Create Cutting Board")
                 yield Input(placeholder="Name", id="cb_name")
@@ -101,3 +107,8 @@ class CuttingBoardManager(Widget):
             weight = self.query_one("#cb_weight", Input).value or ""
             price = self.query_one("#cb_price", Input).value or ""
             self.query_one("#cutting_board_table", DataTable).add_row(name, length, width, weight, price)
+
+    def action_switch_to_create_tab(self) -> None:
+        """Switch to the create tab when ctrl+n is pressed."""
+        tabbed_content = self.query_one(TabbedContent)
+        tabbed_content.active = "create_tab"

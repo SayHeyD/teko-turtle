@@ -37,6 +37,7 @@ def test_that_get_price_in_chf_returns_correct_float_length(get_cutting_board):
     decimal_chars = len(price.split(".")[1])
     assert decimal_chars == 2
 
+
 def test_that_get_price_in_centime_returns_correct_value(get_cutting_board):
     price = get_cutting_board.get_price_in_centime()
     assert price == 2590

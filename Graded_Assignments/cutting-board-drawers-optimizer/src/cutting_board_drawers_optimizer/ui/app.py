@@ -64,3 +64,13 @@ class CuttingBoardDrawersOptimizerApp(App):
     def action_show_tab(self, tab: str) -> None:
         """Switch to specific tab via keyboard shortcut."""
         self.query_one("#tabs", TabbedContent).active = tab
+
+    def on_tabbed_content_tab_activated(self, event: TabbedContent.TabActivated) -> None:
+        """Focus the manager widget when a tab is activated."""
+        if event.tabbed_content.id == "tabs":
+            if event.tab.id == "cutting_boards":
+                manager = self.query_one(CuttingBoardManager)
+                manager.focus()
+            elif event.tab.id == "drawers":
+                manager = self.query_one(DrawerManager)
+                manager.focus()

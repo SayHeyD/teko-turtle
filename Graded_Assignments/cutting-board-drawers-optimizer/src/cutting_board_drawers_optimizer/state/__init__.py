@@ -3,7 +3,7 @@ from cutting_board_drawers_optimizer.state.saving_data_failed_error import Savin
 from cutting_board_drawers_optimizer.state.state import State
 
 __all__ = [
-    "State",
     "LoadingDataFailedError",
     "SavingDataFailedError",
+    "State",
 ]

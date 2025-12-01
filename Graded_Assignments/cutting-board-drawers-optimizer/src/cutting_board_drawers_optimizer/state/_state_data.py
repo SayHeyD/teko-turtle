@@ -45,7 +45,7 @@ class StateData:
                 cutting_board["length"],
                 cutting_board["width"],
                 cutting_board["weight"],
-                int(cutting_board["price_cents"])  # back to cents for constructor
+                int(cutting_board["price_cents"]),  # back to cents for constructor
             )
             for cutting_board in data.get("cutting_boards", [])
         ]

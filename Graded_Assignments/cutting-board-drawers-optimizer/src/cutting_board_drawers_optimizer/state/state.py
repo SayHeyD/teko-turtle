@@ -33,7 +33,7 @@ class State:
             raise FileNotFoundError(message)
 
         try:
-            with open(file_path, "r") as file:
+            with open(file_path) as file:
                 self.__data = StateData.from_dict(json.load(file))
         except Exception as e:
             message = "Failed loading data from disk"
