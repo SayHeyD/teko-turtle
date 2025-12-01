@@ -31,7 +31,8 @@ dev = [
 ]
 test = [
   "pytest==9.0.1",
-  "pytest-cov==7.0.0"
+  "pytest-cov==7.0.0",
+  "pytest-asyncio==1.3.0",
 ]
 
 [project.urls]
@@ -49,13 +50,17 @@ extra-dependencies = [
 [tool.hatch.envs.types.scripts]
 check = "mypy --install-types --non-interactive {args:src/cutting_board_drawers_optimizer tests}"
 
-[tool.hatch.envs.test]
+[tool.hatch.envs.hatch-test]
 # Reuse your optional dependency group so pytest/pytest-cov are installed
 features = ["test"]
 
-[tool.hatch.envs.test.scripts]
-# Terminal summary + HTML output in the default `htmlcov/` directory
-cov-html = "pytest -q --cov --cov-report=term-missing --cov-report=html"
+[tool.hatch.envs.hatch-test.scripts]
+run = "pytest{env:HATCH_TEST_ARGS:} {args}"
+run-cov = "coverage run -m pytest{env:HATCH_TEST_ARGS:} {args}"
+cov-combine = "coverage combine"
+cov-report = "coverage report"
+# Add this line
+cov-html = "coverage html"
 
 [tool.coverage.run]
 source_pkgs = ["cutting_board_drawers_optimizer", "tests"]
