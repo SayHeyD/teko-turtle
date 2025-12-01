@@ -7,9 +7,7 @@ import uuid
 import pytest
 
 from cutting_board_drawers_optimizer.optimizer import CuttingBoard, Drawer
-from cutting_board_drawers_optimizer.state import State
-from cutting_board_drawers_optimizer.state import SavingDataFailedError
-from cutting_board_drawers_optimizer.state import LoadingDataFailedError
+from cutting_board_drawers_optimizer.state import LoadingDataFailedError, SavingDataFailedError, State
 from cutting_board_drawers_optimizer.state._state_data import StateData
 
 
