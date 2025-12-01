@@ -120,7 +120,7 @@ def test_state_raises_exception_on_save_if_directories_cannot_be_created(monkeyp
 
     monkeypatch.setattr(os, "makedirs", boom)
 
-    message_pattern = r"Creation of the directory '" + re.escape(base_directory_to_save_to) + r"' failed:.*"
+    message_pattern = f"Creation of the directory '{base_directory_to_save_to}' failed"
     with pytest.raises(OSError, match=message_pattern):
         State().save(file_to_save_to)
 
@@ -132,7 +132,7 @@ def test_state_raises_exception_on_save_if_file_cannot_be_written(monkeypatch):
 
     monkeypatch.setattr(pickle, "dump", boom)
 
-    message = "Failed saving data to disk: disk is full"
+    message = "Failed saving data to disk"
     with pytest.raises(Exception, match=message):
         State().save(file_to_save_to)
 
@@ -175,6 +175,6 @@ def tests_state_raises_exception_on_load_if_file_data_cannot_be_loaded(get_drawe
 
     monkeypatch.setattr(pickle, "load", boom)
 
-    message = "Failed loading data from disk: Could not unpickle data"
+    message = "Failed loading data from disk"
     with pytest.raises(Exception, match=message):
         State().load(file_to_save_to)

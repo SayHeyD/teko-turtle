@@ -7,7 +7,7 @@ from cutting_board_drawers_optimizer.state._state_data import StateData
 
 
 class State:
-    def __init__(self, drawers: list[Drawer] = None, cutting_boards: list[CuttingBoard] = None):
+    def __init__(self, drawers: list[Drawer] | None = None, cutting_boards: list[CuttingBoard] | None = None):
         if drawers is None:
             drawers = []
 
@@ -34,8 +34,8 @@ class State:
             with open(file_path, "rb") as file:
                 self.__data = pickle.load(file)
         except Exception as e:
-            message = f"Failed loading data from disk: {e}"
-            raise Exception(message)
+            message = f"Failed loading data from disk"
+            raise Exception(message) from e
 
         return self
 
@@ -51,14 +51,14 @@ class State:
             try:
                 os.makedirs(dir_path)
             except OSError as e:
-                message = f"Creation of the directory '{dir_path}' failed: {e}"
-                raise OSError(message)
+                message = f"Creation of the directory '{dir_path}' failed"
+                raise OSError(message) from e
 
         with open(file_path, "wb") as file:
             try:
                 pickle.dump(self.__data, file, protocol=pickle.HIGHEST_PROTOCOL)
             except Exception as e:
-                message = f"Failed saving data to disk: {e}"
-                raise Exception(message)
+                message = f"Failed saving data to disk"
+                raise Exception(message) from e
 
         return self
