@@ -42,7 +42,6 @@ class State:
         return self
 
     def save(self, file_path: str) -> Self:
-
         dir_path = os.path.dirname(file_path)
 
         if os.path.exists(file_path):
