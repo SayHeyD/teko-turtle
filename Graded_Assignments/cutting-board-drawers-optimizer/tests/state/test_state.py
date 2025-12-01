@@ -8,6 +8,8 @@ import pytest
 
 from cutting_board_drawers_optimizer.optimizer import CuttingBoard, Drawer
 from cutting_board_drawers_optimizer.state import State
+from cutting_board_drawers_optimizer.state import SavingDataFailedError
+from cutting_board_drawers_optimizer.state import LoadingDataFailedError
 from cutting_board_drawers_optimizer.state._state_data import StateData
 
 
@@ -132,7 +134,7 @@ def test_state_raises_exception_on_save_if_file_cannot_be_written(monkeypatch):
     monkeypatch.setattr(pickle, "dump", boom)
 
     message = "Failed saving data to disk"
-    with pytest.raises(Exception, match=message):
+    with pytest.raises(SavingDataFailedError, match=message):
         State().save(file_to_save_to)
 
 def test_state_can_be_loaded_from_disk_if_path_exists(get_drawers, get_cutting_boards):
@@ -175,5 +177,5 @@ def tests_state_raises_exception_on_load_if_file_data_cannot_be_loaded(get_drawe
     monkeypatch.setattr(pickle, "load", boom)
 
     message = "Failed loading data from disk"
-    with pytest.raises(Exception, match=message):
+    with pytest.raises(LoadingDataFailedError, match=message):
         State().load(file_to_save_to)

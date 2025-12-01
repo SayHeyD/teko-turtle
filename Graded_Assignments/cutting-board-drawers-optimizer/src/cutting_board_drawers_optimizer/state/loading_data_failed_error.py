@@ -1,0 +1,2 @@
+class LoadingDataFailedError(Exception):
+    pass

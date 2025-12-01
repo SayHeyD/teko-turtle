@@ -4,6 +4,8 @@ from typing import Self
 
 from cutting_board_drawers_optimizer.optimizer import CuttingBoard, Drawer
 from cutting_board_drawers_optimizer.state._state_data import StateData
+from cutting_board_drawers_optimizer.state.loading_data_failed_error import LoadingDataFailedError
+from cutting_board_drawers_optimizer.state.saving_data_failed_error import SavingDataFailedError
 
 
 class State:
@@ -35,7 +37,7 @@ class State:
                 self.__data = pickle.load(file)
         except Exception as e:
             message = "Failed loading data from disk"
-            raise Exception(message) from e
+            raise LoadingDataFailedError(message) from e
 
         return self
 
@@ -59,6 +61,6 @@ class State:
                 pickle.dump(self.__data, file, protocol=pickle.HIGHEST_PROTOCOL)
             except Exception as e:
                 message = "Failed saving data to disk"
-                raise Exception(message) from e
+                raise SavingDataFailedError(message) from e
 
         return self

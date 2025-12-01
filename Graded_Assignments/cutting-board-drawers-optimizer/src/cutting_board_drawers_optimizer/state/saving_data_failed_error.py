@@ -1,0 +1,2 @@
+class SavingDataFailedError(Exception):
+    pass
