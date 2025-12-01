@@ -23,8 +23,7 @@ class CuttingBoard:
             invalid_parameters.append("price")
 
         if len(invalid_parameters) > 0:
-            params = ", ".join(invalid_parameters)
-            message = f"Invalid parameters: {params}"
+            message = ", ".join(invalid_parameters)
             raise ValueError(message)
 
     def get_length_in_centimeters(self) -> int:
