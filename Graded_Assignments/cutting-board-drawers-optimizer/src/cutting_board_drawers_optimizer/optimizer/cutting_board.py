@@ -37,3 +37,6 @@ class CuttingBoard:
 
     def get_price_in_chf(self) -> str:
         return f"{self.__price / 100:.2f}"
+
+    def get_price_in_centime(self) -> int:
+        return self.__price
