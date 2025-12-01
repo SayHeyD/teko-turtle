@@ -1,5 +1,5 @@
 import os
-import pickle
+import json
 import random
 import tempfile
 import uuid
@@ -39,6 +39,7 @@ def get_cutting_boards() -> list[CuttingBoard]:
 
     return cutting_boards
 
+
 # Tests with an empty state
 def test_state_with_empty_lists_returns_correct_state_data():
     state = State()
@@ -47,13 +48,16 @@ def test_state_with_empty_lists_returns_correct_state_data():
     assert state_data.get_drawers() == []
     assert state_data.get_cutting_boards() == []
 
+
 def test_state_with_empty_lists_returns_correct_drawers():
     state = State()
     assert state.get_drawers() == []
 
+
 def test_state_with_empty_lists_returns_correct_cutting_boards():
     state = State()
     assert state.get_cutting_boards() == []
+
 
 # Tests with a filled state
 def test_state_returns_correct_state_data(get_drawers, get_cutting_boards):
@@ -63,13 +67,16 @@ def test_state_returns_correct_state_data(get_drawers, get_cutting_boards):
     assert state_data.get_drawers() == get_drawers
     assert state_data.get_cutting_boards() == get_cutting_boards
 
+
 def test_state_returns_correct_drawers(get_drawers, get_cutting_boards):
     state = State(get_drawers, get_cutting_boards)
     assert state.get_drawers() == get_drawers
 
+
 def test_state_returns_correct_cutting_boards(get_drawers, get_cutting_boards):
     state = State(get_drawers, get_cutting_boards)
     assert state.get_cutting_boards() == get_cutting_boards
+
 
 # Tests hitting the filesystem
 def test_state_can_be_written_to_disk_if_file_path_does_not_exist(get_drawers, get_cutting_boards):
@@ -79,14 +86,18 @@ def test_state_can_be_written_to_disk_if_file_path_does_not_exist(get_drawers, g
     assert os.path.exists(file_to_save_to)
     os.remove(file_to_save_to)
 
-def test_state_can_be_written_to_disk_if_file_path_contains_directories_that_do_not_exist(get_drawers, get_cutting_boards):
-    base_directory_to_save_to = os.path.join( os.path.dirname(tempfile.mktemp()), str(uuid.uuid4()) )
-    file_to_save_to = os.path.join(base_directory_to_save_to, str(uuid.uuid4()) )
+
+def test_state_can_be_written_to_disk_if_file_path_contains_directories_that_do_not_exist(
+    get_drawers, get_cutting_boards
+):
+    base_directory_to_save_to = os.path.join(os.path.dirname(tempfile.mktemp()), str(uuid.uuid4()))
+    file_to_save_to = os.path.join(base_directory_to_save_to, str(uuid.uuid4()))
 
     State(get_drawers, get_cutting_boards).save(file_to_save_to)
 
     assert os.path.exists(file_to_save_to)
     os.remove(file_to_save_to)
+
 
 def test_state_raises_exception_on_save_if_file_path_already_exists():
     file_to_save_to = tempfile.mktemp()
@@ -100,9 +111,10 @@ def test_state_raises_exception_on_save_if_file_path_already_exists():
     assert os.path.exists(file_to_save_to)
     os.remove(file_to_save_to)
 
+
 def test_state_raises_exception_on_save_if_directories_cannot_be_created(monkeypatch):
-    base_directory_to_save_to = os.path.join( os.path.dirname(tempfile.mktemp()), str(uuid.uuid4()) )
-    file_to_save_to = os.path.join(base_directory_to_save_to, str(uuid.uuid4()) )
+    base_directory_to_save_to = os.path.join(os.path.dirname(tempfile.mktemp()), str(uuid.uuid4()))
+    file_to_save_to = os.path.join(base_directory_to_save_to, str(uuid.uuid4()))
 
     # Keep real os.path.exists available
     real_exists = os.path.exists
@@ -123,17 +135,19 @@ def test_state_raises_exception_on_save_if_directories_cannot_be_created(monkeyp
     with pytest.raises(OSError, match=message_pattern):
         State().save(file_to_save_to)
 
+
 def test_state_raises_exception_on_save_if_file_cannot_be_written(monkeypatch):
     file_to_save_to = tempfile.mktemp()
 
     def boom(*args, **kwargs):
         raise OSError("disk is full")
 
-    monkeypatch.setattr(pickle, "dump", boom)
+    monkeypatch.setattr(json, "dump", boom)
 
     message = "Failed saving data to disk"
     with pytest.raises(SavingDataFailedError, match=message):
         State().save(file_to_save_to)
+
 
 def test_state_can_be_loaded_from_disk_if_path_exists(get_drawers, get_cutting_boards):
     drawers = get_drawers
@@ -157,6 +171,7 @@ def test_state_can_be_loaded_from_disk_if_path_exists(get_drawers, get_cutting_b
 
     os.remove(file_to_save_to)
 
+
 def tests_state_raises_exception_on_load_if_file_path_does_not_exist():
     file_that_does_not_exist = tempfile.mktemp()
 
@@ -165,14 +180,15 @@ def tests_state_raises_exception_on_load_if_file_path_does_not_exist():
     with pytest.raises(FileNotFoundError, match=message):
         State().load(file_that_does_not_exist)
 
+
 def tests_state_raises_exception_on_load_if_file_data_cannot_be_loaded(get_drawers, get_cutting_boards, monkeypatch):
     file_to_save_to = tempfile.mktemp()
     State(get_drawers, get_cutting_boards).save(file_to_save_to)
 
     def boom(*args, **kwargs):
-        raise pickle.PicklingError("Could not unpickle data")
+        raise json.JSONDecodeError("Could not marshal data", "", 0)
 
-    monkeypatch.setattr(pickle, "load", boom)
+    monkeypatch.setattr(json, "load", boom)
 
     message = "Failed loading data from disk"
     with pytest.raises(LoadingDataFailedError, match=message):

@@ -1,5 +1,5 @@
+import json
 import os
-import pickle
 from typing import Self
 
 from cutting_board_drawers_optimizer.optimizer import CuttingBoard, Drawer
@@ -33,8 +33,8 @@ class State:
             raise FileNotFoundError(message)
 
         try:
-            with open(file_path, "rb") as file:
-                self.__data = pickle.load(file)
+            with open(file_path, "r") as file:
+                self.__data = StateData.from_dict(json.load(file))
         except Exception as e:
             message = "Failed loading data from disk"
             raise LoadingDataFailedError(message) from e
@@ -55,9 +55,9 @@ class State:
                 message = f"Creation of the directory '{dir_path}' failed"
                 raise OSError(message) from e
 
-        with open(file_path, "wb") as file:
+        with open(file_path, "w") as file:
             try:
-                pickle.dump(self.__data, file, protocol=pickle.HIGHEST_PROTOCOL)
+                json.dump(self.__data.to_dict(), file, ensure_ascii=False)
             except Exception as e:
                 message = "Failed saving data to disk"
                 raise SavingDataFailedError(message) from e
