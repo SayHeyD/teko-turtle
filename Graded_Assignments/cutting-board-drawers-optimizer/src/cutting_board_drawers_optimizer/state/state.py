@@ -34,7 +34,7 @@ class State:
             with open(file_path, "rb") as file:
                 self.__data = pickle.load(file)
         except Exception as e:
-            message = f"Failed loading data from disk"
+            message = "Failed loading data from disk"
             raise Exception(message) from e
 
         return self
@@ -58,7 +58,7 @@ class State:
             try:
                 pickle.dump(self.__data, file, protocol=pickle.HIGHEST_PROTOCOL)
             except Exception as e:
-                message = f"Failed saving data to disk"
+                message = "Failed saving data to disk"
                 raise Exception(message) from e
 
         return self
