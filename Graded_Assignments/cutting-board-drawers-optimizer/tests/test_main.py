@@ -1,5 +1,6 @@
 import importlib
 
+
 def test_main_function_calls_run(monkeypatch):
     called = {"count": 0}
 

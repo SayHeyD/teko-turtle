@@ -1,11 +1,10 @@
 import os
-
+import pickle
 from typing import Self
 
-from cutting_board_drawers_optimizer.optimizer import Drawer, CuttingBoard
+from cutting_board_drawers_optimizer.optimizer import CuttingBoard, Drawer
 from cutting_board_drawers_optimizer.state._state_data import StateData
 
-import pickle
 
 class State:
     def __init__(self, drawers: list[Drawer] = None, cutting_boards: list[CuttingBoard] = None):

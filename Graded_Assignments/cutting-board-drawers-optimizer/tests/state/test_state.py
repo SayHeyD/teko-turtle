@@ -1,13 +1,13 @@
 import os
+import pickle
 import random
 import re
 import tempfile
 import uuid
-import pickle
 
 import pytest
 
-from cutting_board_drawers_optimizer.optimizer import Drawer, CuttingBoard
+from cutting_board_drawers_optimizer.optimizer import CuttingBoard, Drawer
 from cutting_board_drawers_optimizer.state import State
 from cutting_board_drawers_optimizer.state._state_data import StateData
 
