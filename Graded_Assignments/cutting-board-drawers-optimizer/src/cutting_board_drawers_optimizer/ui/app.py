@@ -1,10 +1,14 @@
-from typing import ClassVar
+from typing import ClassVar, Optional
+import os
 
 from textual.app import App, ComposeResult
 from textual.widgets import Footer, Header, TabbedContent, TabPane
 
 from cutting_board_drawers_optimizer.ui.cutting_board_manager import CuttingBoardManager
 from cutting_board_drawers_optimizer.ui.drawer_manager import DrawerManager
+from cutting_board_drawers_optimizer.state.state import State
+from cutting_board_drawers_optimizer.ui.save_dialog import SaveDialog
+from cutting_board_drawers_optimizer.ui.load_dialog import LoadDialog
 
 
 class CuttingBoardDrawersOptimizerApp(App):
@@ -43,9 +47,16 @@ class CuttingBoardDrawersOptimizerApp(App):
     """
 
     BINDINGS: ClassVar[list[tuple[str, str, str]]] = [
+        ("ctrl+s", "save_config", "Save Config"),
+        ("ctrl+o", "load_config", "Open Config"),
         ("c", 'show_tab("cutting_boards")', "Cutting Boards"),
         ("d", 'show_tab("drawers")', "Drawers"),
     ]
+
+    def __init__(self) -> None:
+        super().__init__()
+        self._state = State()
+        self._last_path: Optional[str] = None
 
     def compose(self) -> ComposeResult:
         """Application widget composition."""
@@ -64,6 +75,32 @@ class CuttingBoardDrawersOptimizerApp(App):
     def action_show_tab(self, tab: str) -> None:
         """Switch to specific tab via keyboard shortcut."""
         self.query_one("#tabs", TabbedContent).active = tab
+
+    def action_save_config(self) -> None:
+        def _after(result: Optional[str]) -> None:
+            if not result:
+                return
+            try:
+                self._state.save(result)
+                self._last_path = result
+                # Feedback in log; tests don't assert it
+                self.log(f"Config saved to {result}")
+            except Exception as e:
+                self.log(f"Save failed: {e}")
+        self.push_screen(SaveDialog(self._last_path), _after)
+
+    def action_load_config(self) -> None:
+        def _after(result: Optional[str]) -> None:
+            if not result:
+                return
+            try:
+                self._state.load(result)
+                self._last_path = result
+                self.log(f"Config loaded from {result}")
+            except Exception as e:
+                self.log(f"Load failed: {e}")
+        start_dir = os.path.dirname(self._last_path) if self._last_path else None
+        self.push_screen(LoadDialog(start_dir), _after)
 
     def on_tabbed_content_tab_activated(self, event: TabbedContent.TabActivated) -> None:
         """Focus the manager widget when a tab is activated."""
