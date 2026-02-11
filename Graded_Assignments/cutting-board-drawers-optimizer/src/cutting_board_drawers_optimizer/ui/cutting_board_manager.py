@@ -107,5 +107,5 @@ class CuttingBoardManager(Widget):
                 str(cb.get_length_in_centimeters()),
                 str(cb.get_width_in_centimeters()),
                 str(cb.get_weight_in_grams()),
-                cb.get_price_in_chf()
+                cb.get_price_in_chf(),
             )

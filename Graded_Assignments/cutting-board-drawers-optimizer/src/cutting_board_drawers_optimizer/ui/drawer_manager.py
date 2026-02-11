@@ -84,5 +84,5 @@ class DrawerManager(Widget):
                 drawer.get_name(),
                 str(drawer.get_length_in_centimeters()),
                 str(drawer.get_width_in_centimeters()),
-                str(drawer.get_max_load_in_grams())
+                str(drawer.get_max_load_in_grams()),
             )

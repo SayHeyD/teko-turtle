@@ -39,12 +39,7 @@ class StateData:
     @classmethod
     def from_dict(cls, data: dict) -> "StateData":
         drawers = [
-            Drawer(
-                drawer.get("name", "Unknown Drawer"),
-                drawer["length"],
-                drawer["width"],
-                drawer["max_load"]
-            )  # ints
+            Drawer(drawer.get("name", "Unknown Drawer"), drawer["length"], drawer["width"], drawer["max_load"])  # ints
             for drawer in data.get("drawers", [])
         ]
         cutting_boards = [

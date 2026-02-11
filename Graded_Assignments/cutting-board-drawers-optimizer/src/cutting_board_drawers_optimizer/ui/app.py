@@ -4,6 +4,8 @@ from typing import ClassVar
 from textual.app import App, ComposeResult
 from textual.widgets import Footer, Header, TabbedContent, TabPane
 
+from cutting_board_drawers_optimizer.state.loading_data_failed_error import LoadingDataFailedError
+from cutting_board_drawers_optimizer.state.saving_data_failed_error import SavingDataFailedError
 from cutting_board_drawers_optimizer.state.state import State
 from cutting_board_drawers_optimizer.ui.cutting_board_manager import CuttingBoardManager
 from cutting_board_drawers_optimizer.ui.drawer_manager import DrawerManager
@@ -85,8 +87,7 @@ class CuttingBoardDrawersOptimizerApp(App):
                 cb_manager = self.query_one(CuttingBoardManager)
                 dr_manager = self.query_one(DrawerManager)
                 self._state.set_data(
-                    drawers=dr_manager.get_current_data(),
-                    cutting_boards=cb_manager.get_current_data()
+                    drawers=dr_manager.get_current_data(), cutting_boards=cb_manager.get_current_data()
                 )
 
                 if os.path.exists(result):
@@ -96,8 +97,9 @@ class CuttingBoardDrawersOptimizerApp(App):
                 self._last_path = result
                 # Feedback in log; tests don't assert it
                 self.log(f"Config saved to {result}")
-            except Exception as e:
+            except (OSError, SavingDataFailedError) as e:
                 self.log(f"Save failed: {e}")
+
         self.push_screen(SaveDialog(self._last_path), _after)
 
     def action_load_config(self) -> None:
@@ -114,8 +116,9 @@ class CuttingBoardDrawersOptimizerApp(App):
                 dr_manager = self.query_one(DrawerManager)
                 cb_manager.update_from_data(self._state.get_cutting_boards())
                 dr_manager.update_from_data(self._state.get_drawers())
-            except Exception as e:
+            except (FileNotFoundError, LoadingDataFailedError) as e:
                 self.log(f"Load failed: {e}")
+
         start_dir = os.path.dirname(self._last_path) if self._last_path else None
         self.push_screen(LoadDialog(start_dir), _after)
 
