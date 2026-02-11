@@ -1,7 +1,7 @@
-from typing import ClassVar, Sequence
-from textual.binding import Binding
+from typing import ClassVar
 
 from textual.app import ComposeResult
+from textual.binding import Binding
 from textual.containers import Vertical
 from textual.widget import Widget
 from textual.widgets import (
@@ -32,7 +32,7 @@ class CuttingBoardManager(Widget):
         ("Small Plastic", "20", "15", "500", "12.00"),
     ]
 
-    BINDINGS = [
+    BINDINGS: ClassVar[list[Binding | tuple[str, str] | tuple[str, str, str]]] = [
         ("ctrl+n", "switch_to_create_tab", "Create"),
     ]
 

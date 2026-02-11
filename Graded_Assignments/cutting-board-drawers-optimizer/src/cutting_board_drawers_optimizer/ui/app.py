@@ -1,8 +1,8 @@
 import os
-from typing import ClassVar, Sequence
-from textual.binding import Binding
+from typing import ClassVar
 
 from textual.app import App, ComposeResult
+from textual.binding import Binding
 from textual.widgets import Footer, Header, TabbedContent, TabPane
 
 from cutting_board_drawers_optimizer.state.loading_data_failed_error import LoadingDataFailedError
@@ -49,7 +49,7 @@ class CuttingBoardDrawersOptimizerApp(App):
     }
     """
 
-    BINDINGS = [
+    BINDINGS: ClassVar[list[Binding | tuple[str, str] | tuple[str, str, str]]] = [
         ("ctrl+s", "save_config", "Save Config"),
         ("ctrl+o", "load_config", "Open Config"),
         ("c", 'show_tab("cutting_boards")', "Cutting Boards"),
