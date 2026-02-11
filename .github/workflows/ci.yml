@@ -41,11 +41,8 @@ jobs:
     - name: Install Hatch
       run: pip install --upgrade hatch
     - name: Run tests with coverage
-      # hatch test runs pytest. We add --junitxml for test report and use coverage.
-      run: hatch test --args "--junitxml=report.xml"
+      run: hatch run hatch-test:run-cov --junitxml=report.xml
     - name: Generate HTML coverage report
-      run: hatch test -sc # This usually triggers the run-cov which is mapped to coverage
-    - name: Ensure coverage HTML is generated
       run: hatch run hatch-test:cov-html
     - name: Upload Test Report
       uses: actions/upload-artifact@v4
