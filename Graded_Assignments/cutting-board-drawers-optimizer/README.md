@@ -1,4 +1,4 @@
-# cutting_board_drawers_optimizer
+# Cutting Board Drawers Optimizer
 
 [![PyPI - Version](https://img.shields.io/pypi/v/cutting-board-drawers-optimizer.svg)](https://pypi.org/project/cutting-board-drawers-optimizer)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/cutting-board-drawers-optimizer.svg)](https://pypi.org/project/cutting-board-drawers-optimizer)
