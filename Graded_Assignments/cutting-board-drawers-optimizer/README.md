@@ -16,14 +16,24 @@
 pip install cutting-board-drawers-optimizer
 ```
 
-### Install with dev dependencies
+### Run tests
 
-
+```shell
+hatch test
+```
 
 ## Run the application
 
 ```shell
 hatch run start
+```
+
+## Cleanup envs
+
+Can be necessary after e.g. homebrew upgrades of python versions:
+
+```shell
+hatch env remove hatch-test
 ```
 
 ## License
