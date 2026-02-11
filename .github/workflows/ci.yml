@@ -41,9 +41,9 @@ jobs:
     - name: Install Hatch
       run: pip install --upgrade hatch
     - name: Run tests with coverage
-      run: hatch run hatch-test:run-cov --junitxml=report.xml
+      run: hatch run test:run-cov --junitxml=report.xml
     - name: Generate HTML coverage report
-      run: hatch run hatch-test:cov-html
+      run: hatch run test:cov-html
     - name: Upload Test Report
       uses: actions/upload-artifact@v4
       if: always()

@@ -33,7 +33,7 @@ hatch run start
 Can be necessary after e.g. homebrew upgrades of python versions:
 
 ```shell
-hatch env remove hatch-test
+hatch env remove test
 ```
 
 ## License
