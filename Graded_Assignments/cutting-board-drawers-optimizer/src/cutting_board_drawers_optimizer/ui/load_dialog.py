@@ -1,16 +1,15 @@
 import os
-from typing import Optional
 
 from textual.app import ComposeResult
-from textual.containers import Vertical, Horizontal
+from textual.containers import Horizontal, Vertical
 from textual.screen import ModalScreen
-from textual.widgets import Label, Input, Button
+from textual.widgets import Button, Input, Label
 
 
-class LoadDialog(ModalScreen[Optional[str]]):
+class LoadDialog(ModalScreen[str | None]):
     """Minimal load dialog with a single text input for the file path to open."""
 
-    def __init__(self, start_path: Optional[str] = None) -> None:
+    def __init__(self, start_path: str | None = None) -> None:
         super().__init__()
         self._start_path: str = start_path or os.getcwd()
 

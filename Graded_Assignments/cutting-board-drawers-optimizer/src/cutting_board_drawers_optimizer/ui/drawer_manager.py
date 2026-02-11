@@ -1,6 +1,5 @@
 from typing import ClassVar
 
-from cutting_board_drawers_optimizer.optimizer import Drawer
 from textual.app import ComposeResult
 from textual.containers import Vertical
 from textual.widget import Widget
@@ -12,6 +11,8 @@ from textual.widgets import (
     TabbedContent,
     TabPane,
 )
+
+from cutting_board_drawers_optimizer.optimizer import Drawer
 
 
 class DrawerManager(Widget):

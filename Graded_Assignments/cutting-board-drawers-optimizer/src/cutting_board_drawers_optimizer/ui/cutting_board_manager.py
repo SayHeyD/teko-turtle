@@ -12,7 +12,7 @@ from textual.widgets import (
     TabPane,
 )
 
-from cutting_board_drawers_optimizer.optimizer import CuttingBoard, Drawer
+from cutting_board_drawers_optimizer.optimizer import CuttingBoard
 from cutting_board_drawers_optimizer.ui.cutting_board_table import CuttingBoardTable
 
 
@@ -78,7 +78,7 @@ class CuttingBoardManager(Widget):
         table = self.query_one("#cutting_board_table", DataTable)
         cutting_boards = []
         # Skip header row (index 0 is name, 1 length, 2 width, 3 weight, 4 price)
-        # Note: In Textual DataTable, rows are accessed by key. 
+        # Note: In Textual DataTable, rows are accessed by key.
         # But we can iterate over rows.
         for row_index in range(table.row_count):
             row = table.get_row_at(row_index)
@@ -91,7 +91,7 @@ class CuttingBoardManager(Widget):
                 weight = int(float(row[3]))
                 # Price is displayed as float/str, but constructor needs cents (int)
                 price_val = float(row[4])
-                price_cents = int(round(price_val * 100))
+                price_cents = round(price_val * 100)
                 cutting_boards.append(CuttingBoard(name, length, width, weight, price_cents))
             except (ValueError, IndexError):
                 continue

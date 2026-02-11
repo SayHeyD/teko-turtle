@@ -1,14 +1,14 @@
-from typing import ClassVar, Optional
 import os
+from typing import ClassVar
 
 from textual.app import App, ComposeResult
 from textual.widgets import Footer, Header, TabbedContent, TabPane
 
+from cutting_board_drawers_optimizer.state.state import State
 from cutting_board_drawers_optimizer.ui.cutting_board_manager import CuttingBoardManager
 from cutting_board_drawers_optimizer.ui.drawer_manager import DrawerManager
-from cutting_board_drawers_optimizer.state.state import State
-from cutting_board_drawers_optimizer.ui.save_dialog import SaveDialog
 from cutting_board_drawers_optimizer.ui.load_dialog import LoadDialog
+from cutting_board_drawers_optimizer.ui.save_dialog import SaveDialog
 
 
 class CuttingBoardDrawersOptimizerApp(App):
@@ -56,7 +56,7 @@ class CuttingBoardDrawersOptimizerApp(App):
     def __init__(self) -> None:
         super().__init__()
         self._state = State()
-        self._last_path: Optional[str] = None
+        self._last_path: str | None = None
 
     def compose(self) -> ComposeResult:
         """Application widget composition."""
@@ -77,7 +77,7 @@ class CuttingBoardDrawersOptimizerApp(App):
         self.query_one("#tabs", TabbedContent).active = tab
 
     def action_save_config(self) -> None:
-        def _after(result: Optional[str]) -> None:
+        def _after(result: str | None) -> None:
             if not result:
                 return
             try:
@@ -101,14 +101,14 @@ class CuttingBoardDrawersOptimizerApp(App):
         self.push_screen(SaveDialog(self._last_path), _after)
 
     def action_load_config(self) -> None:
-        def _after(result: Optional[str]) -> None:
+        def _after(result: str | None) -> None:
             if not result:
                 return
             try:
                 self._state.load(result)
                 self._last_path = result
                 self.log(f"Config loaded from {result}")
-                
+
                 # After loading, update the UI with the new state
                 cb_manager = self.query_one(CuttingBoardManager)
                 dr_manager = self.query_one(DrawerManager)

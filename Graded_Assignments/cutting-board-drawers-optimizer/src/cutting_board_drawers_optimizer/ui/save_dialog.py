@@ -1,25 +1,21 @@
 import os
-from typing import Optional
 
 from textual.app import ComposeResult
-from textual.containers import Vertical, Horizontal
+from textual.containers import Horizontal, Vertical
 from textual.screen import ModalScreen
-from textual.widgets import Label, Input, Button
+from textual.widgets import Button, Input, Label
 
 
-class SaveDialog(ModalScreen[Optional[str]]):
+class SaveDialog(ModalScreen[str | None]):
     """Minimal save dialog with a single text input for the target file path."""
 
-    def __init__(self, start_path: Optional[str] = None) -> None:
+    def __init__(self, start_path: str | None = None) -> None:
         super().__init__()
         self._start_path: str = start_path or os.getcwd()
 
     def compose(self) -> ComposeResult:
         default_path = self._start_path
-        if os.path.isdir(default_path):
-            suggested = os.path.join(default_path, "config.json")
-        else:
-            suggested = default_path
+        suggested = os.path.join(default_path, "config.json") if os.path.isdir(default_path) else default_path
         yield Vertical(
             Label("Enter the full path to save the config"),
             Input(value=suggested, id="path_input"),
