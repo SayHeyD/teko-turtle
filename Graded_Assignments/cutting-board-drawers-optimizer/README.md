@@ -12,8 +12,18 @@
 
 ## Installation
 
-```console
+```shell
 pip install cutting-board-drawers-optimizer
+```
+
+### Install with dev dependencies
+
+
+
+## Run the application
+
+```shell
+hatch run start
 ```
 
 ## License
