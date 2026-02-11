@@ -42,6 +42,8 @@ jobs:
       run: pip install --upgrade hatch
     - name: Run tests with coverage
       run: hatch run test:run-cov --junitxml=report.xml
+    - name: Combine coverage data
+      run: hatch run test:cov-combine
     - name: Generate HTML coverage report
       run: hatch run test:cov-html
     - name: Upload Test Report
