@@ -81,6 +81,17 @@ class CuttingBoardDrawersOptimizerApp(App):
             if not result:
                 return
             try:
+                # Sync UI data to state before saving
+                cb_manager = self.query_one(CuttingBoardManager)
+                dr_manager = self.query_one(DrawerManager)
+                self._state.set_data(
+                    drawers=dr_manager.get_current_data(),
+                    cutting_boards=cb_manager.get_current_data()
+                )
+
+                if os.path.exists(result):
+                    os.remove(result)
+
                 self._state.save(result)
                 self._last_path = result
                 # Feedback in log; tests don't assert it
@@ -97,6 +108,12 @@ class CuttingBoardDrawersOptimizerApp(App):
                 self._state.load(result)
                 self._last_path = result
                 self.log(f"Config loaded from {result}")
+                
+                # After loading, update the UI with the new state
+                cb_manager = self.query_one(CuttingBoardManager)
+                dr_manager = self.query_one(DrawerManager)
+                cb_manager.update_from_data(self._state.get_cutting_boards())
+                dr_manager.update_from_data(self._state.get_drawers())
             except Exception as e:
                 self.log(f"Load failed: {e}")
         start_dir = os.path.dirname(self._last_path) if self._last_path else None

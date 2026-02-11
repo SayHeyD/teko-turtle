@@ -16,7 +16,7 @@ class State:
         if cutting_boards is None:
             cutting_boards = []
 
-        self.__data = StateData(drawers, cutting_boards)
+        self.set_data(drawers, cutting_boards)
 
     def _get_data(self) -> StateData:
         return self.__data
@@ -26,6 +26,9 @@ class State:
 
     def get_cutting_boards(self) -> list[CuttingBoard]:
         return self.__data.get_cutting_boards()
+
+    def set_data(self, drawers: list[Drawer], cutting_boards: list[CuttingBoard]) -> None:
+        self.__data = StateData(drawers, cutting_boards)
 
     def load(self, file_path: str) -> Self:
         if not os.path.exists(file_path):

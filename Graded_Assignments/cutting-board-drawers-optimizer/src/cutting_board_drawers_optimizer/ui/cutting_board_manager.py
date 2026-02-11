@@ -12,6 +12,7 @@ from textual.widgets import (
     TabPane,
 )
 
+from cutting_board_drawers_optimizer.optimizer import CuttingBoard, Drawer
 from cutting_board_drawers_optimizer.ui.cutting_board_table import CuttingBoardTable
 
 
@@ -23,52 +24,11 @@ class CuttingBoardManager(Widget):
     - A form to add new cutting boards
     """
 
-    ROWS: ClassVar[list[tuple[str | int, str, str, str | int, str | float]]] = [
+    ROWS: ClassVar[list[tuple[str | int, int, int, int, float]]] = [
         ("Name", "Length", "Width", "Weight", "Price"),
-        (4, "Joseph Schooling", "Singapore", 2000, 50.39),
-        (2, "Michael Phelps", "United States", 2000, 51.14),
-        (5, "Chad le Clos", "South Africa", 2000, 51.14),
-        (6, "László Cseh", "Hungary", 2000, 51.14),
-        (3, "Li Zhuhao", "China", 2000, 51.26),
-        (8, "Mehdy Metella", "France", 2000, 51.58),
-        (7, "Tom Shields", "United States", 2000, 51.73),
-        (1, "Aleksandr Sadovnikov", "Russia", 2000, 51.84),
-        (10, "Darren Burns", "Scotland", 2000, 51.84),
-        (5, "Chad le Clos", "South Africa", 2000, 51.14),
-        (6, "László Cseh", "Hungary", 2000, 51.14),
-        (3, "Li Zhuhao", "China", 2000, 51.26),
-        (8, "Mehdy Metella", "France", 2000, 51.58),
-        (7, "Tom Shields", "United States", 2000, 51.73),
-        (1, "Aleksandr Sadovnikov", "Russia", 2000, 51.84),
-        (10, "Darren Burns", "Scotland", 2000, 51.84),
-        (5, "Chad le Clos", "South Africa", 2000, 51.14),
-        (6, "László Cseh", "Hungary", 2000, 51.14),
-        (3, "Li Zhuhao", "China", 2000, 51.26),
-        (8, "Mehdy Metella", "France", 2000, 51.58),
-        (7, "Tom Shields", "United States", 2000, 51.73),
-        (1, "Aleksandr Sadovnikov", "Russia", 2000, 51.84),
-        (10, "Darren Burns", "Scotland", 2000, 51.84),
-        (5, "Chad le Clos", "South Africa", 2000, 51.14),
-        (6, "László Cseh", "Hungary", 2000, 51.14),
-        (3, "Li Zhuhao", "China", 2000, 51.26),
-        (8, "Mehdy Metella", "France", 2000, 51.58),
-        (7, "Tom Shields", "United States", 2000, 51.73),
-        (1, "Aleksandr Sadovnikov", "Russia", 2000, 51.84),
-        (10, "Darren Burns", "Scotland", 2000, 51.84),
-        (5, "Chad le Clos", "South Africa", 2000, 51.14),
-        (6, "László Cseh", "Hungary", 2000, 51.14),
-        (3, "Li Zhuhao", "China", 2000, 51.26),
-        (8, "Mehdy Metella", "France", 2000, 51.58),
-        (7, "Tom Shields", "United States", 2000, 51.73),
-        (1, "Aleksandr Sadovnikov", "Russia", 2000, 51.84),
-        (10, "Darren Burns", "Scotland", 2000, 51.84),
-        (5, "Chad le Clos", "South Africa", 2000, 51.14),
-        (6, "László Cseh", "Hungary", 2000, 51.14),
-        (3, "Li Zhuhao", "China", 2000, 51.26),
-        (8, "Mehdy Metella", "France", 2000, 51.58),
-        (7, "Tom Shields", "United States", 2000, 51.73),
-        (1, "Aleksandr Sadovnikov", "Russia", 2000, 51.84),
-        (10, "Darren Burns", "Scotland", 2000, 51.84),
+        ("Large Oak", 40, 30, 2000, 50.39),
+        ("Medium Beech", 30, 20, 1500, 35.50),
+        ("Small Plastic", 20, 15, 500, 12.00),
     ]
 
     BINDINGS: ClassVar[list[tuple[str, str, str]]] = [
@@ -112,3 +72,39 @@ class CuttingBoardManager(Widget):
         """Switch to the create tab when ctrl+n is pressed."""
         tabbed_content = self.query_one(TabbedContent)
         tabbed_content.active = "create_tab"
+
+    def get_current_data(self) -> list[CuttingBoard]:
+        """Extract CuttingBoard objects from the DataTable."""
+        table = self.query_one("#cutting_board_table", DataTable)
+        cutting_boards = []
+        # Skip header row (index 0 is name, 1 length, 2 width, 3 weight, 4 price)
+        # Note: In Textual DataTable, rows are accessed by key. 
+        # But we can iterate over rows.
+        for row_index in range(table.row_count):
+            row = table.get_row_at(row_index)
+            try:
+                # We expect: name, length, width, weight, price
+                # We need to convert back to appropriate types for CuttingBoard
+                length = int(float(row[1]))
+                width = int(float(row[2]))
+                weight = int(float(row[3]))
+                # Price is displayed as float/str, but constructor needs cents (int)
+                price_val = float(row[4])
+                price_cents = int(round(price_val * 100))
+                cutting_boards.append(CuttingBoard(length, width, weight, price_cents))
+            except (ValueError, IndexError):
+                continue
+        return cutting_boards
+
+    def update_from_data(self, cutting_boards: list[CuttingBoard]) -> None:
+        """Update the DataTable with the provided CuttingBoard objects."""
+        table = self.query_one("#cutting_board_table", DataTable)
+        table.clear()
+        for i, cb in enumerate(cutting_boards):
+            table.add_row(
+                f"Board {i+1}",
+                str(cb.get_length_in_centimeters()),
+                str(cb.get_width_in_centimeters()),
+                str(cb.get_weight_in_grams()),
+                cb.get_price_in_chf()
+            )

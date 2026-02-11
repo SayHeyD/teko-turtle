@@ -1,5 +1,6 @@
 from typing import ClassVar
 
+from cutting_board_drawers_optimizer.optimizer import Drawer
 from textual.app import ComposeResult
 from textual.containers import Vertical
 from textual.widget import Widget
@@ -21,17 +22,10 @@ class DrawerManager(Widget):
     - A form to add new drawers
     """
 
-    ROWS: ClassVar[list[tuple[str | int, str, str, str | float]]] = [
+    ROWS: ClassVar[list[tuple[str | int, int, int, int]]] = [
         ("Name", "Length", "Width", "Maximum Load"),
-        (4, "Joseph Schooling", "Singapore", 50.39),
-        (2, "Michael Phelps", "United States", 51.14),
-        (5, "Chad le Clos", "South Africa", 51.14),
-        (6, "László Cseh", "Hungary", 51.14),
-        (3, "Li Zhuhao", "China", 51.26),
-        (8, "Mehdy Metella", "France", 51.58),
-        (7, "Tom Shields", "United States", 51.73),
-        (1, "Aleksandr Sadovnikov", "Russia", 51.84),
-        (10, "Darren Burns", "Scotland", 51.84),
+        ("Main Kitchen Drawer", 60, 50, 10000),
+        ("Small Side Drawer", 40, 30, 5000),
     ]
 
     def compose(self) -> ComposeResult:
@@ -62,3 +56,31 @@ class DrawerManager(Widget):
             width = self.query_one("#d_width", Input).value or ""
             max_load = self.query_one("#d_max_load", Input).value or ""
             self.query_one("#drawer_table", DataTable).add_row(name, length, width, max_load)
+
+    def get_current_data(self) -> list[Drawer]:
+        """Extract Drawer objects from the DataTable."""
+        table = self.query_one("#drawer_table", DataTable)
+        drawers = []
+        for row_index in range(table.row_count):
+            row = table.get_row_at(row_index)
+            try:
+                # We expect: name, length, width, max_load
+                length = int(float(row[1]))
+                width = int(float(row[2]))
+                max_load = int(float(row[3]))
+                drawers.append(Drawer(length, width, max_load))
+            except (ValueError, IndexError):
+                continue
+        return drawers
+
+    def update_from_data(self, drawers: list[Drawer]) -> None:
+        """Update the DataTable with the provided Drawer objects."""
+        table = self.query_one("#drawer_table", DataTable)
+        table.clear()
+        for i, drawer in enumerate(drawers):
+            table.add_row(
+                f"Drawer {i+1}",
+                str(drawer.get_length_in_centimeters()),
+                str(drawer.get_width_in_centimeters()),
+                str(drawer.get_max_load_in_grams())
+            )
