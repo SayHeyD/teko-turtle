@@ -65,10 +65,11 @@ class DrawerManager(Widget):
             row = table.get_row_at(row_index)
             try:
                 # We expect: name, length, width, max_load
+                name = str(row[0])
                 length = int(float(row[1]))
                 width = int(float(row[2]))
                 max_load = int(float(row[3]))
-                drawers.append(Drawer(length, width, max_load))
+                drawers.append(Drawer(name, length, width, max_load))
             except (ValueError, IndexError):
                 continue
         return drawers
@@ -77,9 +78,9 @@ class DrawerManager(Widget):
         """Update the DataTable with the provided Drawer objects."""
         table = self.query_one("#drawer_table", DataTable)
         table.clear()
-        for i, drawer in enumerate(drawers):
+        for drawer in drawers:
             table.add_row(
-                f"Drawer {i+1}",
+                drawer.get_name(),
                 str(drawer.get_length_in_centimeters()),
                 str(drawer.get_width_in_centimeters()),
                 str(drawer.get_max_load_in_grams())

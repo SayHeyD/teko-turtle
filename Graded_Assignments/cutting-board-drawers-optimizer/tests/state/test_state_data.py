@@ -12,12 +12,12 @@ from cutting_board_drawers_optimizer.state._state_data import StateData
 def get_drawers() -> list[Drawer]:
     drawers = []
 
-    for _ in range(10):
+    for i in range(10):
         length = random.randint(80, 200)
         width = random.randint(40, 160)
         max_load = random.randint(1000, 40_000)
 
-        drawers.append(Drawer(length, width, max_load))
+        drawers.append(Drawer(f"Drawer {i}", length, width, max_load))
 
     return drawers
 
@@ -26,13 +26,13 @@ def get_drawers() -> list[Drawer]:
 def get_cutting_boards() -> list[CuttingBoard]:
     cutting_boards = []
 
-    for _ in range(20):
+    for i in range(20):
         length = random.randint(80, 200)
         width = random.randint(40, 160)
         weight = random.randint(500, 3_500)
         price = random.randint(100, 80_000)
 
-        cutting_boards.append(CuttingBoard(length, width, weight, price))
+        cutting_boards.append(CuttingBoard(f"Board {i}", length, width, weight, price))
 
     return cutting_boards
 

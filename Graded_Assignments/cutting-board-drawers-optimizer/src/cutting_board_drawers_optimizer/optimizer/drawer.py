@@ -1,5 +1,6 @@
 class Drawer:
-    def __init__(self, length: int, width: int, max_load: int):
+    def __init__(self, name: str, length: int, width: int, max_load: int):
+        self.__name: str = name
         self.__length: int = length
         self.__width: int = width
         self.__max_load: int = max_load
@@ -22,6 +23,9 @@ class Drawer:
             params = ", ".join(invalid_parameters)
             message = f"Invalid parameters: {params}"
             raise ValueError(message)
+
+    def get_name(self) -> str:
+        return self.__name
 
     def get_length_in_centimeters(self) -> int:
         return self.__length

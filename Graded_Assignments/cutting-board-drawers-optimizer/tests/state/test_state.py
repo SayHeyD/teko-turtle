@@ -15,12 +15,12 @@ from cutting_board_drawers_optimizer.state._state_data import StateData
 def get_drawers() -> list[Drawer]:
     drawers = []
 
-    for _ in range(10):
+    for i in range(10):
         length = random.randint(80, 200)
         width = random.randint(40, 160)
         max_load = random.randint(1000, 40_000)
 
-        drawers.append(Drawer(length, width, max_load))
+        drawers.append(Drawer(f"Drawer {i}", length, width, max_load))
 
     return drawers
 
@@ -29,13 +29,13 @@ def get_drawers() -> list[Drawer]:
 def get_cutting_boards() -> list[CuttingBoard]:
     cutting_boards = []
 
-    for _ in range(20):
+    for i in range(20):
         length = random.randint(80, 200)
         width = random.randint(40, 160)
         weight = random.randint(500, 3_500)
         price = random.randint(100, 80_000)
 
-        cutting_boards.append(CuttingBoard(length, width, weight, price))
+        cutting_boards.append(CuttingBoard(f"Board {i}", length, width, weight, price))
 
     return cutting_boards
 
@@ -159,11 +159,13 @@ def test_state_can_be_loaded_from_disk_if_path_exists(get_drawers, get_cutting_b
     state = State().load(file_to_save_to)
 
     for idx, drawer in enumerate(drawers):
+        assert state.get_drawers()[idx].get_name() == drawer.get_name()
         assert state.get_drawers()[idx].get_length_in_centimeters() == drawer.get_length_in_centimeters()
         assert state.get_drawers()[idx].get_width_in_centimeters() == drawer.get_width_in_centimeters()
         assert state.get_drawers()[idx].get_max_load_in_grams() == drawer.get_max_load_in_grams()
 
     for idx, cutting_board in enumerate(cutting_boards):
+        assert state.get_cutting_boards()[idx].get_name() == cutting_board.get_name()
         assert state.get_cutting_boards()[idx].get_length_in_centimeters() == cutting_board.get_length_in_centimeters()
         assert state.get_cutting_boards()[idx].get_width_in_centimeters() == cutting_board.get_width_in_centimeters()
         assert state.get_cutting_boards()[idx].get_weight_in_grams() == cutting_board.get_weight_in_grams()

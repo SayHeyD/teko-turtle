@@ -1,5 +1,6 @@
 class CuttingBoard:
-    def __init__(self, length: int, width: int, weight: int, price: int):
+    def __init__(self, name: str, length: int, width: int, weight: int, price: int):
+        self.__name: str = name
         self.__length: int = length
         self.__width: int = width
         self.__weight: int = weight
@@ -25,6 +26,9 @@ class CuttingBoard:
         if len(invalid_parameters) > 0:
             message = ", ".join(invalid_parameters)
             raise ValueError(message)
+
+    def get_name(self) -> str:
+        return self.__name
 
     def get_length_in_centimeters(self) -> int:
         return self.__length

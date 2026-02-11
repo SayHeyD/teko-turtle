@@ -84,6 +84,7 @@ class CuttingBoardManager(Widget):
             row = table.get_row_at(row_index)
             try:
                 # We expect: name, length, width, weight, price
+                name = str(row[0])
                 # We need to convert back to appropriate types for CuttingBoard
                 length = int(float(row[1]))
                 width = int(float(row[2]))
@@ -91,7 +92,7 @@ class CuttingBoardManager(Widget):
                 # Price is displayed as float/str, but constructor needs cents (int)
                 price_val = float(row[4])
                 price_cents = int(round(price_val * 100))
-                cutting_boards.append(CuttingBoard(length, width, weight, price_cents))
+                cutting_boards.append(CuttingBoard(name, length, width, weight, price_cents))
             except (ValueError, IndexError):
                 continue
         return cutting_boards
@@ -100,9 +101,9 @@ class CuttingBoardManager(Widget):
         """Update the DataTable with the provided CuttingBoard objects."""
         table = self.query_one("#cutting_board_table", DataTable)
         table.clear()
-        for i, cb in enumerate(cutting_boards):
+        for cb in cutting_boards:
             table.add_row(
-                f"Board {i+1}",
+                cb.get_name(),
                 str(cb.get_length_in_centimeters()),
                 str(cb.get_width_in_centimeters()),
                 str(cb.get_weight_in_grams()),

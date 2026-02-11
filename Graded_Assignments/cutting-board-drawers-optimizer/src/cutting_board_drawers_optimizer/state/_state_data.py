@@ -16,6 +16,7 @@ class StateData:
         return {
             "drawers": [
                 {
+                    "name": drawers.get_name(),
                     "length": drawers.get_length_in_centimeters(),
                     "width": drawers.get_width_in_centimeters(),
                     "max_load": drawers.get_max_load_in_grams(),
@@ -24,6 +25,7 @@ class StateData:
             ],
             "cutting_boards": [
                 {
+                    "name": cutting_boards.get_name(),
                     "length": cutting_boards.get_length_in_centimeters(),
                     "width": cutting_boards.get_width_in_centimeters(),
                     "weight": cutting_boards.get_weight_in_grams(),
@@ -37,11 +39,17 @@ class StateData:
     @classmethod
     def from_dict(cls, data: dict) -> "StateData":
         drawers = [
-            Drawer(drawer["length"], drawer["width"], drawer["max_load"])  # ints
+            Drawer(
+                drawer.get("name", "Unknown Drawer"),
+                drawer["length"],
+                drawer["width"],
+                drawer["max_load"]
+            )  # ints
             for drawer in data.get("drawers", [])
         ]
         cutting_boards = [
             CuttingBoard(
+                cutting_board.get("name", "Unknown Board"),
                 cutting_board["length"],
                 cutting_board["width"],
                 cutting_board["weight"],
