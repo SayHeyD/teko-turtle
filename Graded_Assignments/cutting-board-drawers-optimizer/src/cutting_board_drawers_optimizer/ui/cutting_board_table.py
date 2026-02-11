@@ -1,4 +1,5 @@
-from typing import ClassVar
+from typing import ClassVar, Sequence
+from textual.binding import Binding
 
 from textual.widgets import (
     DataTable,
@@ -8,7 +9,7 @@ from textual.widgets import (
 class CuttingBoardTable(DataTable):
     """Custom DataTable for cutting boards with delete binding."""
 
-    BINDINGS: ClassVar[list[tuple[str, str, str]]] = [
+    BINDINGS = [
         ("ctrl+d", "delete_current_row", "Delete"),
     ]
 

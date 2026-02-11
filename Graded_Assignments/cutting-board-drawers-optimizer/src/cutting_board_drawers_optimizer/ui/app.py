@@ -1,5 +1,6 @@
 import os
-from typing import ClassVar
+from typing import ClassVar, Sequence
+from textual.binding import Binding
 
 from textual.app import App, ComposeResult
 from textual.widgets import Footer, Header, TabbedContent, TabPane
@@ -48,7 +49,7 @@ class CuttingBoardDrawersOptimizerApp(App):
     }
     """
 
-    BINDINGS: ClassVar[list[tuple[str, str, str]]] = [
+    BINDINGS = [
         ("ctrl+s", "save_config", "Save Config"),
         ("ctrl+o", "load_config", "Open Config"),
         ("c", 'show_tab("cutting_boards")', "Cutting Boards"),
@@ -129,5 +130,5 @@ class CuttingBoardDrawersOptimizerApp(App):
                 manager = self.query_one(CuttingBoardManager)
                 manager.focus()
             elif event.tab.id == "drawers":
-                manager = self.query_one(DrawerManager)
-                manager.focus()
+                dr_manager = self.query_one(DrawerManager)
+                dr_manager.focus()

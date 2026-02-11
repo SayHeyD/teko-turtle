@@ -1,4 +1,5 @@
-from typing import ClassVar
+from typing import ClassVar, Sequence
+from textual.binding import Binding
 
 from textual.app import ComposeResult
 from textual.containers import Vertical
@@ -24,14 +25,14 @@ class CuttingBoardManager(Widget):
     - A form to add new cutting boards
     """
 
-    ROWS: ClassVar[list[tuple[str | int, int, int, int, float]]] = [
+    ROWS: ClassVar[list[tuple[str, str, str, str, str]]] = [
         ("Name", "Length", "Width", "Weight", "Price"),
-        ("Large Oak", 40, 30, 2000, 50.39),
-        ("Medium Beech", 30, 20, 1500, 35.50),
-        ("Small Plastic", 20, 15, 500, 12.00),
+        ("Large Oak", "40", "30", "2000", "50.39"),
+        ("Medium Beech", "30", "20", "1500", "35.50"),
+        ("Small Plastic", "20", "15", "500", "12.00"),
     ]
 
-    BINDINGS: ClassVar[list[tuple[str, str, str]]] = [
+    BINDINGS = [
         ("ctrl+n", "switch_to_create_tab", "Create"),
     ]
 

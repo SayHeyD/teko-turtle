@@ -23,10 +23,10 @@ class DrawerManager(Widget):
     - A form to add new drawers
     """
 
-    ROWS: ClassVar[list[tuple[str | int, int, int, int]]] = [
+    ROWS: ClassVar[list[tuple[str, str, str, str]]] = [
         ("Name", "Length", "Width", "Maximum Load"),
-        ("Main Kitchen Drawer", 60, 50, 10000),
-        ("Small Side Drawer", 40, 30, 5000),
+        ("Main Kitchen Drawer", "60", "50", "10000"),
+        ("Small Side Drawer", "40", "30", "5000"),
     ]
 
     def compose(self) -> ComposeResult:
