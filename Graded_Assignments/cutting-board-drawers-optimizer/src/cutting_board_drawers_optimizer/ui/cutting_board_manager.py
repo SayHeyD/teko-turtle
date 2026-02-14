@@ -18,7 +18,8 @@ from cutting_board_drawers_optimizer.ui.cutting_board_table import CuttingBoardT
 
 
 class CuttingBoardManager(Widget):
-    """Manager widget for Cutting Boards.
+    """
+    Manager widget for Cutting Boards.
 
     Provides two tabs:
     - A table view populated from ROWS
