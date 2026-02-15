@@ -30,6 +30,7 @@ class DrawerManager(Widget):
     ]
 
     def compose(self) -> ComposeResult:
+        """Composition of the DrawerManager UI."""
         with TabbedContent():
             with TabPane("Table", id="table_tab"):
                 yield DataTable(id="drawer_table")
@@ -42,15 +43,24 @@ class DrawerManager(Widget):
                 yield Button("Add", id="d_add")
 
     def on_mount(self) -> None:
+        """Populate the table after the component is mounted."""
+        # Get the table component
         table = self.query_one("#drawer_table", DataTable)
+
+        # Populate the table with the ROWS
         header, *rows = self.ROWS
         table.add_columns(*[str(h) for h in header])
         for row in rows:
             table.add_row(*[str(cell) for cell in row])
+
+        # Configure the table
         table.show_header = True
         table.zebra_stripes = True
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
+        """Handle button presses."""
+
+        # Add a new row to the table with the data from the form
         if event.button.id == "d_add":
             name = self.query_one("#d_name", Input).value or ""
             length = self.query_one("#d_length", Input).value or ""
@@ -60,9 +70,16 @@ class DrawerManager(Widget):
 
     def get_current_data(self) -> list[Drawer]:
         """Extract Drawer objects from the DataTable."""
+
+        # Get the table component
         table = self.query_one("#drawer_table", DataTable)
+
+        # Initialize an empty list of Drawer objects
         drawers = []
+
+        # Iterate over the rows in the table
         for row_index in range(table.row_count):
+            # Get the row
             row = table.get_row_at(row_index)
             try:
                 # We expect: name, length, width, max_load
@@ -72,13 +89,17 @@ class DrawerManager(Widget):
                 max_load = int(float(row[3]))
                 drawers.append(Drawer(name, length, width, max_load))
             except (ValueError, IndexError):
+                # TODO: Log error
                 continue
         return drawers
 
     def update_from_data(self, drawers: list[Drawer]) -> None:
         """Update the DataTable with the provided Drawer objects."""
         table = self.query_one("#drawer_table", DataTable)
+        # Clear the table
         table.clear()
+
+        # Add a row for each Drawer
         for drawer in drawers:
             table.add_row(
                 drawer.get_name(),
