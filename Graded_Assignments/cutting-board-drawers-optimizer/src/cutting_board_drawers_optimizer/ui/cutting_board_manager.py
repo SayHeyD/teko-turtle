@@ -33,11 +33,13 @@ class CuttingBoardManager(Widget):
         ("Small Plastic", "20", "15", "500", "12.00"),
     ]
 
+    # Keybinds specific to the Cutting Board Manager
     BINDINGS: ClassVar[list[Binding | tuple[str, str] | tuple[str, str, str]]] = [
         ("ctrl+n", "switch_to_create_tab", "Create"),
     ]
 
     def compose(self) -> ComposeResult:
+        """Compose the CuttingBoardManager UI."""
         with TabbedContent():
             with TabPane("Table", id="table_tab"):
                 yield CuttingBoardTable(id="cutting_board_table")
@@ -52,22 +54,38 @@ class CuttingBoardManager(Widget):
 
     def on_mount(self) -> None:
         """Populate the table after mounting."""
+
+        # Get the table component
         table = self.query_one("#cutting_board_table", DataTable)
+
+        # The star in front of the "rows" variable is to unpack the tuple
+        # Read more about unpacking here: https://docs.python.org/3/tutorial/controlflow.html#unpacking-argument-lists
         header, *rows = self.ROWS
+
+        # Add the header and rows to the table
         table.add_columns(*[str(h) for h in header])
+
+        # Add rows to the table
+        # Note: DataTable.add_row expects a list of strings
         for row in rows:
             table.add_row(*[str(cell) for cell in row])
+
+        # Configure the table
         table.show_header = True
         table.zebra_stripes = True
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
+        """Handle button presses."""
+
         if event.button.id == "cb_add":
-            # Read values and append a new row (stringly typed for simplicity)
+            # Read values
+            # Set to empty string if empty to always have a the same type
             name = self.query_one("#cb_name", Input).value or ""
             length = self.query_one("#cb_length", Input).value or ""
             width = self.query_one("#cb_width", Input).value or ""
             weight = self.query_one("#cb_weight", Input).value or ""
             price = self.query_one("#cb_price", Input).value or ""
+            # Add the data to the table
             self.query_one("#cutting_board_table", DataTable).add_row(name, length, width, weight, price)
 
     def action_switch_to_create_tab(self) -> None:
@@ -96,13 +114,17 @@ class CuttingBoardManager(Widget):
                 price_cents = round(price_val * 100)
                 cutting_boards.append(CuttingBoard(name, length, width, weight, price_cents))
             except (ValueError, IndexError):
+                # TODO: Log error
                 continue
         return cutting_boards
 
     def update_from_data(self, cutting_boards: list[CuttingBoard]) -> None:
         """Update the DataTable with the provided CuttingBoard objects."""
+        # Get the table component
         table = self.query_one("#cutting_board_table", DataTable)
+        # Clear the table
         table.clear()
+        # Add a row for each CuttingBoard
         for cb in cutting_boards:
             table.add_row(
                 cb.get_name(),
