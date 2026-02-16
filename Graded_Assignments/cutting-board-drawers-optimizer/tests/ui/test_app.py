@@ -7,6 +7,7 @@ from cutting_board_drawers_optimizer.ui.load_dialog import LoadDialog
 from cutting_board_drawers_optimizer.ui.cutting_board_manager import CuttingBoardManager
 from cutting_board_drawers_optimizer.ui.drawer_manager import DrawerManager
 from cutting_board_drawers_optimizer.ui.cutting_board_table import CuttingBoardTable
+from cutting_board_drawers_optimizer.ui.create_cutting_board import CreateCuttingBoard
 from cutting_board_drawers_optimizer.state.state import State
 
 from textual.widgets import Header, Footer
@@ -78,17 +79,18 @@ async def test_app_load_config_flow(tmp_path):
         cb_manager = app_to_save.query_one(CuttingBoardManager)
         cb_manager.action_switch_to_create_tab()
         await pilot.pause()
-        await pilot.click("#cb_name")
-        await pilot.press("L", "o", "a", "d", " ", "M", "e")
-        await pilot.click("#cb_length")
-        await pilot.press("1", "0")
-        await pilot.click("#cb_width")
-        await pilot.press("1", "0")
-        await pilot.click("#cb_weight")
-        await pilot.press("1", "0")
-        await pilot.click("#cb_price")
-        await pilot.press("1", "0")
-        await pilot.click("#cb_add")
+        create_cb = app_to_save.query_one(CreateCuttingBoard)
+        create_cb.query_one("#cb_name", Input).focus()
+        await pilot.press(*"Load Me")
+        create_cb.query_one("#cb_length", Input).focus()
+        await pilot.press(*"10")
+        create_cb.query_one("#cb_width", Input).focus()
+        await pilot.press(*"10")
+        create_cb.query_one("#cb_weight", Input).focus()
+        await pilot.press(*"10")
+        create_cb.query_one("#cb_price", Input).focus()
+        await pilot.press(*"10")
+        await pilot.press("enter")
         await pilot.pause()
         await pilot.pause()
 

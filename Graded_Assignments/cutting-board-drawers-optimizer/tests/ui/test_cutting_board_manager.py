@@ -37,14 +37,20 @@ async def test_cutting_board_manager_add_item():
 
         create_cb = manager.query_one(CreateCuttingBoard)
         # Fill form
-        create_cb.query_one("#cb_name", Input).value = "Test Board"
-        create_cb.query_one("#cb_length", Input).value = "50"
-        create_cb.query_one("#cb_width", Input).value = "40"
-        create_cb.query_one("#cb_weight", Input).value = "1000"
-        create_cb.query_one("#cb_price", Input).value = "25.50"
+        create_cb.query_one("#cb_name", Input).focus()
+        await pilot.press(*"Test Board")
+        create_cb.query_one("#cb_length", Input).focus()
+        await pilot.press(*"50")
+        create_cb.query_one("#cb_width", Input).focus()
+        await pilot.press(*"40")
+        create_cb.query_one("#cb_weight", Input).focus()
+        await pilot.press(*"1000")
+        create_cb.query_one("#cb_price", Input).focus()
+        await pilot.press(*"25.50")
 
         # Click Add
-        await pilot.click("#cb_add")
+        await pilot.press("enter")
+        await pilot.pause()
         await pilot.pause()
 
         # Should switch back to table tab
