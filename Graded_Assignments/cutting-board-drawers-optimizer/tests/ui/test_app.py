@@ -5,11 +5,21 @@ from cutting_board_drawers_optimizer.ui.save_dialog import SaveDialog
 from cutting_board_drawers_optimizer.ui.load_dialog import LoadDialog
 from cutting_board_drawers_optimizer.ui.cutting_board_manager import CuttingBoardManager
 from cutting_board_drawers_optimizer.ui.cutting_board_table import CuttingBoardTable
+from cutting_board_drawers_optimizer.state.state import State
 
 from textual.widgets import Header, Footer
 
 from cutting_board_drawers_optimizer.ui import CuttingBoardDrawersOptimizerApp
 
+def test_app_init():
+    """Test the CuttingBoardDrawersOptimizerApp constructor."""
+    app = CuttingBoardDrawersOptimizerApp()
+
+    # Verify that the state is initialized
+    assert isinstance(app._state, State)
+
+    # Verify that _last_path is initialized to None
+    assert app._last_path is None
 
 @pytest.mark.asyncio
 async def test_that_app_shows_correct_header_content():
