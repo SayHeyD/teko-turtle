@@ -8,13 +8,11 @@ from textual.widgets import (
     Label,
 )
 
+from cutting_board_drawers_optimizer.ui.validator import Validator
+
 
 class CreateCuttingBoard(Widget):
     """Widget for creating a new cutting board."""
-
-    def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
-        self.errors: list[str] = []
 
     class Created(Message):
         """Message sent when a cutting board is created."""
@@ -37,7 +35,7 @@ class CreateCuttingBoard(Widget):
             yield Input(placeholder="Weight", id="cb_weight")
             yield Input(placeholder="Price", id="cb_price")
             yield Label("", id="cb_error", classes="error")
-            yield Button("Add", id="cb_add")
+            yield Button("Add", id="cb_add", variant="primary")
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
         """Handle the add button press."""
@@ -51,43 +49,20 @@ class CreateCuttingBoard(Widget):
             error_label = self.query_one("#cb_error", Label)
             errors = []
 
-            if not name:
-                errors.append("Name is required.")
+            # Use generalized Validator
+            valid, err = Validator.is_valid_name(name)
+            if not valid:
+                errors.append(err)
 
-            try:
-                l_val = float(length)
-                if l_val <= 0:
-                    errors.append("Length must be positive.")
-            except ValueError:
-                errors.append("Length must be a number.")
-
-            try:
-                w_val = float(width)
-                if w_val <= 0:
-                    errors.append("Width must be positive.")
-            except ValueError:
-                errors.append("Width must be a number.")
-
-            try:
-                wt_val = float(weight)
-                if wt_val <= 0:
-                    errors.append("Weight must be positive.")
-            except ValueError:
-                errors.append("Weight must be a number.")
-
-            try:
-                p_val = float(price)
-                if p_val <= 0:
-                    errors.append("Price must be positive.")
-            except ValueError:
-                errors.append("Price must be a number.")
+            for val, label in [(length, "Length"), (width, "Width"), (weight, "Weight"), (price, "Price")]:
+                valid, err = Validator.is_positive_number(val, label)
+                if not valid:
+                    errors.append(err)
 
             if errors:
-                self.errors = errors
                 error_label.update(" ".join(errors))
                 error_label.visible = True
             else:
-                self.errors = []
                 error_label.update("")
                 error_label.visible = False
                 self.post_message(self.Created(name, length, width, weight, price))

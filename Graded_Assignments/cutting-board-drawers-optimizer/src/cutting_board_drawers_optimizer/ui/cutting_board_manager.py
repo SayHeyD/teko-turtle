@@ -52,7 +52,7 @@ class CuttingBoardManager(Widget):
         """Handle the creation of a new cutting board."""
         table = self.query_one(CuttingBoardTable)
         table.add_row(message.name, message.length, message.width, message.weight, message.price)
-        self.call_after_refresh(self.action_switch_to_table)
+        self.action_switch_to_table()
 
     def action_switch_to_table(self) -> None:
         tabs = self.query_one("#cb_tabs", TabbedContent)

@@ -90,6 +90,7 @@ async def test_app_load_config_flow(tmp_path):
         await pilot.press("1", "0")
         await pilot.click("#cb_add")
         await pilot.pause()
+        await pilot.pause()
 
         # Verify it was added to the table
         cb_manager.action_switch_to_table()

@@ -1,5 +1,5 @@
 import pytest
-from textual.widgets import TabbedContent, Input, DataTable
+from textual.widgets import TabbedContent, Input, DataTable, Label
 from cutting_board_drawers_optimizer.ui.cutting_board_manager import CuttingBoardManager
 from cutting_board_drawers_optimizer.ui.cutting_board_table import CuttingBoardTable
 from unittest.mock import MagicMock, patch, PropertyMock
@@ -35,20 +35,18 @@ async def test_cutting_board_manager_add_item():
         tabs = manager.query_one("#cb_tabs", TabbedContent)
         assert tabs.active == "create_tab"
 
+        create_cb = manager.query_one(CreateCuttingBoard)
         # Fill form
-        await pilot.click("#cb_name")
-        await pilot.press("T", "e", "s", "t", " ", "B", "o", "a", "r", "d")
-        await pilot.click("#cb_length")
-        await pilot.press("5", "0")
-        await pilot.click("#cb_width")
-        await pilot.press("4", "0")
-        await pilot.click("#cb_weight")
-        await pilot.press("1", "0", "0", "0")
-        await pilot.click("#cb_price")
-        await pilot.press("2", "5", ".", "5", "0")
+        create_cb.query_one("#cb_name", Input).value = "Test Board"
+        create_cb.query_one("#cb_length", Input).value = "50"
+        create_cb.query_one("#cb_width", Input).value = "40"
+        create_cb.query_one("#cb_weight", Input).value = "1000"
+        create_cb.query_one("#cb_price", Input).value = "25.50"
 
         # Click Add
         await pilot.click("#cb_add")
+        await pilot.pause()
+        await pilot.pause()
         await pilot.pause()
 
         # Should switch back to table tab
@@ -220,7 +218,8 @@ async def test_create_cutting_board_validation():
         tabs = manager.query_one("#cb_tabs", TabbedContent)
 
         # 1. Test empty fields -> should not add, stay on create, show error
-        await pilot.click("#cb_add")
+        # Use key presses instead of click to avoid potential focus issues with pilot.click
+        await pilot.press("tab", "tab", "tab", "tab", "tab", "enter")
         await pilot.pause()
         assert error_label.visible is True
         assert tabs.active == "create_tab"
@@ -232,7 +231,7 @@ async def test_create_cutting_board_validation():
         create_cb.query_one("#cb_width", Input).value = "-10"
         create_cb.query_one("#cb_weight", Input).value = "0"
         create_cb.query_one("#cb_price", Input).value = "foo"
-        await pilot.click("#cb_add")
+        await pilot.press("enter")
         await pilot.pause()
         assert error_label.visible is True
         assert tabs.active == "create_tab"
@@ -243,7 +242,8 @@ async def test_create_cutting_board_validation():
         create_cb.query_one("#cb_width", Input).value = "40"
         create_cb.query_one("#cb_weight", Input).value = "1000"
         create_cb.query_one("#cb_price", Input).value = "25.50"
-        await pilot.click("#cb_add")
+        await pilot.press("enter")
+        await pilot.pause()
         await pilot.pause()
         assert error_label.visible is False
         assert tabs.active == "table_tab"

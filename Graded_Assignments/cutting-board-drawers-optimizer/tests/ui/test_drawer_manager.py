@@ -206,7 +206,7 @@ async def test_create_drawer_validation():
         tabs = manager.query_one("#drawer_tabs", TabbedContent)
 
         # 1. Test empty fields -> should not add, stay on create, show error
-        await pilot.click("#d_add")
+        await pilot.press("tab", "tab", "tab", "tab", "enter")
         await pilot.pause()
         assert error_label.visible is True
         assert tabs.active == "create_tab"
@@ -217,7 +217,7 @@ async def test_create_drawer_validation():
         create_dr.query_one("#d_length", Input).value = "abc"
         create_dr.query_one("#d_width", Input).value = "-10"
         create_dr.query_one("#d_max_load", Input).value = "0"
-        await pilot.click("#d_add")
+        await pilot.press("enter")
         await pilot.pause()
         assert error_label.visible is True
         assert tabs.active == "create_tab"
@@ -227,7 +227,8 @@ async def test_create_drawer_validation():
         create_dr.query_one("#d_length", Input).value = "60"
         create_dr.query_one("#d_width", Input).value = "50"
         create_dr.query_one("#d_max_load", Input).value = "10000"
-        await pilot.click("#d_add")
+        await pilot.press("enter")
+        await pilot.pause()
         await pilot.pause()
         assert error_label.visible is False
         assert tabs.active == "table_tab"
