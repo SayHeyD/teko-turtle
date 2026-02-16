@@ -7,8 +7,13 @@
 
 ## Table of Contents
 
+- [Prerequisites](#prerequisites)   
 - [Installation](#installation)
 - [License](#license)
+
+## Prerequisites
+
+[Hatch 1.16](https://hatch.pypa.io/1.16/) or newer is required to use all development commands.
 
 ## Installation
 
