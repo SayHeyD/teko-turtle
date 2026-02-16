@@ -1,11 +1,12 @@
 import os
 import pytest
-from textual.widgets import Input
+from textual.widgets import Input, TabbedContent
 from cutting_board_drawers_optimizer.ui import CuttingBoardDrawersOptimizerApp
 from cutting_board_drawers_optimizer.ui.save_dialog import SaveDialog
 from cutting_board_drawers_optimizer.ui.load_dialog import LoadDialog
 from cutting_board_drawers_optimizer.ui.cutting_board_manager import CuttingBoardManager
 from cutting_board_drawers_optimizer.ui.drawer_manager import DrawerManager
+from cutting_board_drawers_optimizer.ui.cutting_board_table import CuttingBoardTable
 
 from textual.widgets import Header, Footer
 
@@ -79,7 +80,7 @@ async def test_app_load_config_flow(tmp_path):
         # Verify it was added to the table
         cb_manager.action_switch_to_table()
         await pilot.pause()
-        assert cb_manager.query_one("CuttingBoardTable").row_count == 4
+        assert cb_manager.query_one(CuttingBoardTable).row_count == 4
 
         # Save the current state
         await pilot.press("ctrl+s")
@@ -101,7 +102,7 @@ async def test_app_load_config_flow(tmp_path):
 
         # Verify data is loaded
         cb_manager = app_to_load.query_one(CuttingBoardManager)
-        table = cb_manager.query_one("CuttingBoardTable")
+        table = cb_manager.query_one(CuttingBoardTable)
         # 3 default + 1 loaded
         assert table.row_count == 4
         assert table.get_row_at(3)[0] == "Load Me"
@@ -111,7 +112,7 @@ async def test_app_tab_switching():
     app = CuttingBoardDrawersOptimizerApp()
     async with app.run_test() as pilot:
         # Initial tab
-        tabs = app.query_one("#tabs")
+        tabs = app.query_one("#tabs", TabbedContent)
         assert tabs.active == "cutting_boards"
 
         # Switch to drawers via keybind
