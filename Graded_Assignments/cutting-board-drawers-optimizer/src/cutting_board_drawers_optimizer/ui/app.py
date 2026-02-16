@@ -49,6 +49,13 @@ class CuttingBoardDrawersOptimizerApp(App):
     DataTable {
         height: 1fr;
     }
+
+    /* Error message styling */
+    .error {
+        color: red;
+        margin: 0 2;
+        text-style: bold;
+    }
     """
 
     # App wide keybinds

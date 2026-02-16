@@ -5,7 +5,6 @@ from cutting_board_drawers_optimizer.ui.cutting_board_table import CuttingBoardT
 from unittest.mock import MagicMock, patch, PropertyMock
 from cutting_board_drawers_optimizer.ui.create_cutting_board import CreateCuttingBoard
 from cutting_board_drawers_optimizer.optimizer import CuttingBoard
-from textual.widgets import Button
 from cutting_board_drawers_optimizer.ui import CuttingBoardDrawersOptimizerApp
 
 
@@ -202,3 +201,50 @@ async def test_cutting_board_manager_tab_activation_branches():
         with patch.object(manager.query_one(CuttingBoardTable), "focus") as mock_focus:
             manager.on_tabbed_content_tab_activated(mock_event)
             mock_focus.assert_not_called()
+
+@pytest.mark.asyncio
+async def test_create_cutting_board_validation():
+    app = CuttingBoardDrawersOptimizerApp()
+    async with app.run_test() as pilot:
+        manager = app.query_one(CuttingBoardManager)
+        table = manager.query_one(CuttingBoardTable)
+        initial_rows = table.row_count
+
+        # Navigate to Cutting Boards -> Create
+        await pilot.press("c")
+        manager.action_switch_to_create_tab()
+        await pilot.pause()
+
+        create_cb = app.query_one(CreateCuttingBoard)
+        error_label = create_cb.query_one("#cb_error", Label)
+        tabs = manager.query_one("#cb_tabs", TabbedContent)
+
+        # 1. Test empty fields -> should not add, stay on create, show error
+        await pilot.click("#cb_add")
+        await pilot.pause()
+        assert error_label.visible is True
+        assert tabs.active == "create_tab"
+        assert table.row_count == initial_rows
+
+        # 2. Test invalid numeric values -> still error
+        create_cb.query_one("#cb_name", Input).value = "Valid Name"
+        create_cb.query_one("#cb_length", Input).value = "abc"
+        create_cb.query_one("#cb_width", Input).value = "-10"
+        create_cb.query_one("#cb_weight", Input).value = "0"
+        create_cb.query_one("#cb_price", Input).value = "foo"
+        await pilot.click("#cb_add")
+        await pilot.pause()
+        assert error_label.visible is True
+        assert tabs.active == "create_tab"
+        assert table.row_count == initial_rows
+
+        # 3. Test valid values -> should add, switch to table, hide error
+        create_cb.query_one("#cb_length", Input).value = "50"
+        create_cb.query_one("#cb_width", Input).value = "40"
+        create_cb.query_one("#cb_weight", Input).value = "1000"
+        create_cb.query_one("#cb_price", Input).value = "25.50"
+        await pilot.click("#cb_add")
+        await pilot.pause()
+        assert error_label.visible is False
+        assert tabs.active == "table_tab"
+        assert table.row_count == initial_rows + 1

@@ -1,8 +1,7 @@
 import pytest
-from textual.widgets import TabbedContent, Input, DataTable
+from textual.widgets import TabbedContent, Input
 from cutting_board_drawers_optimizer.ui.drawer_manager import DrawerManager
 from cutting_board_drawers_optimizer.ui.drawer_table import DrawerTable
-from cutting_board_drawers_optimizer.ui.create_drawer import CreateDrawer
 from unittest.mock import MagicMock, patch, PropertyMock
 from cutting_board_drawers_optimizer.ui.create_drawer import CreateDrawer
 from cutting_board_drawers_optimizer.optimizer import Drawer
@@ -188,3 +187,48 @@ async def test_drawer_manager_tab_activation_branches():
         # Coverage for irrelevant tabbed content
         mock_event.tabbed_content.id = "irrelevant"
         manager.on_tabbed_content_tab_activated(mock_event)
+
+@pytest.mark.asyncio
+async def test_create_drawer_validation():
+    app = CuttingBoardDrawersOptimizerApp()
+    async with app.run_test() as pilot:
+        manager = app.query_one(DrawerManager)
+        table = manager.query_one(DrawerTable)
+        initial_rows = table.row_count
+
+        # Navigate to Drawers -> Create
+        await pilot.press("d")
+        manager.action_switch_to_create_tab()
+        await pilot.pause()
+
+        create_dr = app.query_one(CreateDrawer)
+        error_label = create_dr.query_one("#d_error", Label)
+        tabs = manager.query_one("#drawer_tabs", TabbedContent)
+
+        # 1. Test empty fields -> should not add, stay on create, show error
+        await pilot.click("#d_add")
+        await pilot.pause()
+        assert error_label.visible is True
+        assert tabs.active == "create_tab"
+        assert table.row_count == initial_rows
+
+        # 2. Test invalid numeric values -> still error
+        create_dr.query_one("#d_name", Input).value = "Valid Name"
+        create_dr.query_one("#d_length", Input).value = "abc"
+        create_dr.query_one("#d_width", Input).value = "-10"
+        create_dr.query_one("#d_max_load", Input).value = "0"
+        await pilot.click("#d_add")
+        await pilot.pause()
+        assert error_label.visible is True
+        assert tabs.active == "create_tab"
+        assert table.row_count == initial_rows
+
+        # 3. Test valid values -> should add, switch to table, hide error
+        create_dr.query_one("#d_length", Input).value = "60"
+        create_dr.query_one("#d_width", Input).value = "50"
+        create_dr.query_one("#d_max_load", Input).value = "10000"
+        await pilot.click("#d_add")
+        await pilot.pause()
+        assert error_label.visible is False
+        assert tabs.active == "table_tab"
+        assert table.row_count == initial_rows + 1
