@@ -2,8 +2,10 @@ import pytest
 from textual.widgets import TabbedContent, Input, DataTable
 from cutting_board_drawers_optimizer.ui.cutting_board_manager import CuttingBoardManager
 from cutting_board_drawers_optimizer.ui.cutting_board_table import CuttingBoardTable
+from unittest.mock import MagicMock, patch, PropertyMock
 from cutting_board_drawers_optimizer.ui.create_cutting_board import CreateCuttingBoard
 from cutting_board_drawers_optimizer.optimizer import CuttingBoard
+from textual.widgets import Button
 from cutting_board_drawers_optimizer.ui import CuttingBoardDrawersOptimizerApp
 
 
@@ -129,3 +131,70 @@ async def test_cutting_board_manager_data_methods():
         table = manager.query_one(CuttingBoardTable)
         assert table.row_count == 1
         assert table.get_row_at(0)[0] == "New CB"
+
+@pytest.mark.asyncio
+async def test_cutting_board_table_delete_no_selection():
+    app = CuttingBoardDrawersOptimizerApp()
+    async with app.run_test() as pilot:
+        table = app.query_one(CuttingBoardTable)
+        # Mock cursor_row as None to test branch
+        with patch.object(CuttingBoardTable, "cursor_row", new_callable=PropertyMock, return_value=None):
+            initial_count = table.row_count
+            table.action_delete_current_row()
+            assert table.row_count == initial_count
+
+@pytest.mark.asyncio
+async def test_cutting_board_table_invalid_data_parsing():
+    app = CuttingBoardDrawersOptimizerApp()
+    async with app.run_test() as pilot:
+        table = app.query_one(CuttingBoardTable)
+        # Add a row with invalid data
+        table.add_row("Bad Row", "not a number", "10", "10", "10")
+        data = table.get_current_data()
+        # Should skip the bad row
+        assert len(data) == 3
+        for item in data:
+            assert item.get_name() != "Bad Row"
+
+@pytest.mark.asyncio
+async def test_create_cutting_board_wrong_button():
+    # This covers on_button_pressed branch if event.button.id != "cb_add"
+    widget = CreateCuttingBoard()
+    mock_event = MagicMock()
+    mock_event.button.id = "other_id"
+    # Should not post Created message
+    with patch.object(widget, "post_message") as mock_post:
+        widget.on_button_pressed(mock_event)
+        mock_post.assert_not_called()
+
+@pytest.mark.asyncio
+async def test_cutting_board_manager_tab_activation_branches():
+    app = CuttingBoardDrawersOptimizerApp()
+    async with app.run_test() as pilot:
+        manager = app.query_one(CuttingBoardManager)
+        mock_event = MagicMock()
+        mock_event.tabbed_content.id = "cb_tabs"
+        
+        # Test table_tab
+        mock_event.tab.id = "table_tab"
+        with patch.object(manager.query_one(CuttingBoardTable), "focus") as mock_focus:
+            manager.on_tabbed_content_tab_activated(mock_event)
+            mock_focus.assert_called_once()
+            
+        # Test create_tab
+        mock_event.tab.id = "create_tab"
+        with patch.object(manager.query_one("#cb_name", Input), "focus") as mock_focus:
+            manager.on_tabbed_content_tab_activated(mock_event)
+            mock_focus.assert_called_once()
+
+        # Test irrelevant tab
+        mock_event.tab.id = "other"
+        with patch.object(manager.query_one(CuttingBoardTable), "focus") as mock_focus:
+            manager.on_tabbed_content_tab_activated(mock_event)
+            mock_focus.assert_not_called()
+
+        # Test irrelevant tabbed content
+        mock_event.tabbed_content.id = "other_tabs"
+        with patch.object(manager.query_one(CuttingBoardTable), "focus") as mock_focus:
+            manager.on_tabbed_content_tab_activated(mock_event)
+            mock_focus.assert_not_called()
