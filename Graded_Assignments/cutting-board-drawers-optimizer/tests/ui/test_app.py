@@ -13,6 +13,7 @@ from textual.widgets import Header, Footer
 
 from cutting_board_drawers_optimizer.ui import CuttingBoardDrawersOptimizerApp
 
+
 def test_app_init():
     """Test the CuttingBoardDrawersOptimizerApp constructor."""
     app = CuttingBoardDrawersOptimizerApp()
@@ -22,6 +23,7 @@ def test_app_init():
 
     # Verify that _last_path is initialized to None
     assert app._last_path is None
+
 
 @pytest.mark.asyncio
 async def test_that_app_shows_correct_header_content():
@@ -158,6 +160,7 @@ async def test_app_tab_activation_focus():
         # I can just call it with a mock event.
 
         from unittest.mock import MagicMock, patch, PropertyMock
+
         mock_event = MagicMock()
         mock_event.tabbed_content.id = "tabs"
 
@@ -181,6 +184,7 @@ async def test_app_tab_activation_focus():
             app.on_tabbed_content_tab_activated(mock_event)
             mock_focus.assert_not_called()
 
+
 @pytest.mark.asyncio
 async def test_app_save_config_cancel():
     app = CuttingBoardDrawersOptimizerApp()
@@ -188,14 +192,15 @@ async def test_app_save_config_cancel():
         await pilot.press("ctrl+s")
         await pilot.pause()
         assert isinstance(app.screen, SaveDialog)
-        
+
         # Click cancel
         await pilot.click("#cancel")
         await pilot.pause()
-        
+
         # Should be back to main screen
         assert not isinstance(app.screen, SaveDialog)
         assert app._last_path is None
+
 
 @pytest.mark.asyncio
 async def test_app_save_config_error(tmp_path):
@@ -204,16 +209,17 @@ async def test_app_save_config_error(tmp_path):
         save_path = str(tmp_path / "error_test.json")
         await pilot.press("ctrl+s")
         await pilot.pause()
-        
+
         app.screen.query_one("#path_input", Input).value = save_path
-        
+
         # Simulate OSError during save
         with patch.object(app._state, "save", side_effect=OSError("Disk full")):
             await pilot.click("#confirm")
             await pilot.pause()
-            
+
         # Verify it didn't crash and didn't update last_path
         assert app._last_path is None
+
 
 @pytest.mark.asyncio
 async def test_app_load_config_cancel():
@@ -222,13 +228,14 @@ async def test_app_load_config_cancel():
         await pilot.press("ctrl+o")
         await pilot.pause()
         assert isinstance(app.screen, LoadDialog)
-        
+
         # Click cancel
         await pilot.click("#cancel")
         await pilot.pause()
-        
+
         assert not isinstance(app.screen, LoadDialog)
         assert app._last_path is None
+
 
 @pytest.mark.asyncio
 async def test_app_load_config_error(tmp_path):
@@ -236,15 +243,16 @@ async def test_app_load_config_error(tmp_path):
     async with app.run_test() as pilot:
         await pilot.press("ctrl+o")
         await pilot.pause()
-        
+
         app.screen.query_one("#path_input", Input).value = "non_existent.json"
-        
+
         # Simulate FileNotFoundError
         with patch.object(app._state, "load", side_effect=FileNotFoundError()):
             await pilot.click("#open")
             await pilot.pause()
-            
+
         assert app._last_path is None
+
 
 @pytest.mark.asyncio
 async def test_save_dialog_empty_path():
@@ -252,13 +260,14 @@ async def test_save_dialog_empty_path():
     async with app.run_test() as pilot:
         await pilot.press("ctrl+s")
         await pilot.pause()
-        
+
         app.screen.query_one("#path_input", Input).value = ""
         await pilot.click("#confirm")
         await pilot.pause()
-        
+
         assert not isinstance(app.screen, SaveDialog)
         assert app._last_path is None
+
 
 @pytest.mark.asyncio
 async def test_save_dialog_append_extension():
@@ -266,11 +275,11 @@ async def test_save_dialog_append_extension():
     async with app.run_test() as pilot:
         await pilot.press("ctrl+s")
         await pilot.pause()
-        
+
         # Path without .json
         base_path = "myconfig"
         app.screen.query_one("#path_input", Input).value = base_path
-        
+
         with patch.object(app._state, "save") as mock_save:
             await pilot.click("#confirm")
             await pilot.pause()
@@ -285,6 +294,7 @@ async def test_save_dialog_append_extension():
             await pilot.pause()
             mock_save.assert_called_once_with("other.JSON")
 
+
 @pytest.mark.asyncio
 async def test_app_save_config_overwrite(tmp_path):
     app = CuttingBoardDrawersOptimizerApp()
@@ -293,7 +303,7 @@ async def test_app_save_config_overwrite(tmp_path):
         # Create the file first
         with open(save_path, "w") as f:
             f.write("{}")
-            
+
         await pilot.press("ctrl+s")
         await pilot.pause()
         app.screen.query_one("#path_input", Input).value = save_path
@@ -301,19 +311,21 @@ async def test_app_save_config_overwrite(tmp_path):
         await pilot.pause()
         assert os.path.exists(save_path)
 
+
 @pytest.mark.asyncio
 async def test_load_dialog_empty_path():
     app = CuttingBoardDrawersOptimizerApp()
     async with app.run_test() as pilot:
         await pilot.press("ctrl+o")
         await pilot.pause()
-        
+
         # Empty value should result in None being passed to dismiss
         app.screen.query_one("#path_input", Input).value = ""
         await pilot.click("#open")
         await pilot.pause()
-        
+
         assert not isinstance(app.screen, LoadDialog)
+
 
 @pytest.mark.asyncio
 async def test_save_dialog_start_path_dir(tmp_path):
@@ -326,7 +338,7 @@ async def test_save_dialog_start_path_dir(tmp_path):
         await pilot.pause()
         input_widget = dialog.query_one("#path_input", Input)
         assert input_widget.value == os.path.join(dir_path, "config.json")
-    
+
     # Pass a file as start_path
     file_path = os.path.join(dir_path, "test.json")
     dialog2 = SaveDialog(file_path)

@@ -128,6 +128,7 @@ async def test_drawer_manager_data_methods():
         assert table.row_count == 1
         assert table.get_row_at(0)[0] == "New Drawer"
 
+
 @pytest.mark.asyncio
 async def test_drawer_table_delete_no_selection():
     app = CuttingBoardDrawersOptimizerApp()
@@ -138,6 +139,7 @@ async def test_drawer_table_delete_no_selection():
             initial_count = table.row_count
             table.action_delete_current_row()
             assert table.row_count == initial_count
+
 
 @pytest.mark.asyncio
 async def test_drawer_table_invalid_data_parsing():
@@ -150,6 +152,7 @@ async def test_drawer_table_invalid_data_parsing():
         for item in data:
             assert item.get_name() != "Bad Row"
 
+
 @pytest.mark.asyncio
 async def test_create_drawer_wrong_button():
     widget = CreateDrawer()
@@ -159,6 +162,7 @@ async def test_create_drawer_wrong_button():
         widget.on_button_pressed(mock_event)
         mock_post.assert_not_called()
 
+
 @pytest.mark.asyncio
 async def test_drawer_manager_tab_activation_branches():
     app = CuttingBoardDrawersOptimizerApp()
@@ -166,12 +170,12 @@ async def test_drawer_manager_tab_activation_branches():
         manager = app.query_one(DrawerManager)
         mock_event = MagicMock()
         mock_event.tabbed_content.id = "drawer_tabs"
-        
+
         mock_event.tab.id = "table_tab"
         with patch.object(manager.query_one(DrawerTable), "focus") as mock_focus:
             manager.on_tabbed_content_tab_activated(mock_event)
             mock_focus.assert_called_once()
-            
+
         mock_event.tab.id = "create_tab"
         with patch.object(manager.query_one("#d_name", Input), "focus") as mock_focus:
             manager.on_tabbed_content_tab_activated(mock_event)
