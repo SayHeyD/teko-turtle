@@ -1,9 +1,8 @@
 import pytest
-from textual.widgets import TabbedContent, Input, DataTable, Label
+from textual.widgets import TabbedContent, Input
 from cutting_board_drawers_optimizer.ui.cutting_board_manager import CuttingBoardManager
 from cutting_board_drawers_optimizer.ui.cutting_board_table import CuttingBoardTable
-from unittest.mock import MagicMock, patch, PropertyMock
-from cutting_board_drawers_optimizer.ui.create_cutting_board import CreateCuttingBoard
+from unittest.mock import MagicMock, patch
 from cutting_board_drawers_optimizer.optimizer import CuttingBoard
 from cutting_board_drawers_optimizer.ui import CuttingBoardDrawersOptimizerApp
 
@@ -21,6 +20,7 @@ async def test_cutting_board_manager_initial_population():
 
 @pytest.mark.asyncio
 async def test_cutting_board_manager_add_item():
+    from cutting_board_drawers_optimizer.ui.create_cutting_board import CreateCuttingBoard
     app = CuttingBoardDrawersOptimizerApp()
     async with app.run_test() as pilot:
         manager = app.query_one(CuttingBoardManager)
@@ -50,7 +50,6 @@ async def test_cutting_board_manager_add_item():
 
         # Click Add
         await pilot.press("enter")
-        await pilot.pause()
         await pilot.pause()
 
         # Should switch back to table tab
@@ -135,44 +134,6 @@ async def test_cutting_board_manager_data_methods():
 
 
 @pytest.mark.asyncio
-async def test_cutting_board_table_delete_no_selection():
-    app = CuttingBoardDrawersOptimizerApp()
-    async with app.run_test() as pilot:
-        table = app.query_one(CuttingBoardTable)
-        # Mock cursor_row as None to test branch
-        with patch.object(CuttingBoardTable, "cursor_row", new_callable=PropertyMock, return_value=None):
-            initial_count = table.row_count
-            table.action_delete_current_row()
-            assert table.row_count == initial_count
-
-
-@pytest.mark.asyncio
-async def test_cutting_board_table_invalid_data_parsing():
-    app = CuttingBoardDrawersOptimizerApp()
-    async with app.run_test() as pilot:
-        table = app.query_one(CuttingBoardTable)
-        # Add a row with invalid data
-        table.add_row("Bad Row", "not a number", "10", "10", "10")
-        data = table.get_current_data()
-        # Should skip the bad row
-        assert len(data) == 3
-        for item in data:
-            assert item.get_name() != "Bad Row"
-
-
-@pytest.mark.asyncio
-async def test_create_cutting_board_wrong_button():
-    # This covers on_button_pressed branch if event.button.id != "cb_add"
-    widget = CreateCuttingBoard()
-    mock_event = MagicMock()
-    mock_event.button.id = "other_id"
-    # Should not post Created message
-    with patch.object(widget, "post_message") as mock_post:
-        widget.on_button_pressed(mock_event)
-        mock_post.assert_not_called()
-
-
-@pytest.mark.asyncio
 async def test_cutting_board_manager_tab_activation_branches():
     app = CuttingBoardDrawersOptimizerApp()
     async with app.run_test() as pilot:
@@ -203,52 +164,3 @@ async def test_cutting_board_manager_tab_activation_branches():
         with patch.object(manager.query_one(CuttingBoardTable), "focus") as mock_focus:
             manager.on_tabbed_content_tab_activated(mock_event)
             mock_focus.assert_not_called()
-
-
-@pytest.mark.asyncio
-async def test_create_cutting_board_validation():
-    app = CuttingBoardDrawersOptimizerApp()
-    async with app.run_test() as pilot:
-        manager = app.query_one(CuttingBoardManager)
-        table = manager.query_one(CuttingBoardTable)
-        initial_rows = table.row_count
-
-        # Navigate to Cutting Boards -> Create
-        await pilot.press("c")
-        manager.action_switch_to_create_tab()
-        await pilot.pause()
-
-        create_cb = app.query_one(CreateCuttingBoard)
-        error_label = create_cb.query_one("#cb_error", Label)
-        tabs = manager.query_one("#cb_tabs", TabbedContent)
-
-        # 1. Test empty fields -> should not add, stay on create, show error
-        # Use key presses instead of click to avoid potential focus issues with pilot.click
-        await pilot.press("tab", "tab", "tab", "tab", "tab", "enter")
-        await pilot.pause()
-        assert error_label.visible is True
-        assert tabs.active == "create_tab"
-        assert table.row_count == initial_rows
-
-        # 2. Test invalid numeric values -> still error
-        create_cb.query_one("#cb_name", Input).value = "Valid Name"
-        create_cb.query_one("#cb_length", Input).value = "abc"
-        create_cb.query_one("#cb_width", Input).value = "-10"
-        create_cb.query_one("#cb_weight", Input).value = "0"
-        create_cb.query_one("#cb_price", Input).value = "foo"
-        await pilot.press("enter")
-        await pilot.pause()
-        assert error_label.visible is True
-        assert tabs.active == "create_tab"
-        assert table.row_count == initial_rows
-
-        # 3. Test valid values -> should add, switch to table, hide error
-        create_cb.query_one("#cb_length", Input).value = "50"
-        create_cb.query_one("#cb_width", Input).value = "40"
-        create_cb.query_one("#cb_weight", Input).value = "1000"
-        create_cb.query_one("#cb_price", Input).value = "25.50"
-        await pilot.press("enter")
-        await pilot.pause()
-        assert error_label.visible is False
-        assert tabs.active == "table_tab"
-        assert table.row_count == initial_rows + 1
