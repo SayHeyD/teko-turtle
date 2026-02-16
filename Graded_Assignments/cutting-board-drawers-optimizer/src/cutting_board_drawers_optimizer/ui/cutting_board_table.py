@@ -51,6 +51,7 @@ class CuttingBoardTable(DataTable):
     def populate(self, rows: list[tuple[str, str, str, str, str]]) -> None:
         """Populate the table with the provided rows."""
         header, *data_rows = rows
+        # Force column width to be flexible
         self.add_columns(*[str(h) for h in header])
         for row in data_rows:
             self.add_row(*[str(cell) for cell in row])

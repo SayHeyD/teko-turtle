@@ -50,7 +50,6 @@ class EditCuttingBoard(Widget):
     def on_button_pressed(self, event: Button.Pressed) -> None:
         """Handle the save button press."""
         if event.button.id == "cbe_save":
-            # self.log("Save button pressed in EditCuttingBoard")
             name = self.query_one("#cbe_name", Input).value.strip()
             length = self.query_one("#cbe_length", Input).value.strip()
             width = self.query_one("#cbe_width", Input).value.strip()

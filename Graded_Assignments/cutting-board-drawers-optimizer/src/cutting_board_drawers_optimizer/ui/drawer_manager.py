@@ -76,6 +76,11 @@ class DrawerManager(Widget):
             table.update_cell(row_key, column_keys[1], message.length)
             table.update_cell(row_key, column_keys[2], message.width)
             table.update_cell(row_key, column_keys[3], message.max_load)
+            
+            # Textual's DataTable update_cell doesn't automatically resize columns.
+            # We can force a full refresh by re-drawing the table content.
+            current_drawers = table.get_current_data()
+            table.update_from_data(current_drawers)
         
         tabbed_content = self.query_one("#drawer_tabs", TabbedContent)
         tabbed_content.hide_tab("edit_tab")

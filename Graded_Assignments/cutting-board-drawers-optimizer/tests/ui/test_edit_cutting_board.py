@@ -17,16 +17,23 @@ async def test_cutting_board_manager_edit_item():
         table = manager.query_one(CuttingBoardTable)
         tabs = manager.query_one("#cb_tabs", TabbedContent)
 
-        # Select first row and press ctrl+e
+        # Focus table and ensure a row is selected
         table.focus()
+        if table.cursor_row is None:
+            await pilot.press("down")
+            await pilot.pause()
+        selected_index = table.cursor_row or 0
+        expected_name = table.get_row_at(selected_index)[0]
+
+        # Open edit for the selected row
         await pilot.press("ctrl+e")
         await pilot.pause()
 
         # Should switch to edit tab
         assert tabs.active == "edit_tab"
         
-        # Check if values are correctly populated
-        assert app.query_one("#cbe_name").value == "Large Oak"
+        # Check if the selected row's values are correctly populated
+        assert app.query_one("#cbe_name").value == expected_name
         assert app.query_one("#cbe_length").value == "40"
         assert app.query_one("#cbe_width").value == "30"
         assert app.query_one("#cbe_weight").value == "2000"

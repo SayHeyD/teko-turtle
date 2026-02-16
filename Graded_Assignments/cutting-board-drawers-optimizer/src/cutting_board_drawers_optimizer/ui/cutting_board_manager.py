@@ -79,6 +79,11 @@ class CuttingBoardManager(Widget):
             table.update_cell(row_key, column_keys[2], message.width)
             table.update_cell(row_key, column_keys[3], message.weight)
             table.update_cell(row_key, column_keys[4], message.price)
+            
+            # Textual's DataTable update_cell doesn't automatically resize columns.
+            # We can force a full refresh by re-drawing the table content.
+            current_boards = table.get_current_data()
+            table.update_from_data(current_boards)
         
         tabs = self.query_one("#cb_tabs", TabbedContent)
         tabs.active = "table_tab"
