@@ -24,7 +24,7 @@ async def test_drawer_manager_edit_item():
 
         # Should switch to edit tab
         assert tabs.active == "edit_tab"
-        
+
         # Check if values are correctly populated
         assert app.query_one("#de_name").value == "Main Kitchen Drawer"
         assert app.query_one("#de_length").value == "60"
@@ -36,7 +36,7 @@ async def test_drawer_manager_edit_item():
         # Clear and type new name
         await pilot.press("home", "shift+end", "delete")
         await pilot.press("U", "p", "d", "a", "t", "e", "d", " ", "D", "r", "a", "w", "e", "r")
-        
+
         await pilot.click("#de_length")
         await pilot.press("home", "shift+end", "delete")
         await pilot.press("7", "5")

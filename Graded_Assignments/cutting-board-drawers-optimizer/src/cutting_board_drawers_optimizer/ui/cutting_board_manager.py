@@ -11,8 +11,8 @@ from textual.widgets import (
 
 from cutting_board_drawers_optimizer.optimizer import CuttingBoard
 from cutting_board_drawers_optimizer.ui.create_cutting_board import CreateCuttingBoard
-from cutting_board_drawers_optimizer.ui.edit_cutting_board import EditCuttingBoard
 from cutting_board_drawers_optimizer.ui.cutting_board_table import CuttingBoardTable
+from cutting_board_drawers_optimizer.ui.edit_cutting_board import EditCuttingBoard
 
 
 class CuttingBoardManager(Widget):
@@ -63,7 +63,7 @@ class CuttingBoardManager(Widget):
         """Handle the edit request from the table."""
         edit_form = self.query_one(EditCuttingBoard)
         edit_form.set_values(message.name, message.length, message.width, message.weight, message.price)
-        
+
         tabbed_content = self.query_one("#cb_tabs", TabbedContent)
         tabbed_content.show_tab("edit_tab")
         tabbed_content.active = "edit_tab"
@@ -79,12 +79,12 @@ class CuttingBoardManager(Widget):
             table.update_cell(row_key, column_keys[2], message.width)
             table.update_cell(row_key, column_keys[3], message.weight)
             table.update_cell(row_key, column_keys[4], message.price)
-            
+
             # Textual's DataTable update_cell doesn't automatically resize columns.
             # We can force a full refresh by re-drawing the table content.
             current_boards = table.get_current_data()
             table.update_from_data(current_boards)
-        
+
         tabs = self.query_one("#cb_tabs", TabbedContent)
         tabs.active = "table_tab"
         table.focus()

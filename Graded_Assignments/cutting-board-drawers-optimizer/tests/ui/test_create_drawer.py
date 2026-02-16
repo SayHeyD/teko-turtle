@@ -6,6 +6,7 @@ from cutting_board_drawers_optimizer.ui.app import CuttingBoardDrawersOptimizerA
 from cutting_board_drawers_optimizer.ui.drawer_manager import DrawerManager
 from cutting_board_drawers_optimizer.ui.drawer_table import DrawerTable
 
+
 @pytest.mark.asyncio
 async def test_create_drawer_wrong_button():
     # This covers on_button_pressed branch if event.button.id != "d_add"
@@ -16,6 +17,7 @@ async def test_create_drawer_wrong_button():
     with patch.object(widget, "post_message") as mock_post:
         widget.on_button_pressed(mock_event)
         mock_post.assert_not_called()
+
 
 @pytest.mark.asyncio
 async def test_create_drawer_validation():
@@ -72,6 +74,7 @@ async def test_create_drawer_validation():
         assert create_dr.query_one("#d_width", Input).value == ""
         assert create_dr.query_one("#d_max_load", Input).value == ""
 
+
 @pytest.mark.asyncio
 async def test_clear_inputs_after_adding_drawer():
     app = CuttingBoardDrawersOptimizerApp()
@@ -85,7 +88,7 @@ async def test_clear_inputs_after_adding_drawer():
         await pilot.pause()
 
         create_dr = dr_manager.query_one(CreateDrawer)
-        
+
         # Fill form
         create_dr.query_one("#d_name", Input).value = "Test Drawer"
         create_dr.query_one("#d_length", Input).value = "60"

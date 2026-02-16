@@ -5,6 +5,7 @@ from textual.widgets import Input
 from cutting_board_drawers_optimizer.ui.app import CuttingBoardDrawersOptimizerApp
 from cutting_board_drawers_optimizer.ui.save_dialog import SaveDialog
 
+
 @pytest.mark.asyncio
 async def test_save_dialog_empty_path():
     app = CuttingBoardDrawersOptimizerApp()
@@ -18,6 +19,7 @@ async def test_save_dialog_empty_path():
 
         assert not isinstance(app.screen, SaveDialog)
         assert app._last_path is None
+
 
 @pytest.mark.asyncio
 async def test_save_dialog_append_extension():
@@ -43,6 +45,7 @@ async def test_save_dialog_append_extension():
             await pilot.click("#confirm")
             await pilot.pause()
             mock_save.assert_called_once_with("other.JSON")
+
 
 @pytest.mark.asyncio
 async def test_save_dialog_start_path_dir(tmp_path):

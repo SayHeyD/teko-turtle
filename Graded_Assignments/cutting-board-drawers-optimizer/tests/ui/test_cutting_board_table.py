@@ -3,6 +3,7 @@ from unittest.mock import patch, PropertyMock
 from cutting_board_drawers_optimizer.ui.app import CuttingBoardDrawersOptimizerApp
 from cutting_board_drawers_optimizer.ui.cutting_board_table import CuttingBoardTable
 
+
 @pytest.mark.asyncio
 async def test_cutting_board_table_delete_no_selection():
     app = CuttingBoardDrawersOptimizerApp()
@@ -13,6 +14,7 @@ async def test_cutting_board_table_delete_no_selection():
             initial_count = table.row_count
             table.action_delete_current_row()
             assert table.row_count == initial_count
+
 
 @pytest.mark.asyncio
 async def test_cutting_board_table_invalid_data_parsing():

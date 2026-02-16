@@ -11,8 +11,8 @@ from textual.widgets import (
 
 from cutting_board_drawers_optimizer.optimizer import Drawer
 from cutting_board_drawers_optimizer.ui.create_drawer import CreateDrawer
-from cutting_board_drawers_optimizer.ui.edit_drawer import EditDrawer
 from cutting_board_drawers_optimizer.ui.drawer_table import DrawerTable
+from cutting_board_drawers_optimizer.ui.edit_drawer import EditDrawer
 
 
 class DrawerManager(Widget):
@@ -61,7 +61,7 @@ class DrawerManager(Widget):
         """Handle the edit request from the table."""
         edit_form = self.query_one(EditDrawer)
         edit_form.set_values(message.name, message.length, message.width, message.max_load)
-        
+
         tabbed_content = self.query_one("#drawer_tabs", TabbedContent)
         tabbed_content.show_tab("edit_tab")
         tabbed_content.active = "edit_tab"
@@ -76,12 +76,12 @@ class DrawerManager(Widget):
             table.update_cell(row_key, column_keys[1], message.length)
             table.update_cell(row_key, column_keys[2], message.width)
             table.update_cell(row_key, column_keys[3], message.max_load)
-            
+
             # Textual's DataTable update_cell doesn't automatically resize columns.
             # We can force a full refresh by re-drawing the table content.
             current_drawers = table.get_current_data()
             table.update_from_data(current_drawers)
-        
+
         tabbed_content = self.query_one("#drawer_tabs", TabbedContent)
         tabbed_content.hide_tab("edit_tab")
         tabbed_content.active = "table_tab"

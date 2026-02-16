@@ -6,6 +6,7 @@ from cutting_board_drawers_optimizer.ui.app import CuttingBoardDrawersOptimizerA
 from cutting_board_drawers_optimizer.ui.cutting_board_manager import CuttingBoardManager
 from cutting_board_drawers_optimizer.ui.cutting_board_table import CuttingBoardTable
 
+
 @pytest.mark.asyncio
 async def test_create_cutting_board_wrong_button():
     # This covers on_button_pressed branch if event.button.id != "cb_add"
@@ -16,6 +17,7 @@ async def test_create_cutting_board_wrong_button():
     with patch.object(widget, "post_message") as mock_post:
         widget.on_button_pressed(mock_event)
         mock_post.assert_not_called()
+
 
 @pytest.mark.asyncio
 async def test_create_cutting_board_validation():
@@ -32,8 +34,9 @@ async def test_create_cutting_board_validation():
 
         create_cb = app.query_one(CreateCuttingBoard)
         error_label = create_cb.query_one("#cb_error", Label)
-        
+
         from textual.widgets import TabbedContent
+
         tabs = manager.query_one("#cb_tabs", TabbedContent)
 
         # 1. Test empty fields -> should not add, stay on create, show error
@@ -66,6 +69,7 @@ async def test_create_cutting_board_validation():
         assert tabs.active == "table_tab"
         assert table.row_count == initial_rows + 1
 
+
 @pytest.mark.asyncio
 async def test_clear_inputs_after_adding_cutting_board():
     app = CuttingBoardDrawersOptimizerApp()
@@ -75,7 +79,7 @@ async def test_clear_inputs_after_adding_cutting_board():
         await pilot.pause()
 
         create_cb = cb_manager.query_one(CreateCuttingBoard)
-        
+
         # Fill form
         create_cb.query_one("#cb_name", Input).value = "Test Board"
         create_cb.query_one("#cb_length", Input).value = "50"

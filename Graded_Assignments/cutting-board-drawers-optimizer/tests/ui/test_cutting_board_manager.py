@@ -21,6 +21,7 @@ async def test_cutting_board_manager_initial_population():
 @pytest.mark.asyncio
 async def test_cutting_board_manager_add_item():
     from cutting_board_drawers_optimizer.ui.create_cutting_board import CreateCuttingBoard
+
     app = CuttingBoardDrawersOptimizerApp()
     async with app.run_test() as pilot:
         manager = app.query_one(CuttingBoardManager)

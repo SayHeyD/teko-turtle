@@ -9,6 +9,7 @@ from cutting_board_drawers_optimizer.ui.drawer_manager import DrawerManager
 from cutting_board_drawers_optimizer.ui import CuttingBoardDrawersOptimizerApp
 from cutting_board_drawers_optimizer.state.state import State
 
+
 @pytest.mark.asyncio
 async def test_app_init():
     """Test the CuttingBoardDrawersOptimizerApp constructor."""
@@ -18,9 +19,11 @@ async def test_app_init():
     # Verify that _last_path is initialized to None
     assert app._last_path is None
 
+
 @pytest.mark.asyncio
 async def test_that_app_shows_correct_header_content():
     from textual.widgets import Header
+
     app = CuttingBoardDrawersOptimizerApp()
     async with app.run_test():
         header = app.query_one(Header)
@@ -28,13 +31,16 @@ async def test_that_app_shows_correct_header_content():
         assert header._show_clock is True
         assert header.screen_title == "Cutting Board Drawers Optimizer"
 
+
 @pytest.mark.asyncio
 async def test_that_app_has_footer():
     from textual.widgets import Footer
+
     app = CuttingBoardDrawersOptimizerApp()
     async with app.run_test():
         footer = app.query_one(Footer)
         assert footer is not None
+
 
 @pytest.mark.asyncio
 async def test_app_save_config_flow(tmp_path):
@@ -54,10 +60,12 @@ async def test_app_save_config_flow(tmp_path):
         assert os.path.exists(save_path)
         assert app._last_path == save_path
 
+
 @pytest.mark.asyncio
 async def test_app_load_config_flow(tmp_path):
     from cutting_board_drawers_optimizer.ui.create_cutting_board import CreateCuttingBoard
     from cutting_board_drawers_optimizer.ui.cutting_board_table import CuttingBoardTable
+
     # First create a config file
     config_path = str(tmp_path / "load_test.json")
     app_to_save = CuttingBoardDrawersOptimizerApp()
@@ -110,6 +118,7 @@ async def test_app_load_config_flow(tmp_path):
         assert table.row_count == 4
         assert table.get_row_at(3)[0] == "Load Me"
 
+
 @pytest.mark.asyncio
 async def test_app_tab_switching():
     app = CuttingBoardDrawersOptimizerApp()
@@ -125,6 +134,7 @@ async def test_app_tab_switching():
         await pilot.press("c")
         await pilot.pause()
         assert tabs.active == "cutting_boards"
+
 
 @pytest.mark.asyncio
 async def test_app_tab_activation_focus():
@@ -153,6 +163,7 @@ async def test_app_tab_activation_focus():
             app.on_tabbed_content_tab_activated(mock_event)
             mock_focus.assert_called_once()
 
+
 @pytest.mark.asyncio
 async def test_app_save_config_cancel():
     app = CuttingBoardDrawersOptimizerApp()
@@ -166,6 +177,7 @@ async def test_app_save_config_cancel():
         # Should be back to main screen
         assert not isinstance(app.screen, SaveDialog)
         assert app._last_path is None
+
 
 @pytest.mark.asyncio
 async def test_app_save_config_error(tmp_path):
@@ -182,6 +194,7 @@ async def test_app_save_config_error(tmp_path):
         # Verify it didn't crash and didn't update last_path
         assert app._last_path is None
 
+
 @pytest.mark.asyncio
 async def test_app_load_config_cancel():
     app = CuttingBoardDrawersOptimizerApp()
@@ -195,6 +208,7 @@ async def test_app_load_config_cancel():
         assert not isinstance(app.screen, LoadDialog)
         assert app._last_path is None
 
+
 @pytest.mark.asyncio
 async def test_app_load_config_error(tmp_path):
     app = CuttingBoardDrawersOptimizerApp()
@@ -207,6 +221,7 @@ async def test_app_load_config_error(tmp_path):
             await pilot.click("#open")
             await pilot.pause()
         assert app._last_path is None
+
 
 @pytest.mark.asyncio
 async def test_app_save_config_overwrite(tmp_path):
