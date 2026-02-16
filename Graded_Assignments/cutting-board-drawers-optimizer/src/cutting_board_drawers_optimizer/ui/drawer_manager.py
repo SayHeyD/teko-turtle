@@ -1,19 +1,17 @@
 from typing import ClassVar
 
 from textual.app import ComposeResult
-from textual.containers import Vertical
+from textual.binding import Binding
 from textual.widget import Widget
-from textual.message import Message
 from textual.widgets import (
-    Button,
-    DataTable,
     Input,
-    Label,
     TabbedContent,
     TabPane,
 )
 
 from cutting_board_drawers_optimizer.optimizer import Drawer
+from cutting_board_drawers_optimizer.ui.drawer_table import DrawerTable
+from cutting_board_drawers_optimizer.ui.create_drawer import CreateDrawer
 
 
 class DrawerManager(Widget):
@@ -30,97 +28,54 @@ class DrawerManager(Widget):
         ("Small Side Drawer", "40", "30", "5000"),
     ]
 
+    # Keybinds specific to the Drawer Manager
+    BINDINGS: ClassVar[list[Binding | tuple[str, str] | tuple[str, str, str]]] = [
+        ("ctrl+n", "switch_to_create_tab", "Create"),
+    ]
+
     def compose(self) -> ComposeResult:
         """Composition of the DrawerManager UI."""
         with TabbedContent(id="drawer_tabs"):
             with TabPane("Table", id="table_tab"):
-                yield DataTable(id="drawer_table")
-            with TabPane("Create", id="create_tab"), Vertical(id="drawer_form"):
-                yield Label("Create Drawer")
-                yield Input(placeholder="Name", id="d_name")
-                yield Input(placeholder="Length", id="d_length")
-                yield Input(placeholder="Width", id="d_width")
-                yield Input(placeholder="Maximum Load", id="d_max_load")
-                yield Button("Add", id="d_add")
+                yield DrawerTable(id="drawer_table")
+            with TabPane("Create", id="create_tab"):
+                yield CreateDrawer()
 
     def on_mount(self) -> None:
         """Populate the table after the component is mounted."""
-        # Get the table component
-        table = self.query_one("#drawer_table", DataTable)
+        table = self.query_one(DrawerTable)
+        table.populate(self.ROWS)
 
-        # Populate the table with the ROWS
-        header, *rows = self.ROWS
-        table.add_columns(*[str(h) for h in header])
-        for row in rows:
-            table.add_row(*[str(cell) for cell in row])
-
-        # Configure the table
-        table.show_header = True
-        table.zebra_stripes = True
-
-    def on_button_pressed(self, event: Button.Pressed) -> None:
-        """Handle button presses."""
-        # Add a new row to the table with the data from the form
-        if event.button.id == "d_add":
-            name = self.query_one("#d_name", Input).value or ""
-            length = self.query_one("#d_length", Input).value or ""
-            width = self.query_one("#d_width", Input).value or ""
-            max_load = self.query_one("#d_max_load", Input).value or ""
-            self.query_one("#drawer_table", DataTable).add_row(name, length, width, max_load)
-            
-            # Switch back to the table tab
-            # self.query_one("#drawer_tabs", TabbedContent).active = "table_tab"
-            self.call_after_refresh(self.action_switch_to_table)
+    def on_create_drawer_created(self, message: CreateDrawer.Created) -> None:
+        """Handle the creation of a new drawer."""
+        table = self.query_one(DrawerTable)
+        table.add_row(message.name, message.length, message.width, message.max_load)
+        self.call_after_refresh(self.action_switch_to_table)
 
     def action_switch_to_table(self) -> None:
         tabs = self.query_one("#drawer_tabs", TabbedContent)
         tabs.active = "table_tab"
-        self.query_one("#drawer_table", DataTable).focus()
+        self.query_one(DrawerTable).focus()
 
     def on_tabbed_content_tab_activated(self, event: TabbedContent.TabActivated) -> None:
         """Handle tab activation within DrawerManager."""
         if event.tabbed_content.id == "drawer_tabs":
             if event.tab.id == "table_tab":
-                self.query_one("#drawer_table", DataTable).focus()
+                self.query_one(DrawerTable).focus()
             elif event.tab.id == "create_tab":
                 self.query_one("#d_name", Input).focus()
 
+    def action_switch_to_create_tab(self) -> None:
+        """Switch to the create tab when ctrl+n is pressed."""
+        tabbed_content = self.query_one("#drawer_tabs", TabbedContent)
+        tabbed_content.active = "create_tab"
+
     def get_current_data(self) -> list[Drawer]:
         """Extract Drawer objects from the DataTable."""
-
-        # Get the table component
-        table = self.query_one("#drawer_table", DataTable)
-
-        # Initialize an empty list of Drawer objects
-        drawers = []
-
-        # Iterate over the rows in the table
-        for row_index in range(table.row_count):
-            # Get the row
-            row = table.get_row_at(row_index)
-            try:
-                # We expect: name, length, width, max_load
-                name = str(row[0])
-                length = int(float(row[1]))
-                width = int(float(row[2]))
-                max_load = int(float(row[3]))
-                drawers.append(Drawer(name, length, width, max_load))
-            except (ValueError, IndexError):
-                # TODO: Log error
-                continue
-        return drawers
+        table = self.query_one(DrawerTable)
+        return table.get_current_data()
 
     def update_from_data(self, drawers: list[Drawer]) -> None:
         """Update the DataTable with the provided Drawer objects."""
-        table = self.query_one("#drawer_table", DataTable)
-        # Clear the table
-        table.clear()
-
-        # Add a row for each Drawer
-        for drawer in drawers:
-            table.add_row(
-                drawer.get_name(),
-                str(drawer.get_length_in_centimeters()),
-                str(drawer.get_width_in_centimeters()),
-                str(drawer.get_max_load_in_grams()),
-            )
+        table = self.query_one(DrawerTable)
+        table.update_from_data(drawers)

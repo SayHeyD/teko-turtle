@@ -44,3 +44,8 @@ class CreateCuttingBoard(Widget):
             price = self.query_one("#cb_price", Input).value or ""
 
             self.post_message(self.Created(name, length, width, weight, price))
+
+    def on_input_submitted(self, event: Input.Submitted) -> None:
+        """Handle input submission (pressing Enter)."""
+        # Trigger the same logic as clicking "Add"
+        self.on_button_pressed(Button.Pressed(self.query_one("#cb_add", Button)))
