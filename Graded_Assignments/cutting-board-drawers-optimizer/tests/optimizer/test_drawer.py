@@ -5,22 +5,22 @@ from cutting_board_drawers_optimizer.optimizer import Drawer
 
 @pytest.fixture
 def get_drawer() -> Drawer:
-    return Drawer("Test Drawer", 120, 80, 15_670)
+    return Drawer("Test Drawer", 120, 80, 15_670, 10)
 
 
 def test_that_drawer_constructor_raises_value_error_if_length_is_less_than_1():
     with pytest.raises(ValueError, match=r".*length.*"):
-        Drawer("Test Drawer", 0, 80, 15_670)
+        Drawer("Test Drawer", 0, 80, 15_670, 10)
 
 
 def test_that_drawer_constructor_raises_value_error_if_width_is_less_than_1():
     with pytest.raises(ValueError, match=r".*width.*"):
-        Drawer("Test Drawer", 120, 0, 15_670)
+        Drawer("Test Drawer", 120, 0, 15_670, 10)
 
 
 def test_that_drawer_constructor_raises_value_error_if_max_load_is_less_than_1():
     with pytest.raises(ValueError, match=r".*max_load.*"):
-        Drawer("Test Drawer", 120, 80, 0)
+        Drawer("Test Drawer", 120, 80, 0, 10)
 
 
 def test_that_get_length_in_centimeters_returns_correct_float(get_drawer):
@@ -33,3 +33,12 @@ def test_that_get_width_in_centimeters_returns_correct_float(get_drawer):
 
 def test_that_get_max_load_in_grams_returns_correct_float(get_drawer):
     assert get_drawer.get_max_load_in_grams() == 15_670
+
+
+def test_that_drawer_constructor_raises_value_error_if_max_boards_is_less_than_1():
+    with pytest.raises(ValueError, match=r".*max_boards.*"):
+        Drawer("Test Drawer", 120, 80, 15_670, 0)
+
+
+def test_that_get_max_boards_returns_correct_value(get_drawer):
+    assert get_drawer.get_max_boards() == 10

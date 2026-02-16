@@ -24,10 +24,10 @@ class DrawerManager(Widget):
     - A form to edit existing drawers
     """
 
-    ROWS: ClassVar[list[tuple[str, str, str, str]]] = [
-        ("Name", "Length", "Width", "Maximum Load"),
-        ("Main Kitchen Drawer", "60", "50", "10000"),
-        ("Small Side Drawer", "40", "30", "5000"),
+    ROWS: ClassVar[list[tuple[str, str, str, str, str]]] = [
+        ("Name", "Length", "Width", "Maximum Load", "Max Boards"),
+        ("Main Kitchen Drawer", "60", "50", "10000", "5"),
+        ("Small Side Drawer", "40", "30", "5000", "3"),
     ]
 
     # Keybinds specific to the Drawer Manager
@@ -54,13 +54,13 @@ class DrawerManager(Widget):
     def on_create_drawer_created(self, message: CreateDrawer.Created) -> None:
         """Handle the creation of a new drawer."""
         table = self.query_one(DrawerTable)
-        table.add_row(message.name, message.length, message.width, message.max_load)
+        table.add_row(message.name, message.length, message.width, message.max_load, message.max_boards)
         self.call_after_refresh(self.action_switch_to_table)
 
     def on_drawer_table_edit_requested(self, message: DrawerTable.EditRequested) -> None:
         """Handle the edit request from the table."""
         edit_form = self.query_one(EditDrawer)
-        edit_form.set_values(message.name, message.length, message.width, message.max_load)
+        edit_form.set_values(message.name, message.length, message.width, message.max_load, message.max_boards)
 
         tabbed_content = self.query_one("#drawer_tabs", TabbedContent)
         tabbed_content.show_tab("edit_tab")
@@ -76,6 +76,7 @@ class DrawerManager(Widget):
             table.update_cell(row_key, column_keys[1], message.length)
             table.update_cell(row_key, column_keys[2], message.width)
             table.update_cell(row_key, column_keys[3], message.max_load)
+            table.update_cell(row_key, column_keys[4], message.max_boards)
 
             # Textual's DataTable update_cell doesn't automatically resize columns.
             # We can force a full refresh by re-drawing the table content.

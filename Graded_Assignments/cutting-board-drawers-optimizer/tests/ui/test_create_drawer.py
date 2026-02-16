@@ -51,6 +51,7 @@ async def test_create_drawer_validation():
         create_dr.query_one("#d_length", Input).value = "abc"
         create_dr.query_one("#d_width", Input).value = "-10"
         create_dr.query_one("#d_max_load", Input).value = "foo"
+        create_dr.query_one("#d_max_boards", Input).value = "bar"
         create_dr.query_one("#d_add", Button).focus()
         await pilot.press("enter")
         await pilot.pause()
@@ -63,8 +64,9 @@ async def test_create_drawer_validation():
         create_dr.query_one("#d_length", Input).value = "60"
         create_dr.query_one("#d_width", Input).value = "50"
         create_dr.query_one("#d_max_load", Input).value = "10000"
+        create_dr.query_one("#d_max_boards", Input).value = "5"
         # Submit via Enter on the last input to trigger on_input_submitted reliably
-        create_dr.query_one("#d_max_load", Input).focus()
+        create_dr.query_one("#d_max_boards", Input).focus()
         await pilot.press("enter")
         # Allow UI to process Created message and tab switch
         await pilot.pause()
@@ -73,6 +75,7 @@ async def test_create_drawer_validation():
         assert create_dr.query_one("#d_length", Input).value == ""
         assert create_dr.query_one("#d_width", Input).value == ""
         assert create_dr.query_one("#d_max_load", Input).value == ""
+        assert create_dr.query_one("#d_max_boards", Input).value == ""
 
 
 @pytest.mark.asyncio
@@ -94,6 +97,7 @@ async def test_clear_inputs_after_adding_drawer():
         create_dr.query_one("#d_length", Input).value = "60"
         create_dr.query_one("#d_width", Input).value = "50"
         create_dr.query_one("#d_max_load", Input).value = "10000"
+        create_dr.query_one("#d_max_boards", Input).value = "5"
 
         # Press Enter
         create_dr.query_one("#d_add", Button).focus()
@@ -109,3 +113,4 @@ async def test_clear_inputs_after_adding_drawer():
         assert create_dr.query_one("#d_length", Input).value == ""
         assert create_dr.query_one("#d_width", Input).value == ""
         assert create_dr.query_one("#d_max_load", Input).value == ""
+        assert create_dr.query_one("#d_max_boards", Input).value == ""

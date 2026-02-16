@@ -30,19 +30,16 @@ async def test_drawer_manager_edit_item():
         assert app.query_one("#de_length", Input).value == "60"
         assert app.query_one("#de_width", Input).value == "50"
         assert app.query_one("#de_max_load", Input).value == "10000"
+        assert app.query_one("#de_max_boards", Input).value == "5"
 
-        # Edit values
-        await pilot.click("#de_name")
-        # Clear and type new name
-        await pilot.press("home", "shift+end", "delete")
-        await pilot.press("U", "p", "d", "a", "t", "e", "d", " ", "D", "r", "a", "w", "e", "r")
+        # Edit values programmatically
+        app.query_one("#de_name", Input).value = "Updated Drawer"
+        app.query_one("#de_length", Input).value = "75"
+        await pilot.pause()
 
-        await pilot.click("#de_length")
-        await pilot.press("home", "shift+end", "delete")
-        await pilot.press("7", "5")
-
-        # Click Save
-        await pilot.click("#de_save")
+        # Submit save via Enter on the save button
+        app.query_one("#de_save").focus()
+        await pilot.press("enter")
         await pilot.pause()
 
         # Should switch back to table tab

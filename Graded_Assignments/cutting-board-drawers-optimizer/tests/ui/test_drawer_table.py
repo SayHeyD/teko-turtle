@@ -22,7 +22,7 @@ async def test_drawer_table_invalid_data_parsing():
     async with app.run_test() as pilot:
         table = app.query_one(DrawerTable)
         # Add a row with invalid data
-        table.add_row("Bad Row", "not a number", "10", "10")
+        table.add_row("Bad Row", "not a number", "10", "10", "5")
         data = table.get_current_data()
         # Should skip the bad row (2 initial valid rows)
         assert len(data) == 2

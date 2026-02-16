@@ -16,8 +16,9 @@ def get_drawers() -> list[Drawer]:
         length = random.randint(80, 200)
         width = random.randint(40, 160)
         max_load = random.randint(1000, 40_000)
+        max_boards = random.randint(1, 20)
 
-        drawers.append(Drawer(f"Drawer {i}", length, width, max_load))
+        drawers.append(Drawer(f"Drawer {i}", length, width, max_load, max_boards))
 
     return drawers
 

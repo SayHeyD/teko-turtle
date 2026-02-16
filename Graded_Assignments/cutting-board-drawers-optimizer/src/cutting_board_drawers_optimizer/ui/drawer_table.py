@@ -13,11 +13,12 @@ class DrawerTable(DataTable):
     class EditRequested(Message):
         """Message sent when an edit is requested for a row."""
 
-        def __init__(self, name: str, length: str, width: str, max_load: str) -> None:
+        def __init__(self, name: str, length: str, width: str, max_load: str, max_boards: str) -> None:
             self.name = name
             self.length = length
             self.width = width
             self.max_load = max_load
+            self.max_boards = max_boards
             super().__init__()
 
     BINDINGS: ClassVar[list[Binding | tuple[str, str] | tuple[str, str, str]]] = [
@@ -41,10 +42,11 @@ class DrawerTable(DataTable):
                     str(row[1]),
                     str(row[2]),
                     str(row[3]),
+                    str(row[4]),
                 )
             )
 
-    def populate(self, rows: list[tuple[str, str, str, str]]) -> None:
+    def populate(self, rows: list[tuple[str, str, str, str, str]]) -> None:
         """Populate the table with the provided rows."""
         header, *data_rows = rows
         # Force column width to be flexible
@@ -66,7 +68,8 @@ class DrawerTable(DataTable):
                 length = int(float(row[1]))
                 width = int(float(row[2]))
                 max_load = int(float(row[3]))
-                drawers.append(Drawer(name, length, width, max_load))
+                max_boards = int(float(row[4]))
+                drawers.append(Drawer(name, length, width, max_load, max_boards))
             except (ValueError, IndexError):
                 continue
         return drawers
@@ -80,4 +83,5 @@ class DrawerTable(DataTable):
                 str(drawer.get_length_in_centimeters()),
                 str(drawer.get_width_in_centimeters()),
                 str(drawer.get_max_load_in_grams()),
+                str(drawer.get_max_boards()),
             )

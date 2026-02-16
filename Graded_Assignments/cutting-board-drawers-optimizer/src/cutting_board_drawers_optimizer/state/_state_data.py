@@ -20,6 +20,7 @@ class StateData:
                     "length": drawers.get_length_in_centimeters(),
                     "width": drawers.get_width_in_centimeters(),
                     "max_load": drawers.get_max_load_in_grams(),
+                    "max_boards": drawers.get_max_boards(),
                 }
                 for drawers in self.__drawers
             ],
@@ -39,7 +40,7 @@ class StateData:
     @classmethod
     def from_dict(cls, data: dict) -> "StateData":
         drawers = [
-            Drawer(drawer.get("name", "Unknown Drawer"), drawer["length"], drawer["width"], drawer["max_load"])  # ints
+            Drawer(drawer.get("name", "Unknown Drawer"), drawer["length"], drawer["width"], drawer["max_load"], drawer["max_boards"])  # ints
             for drawer in data.get("drawers", [])
         ]
         cutting_boards = [

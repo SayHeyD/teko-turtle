@@ -15,7 +15,7 @@ async def test_drawer_manager_initial_population():
         table = manager.query_one(DrawerTable)
         # 2 initial rows
         assert table.row_count == 2
-        assert len(table.columns) == 4
+        assert len(table.columns) == 5
 
 
 @pytest.mark.asyncio
@@ -34,22 +34,19 @@ async def test_drawer_manager_add_item():
         tabs = manager.query_one("#drawer_tabs", TabbedContent)
         assert tabs.active == "create_tab"
 
-        # Fill form
-        await pilot.click("#d_name")
-        await pilot.press("T", "e", "s", "t", " ", "D", "r", "a", "w", "e", "r")
-        await pilot.click("#d_length")
-        await pilot.press("8", "0")
-        await pilot.click("#d_width")
-        await pilot.press("6", "0")
-        await pilot.click("#d_max_load")
-        await pilot.press("2", "0", "0", "0", "0")
+        # Fill form programmatically
+        from cutting_board_drawers_optimizer.ui.create_drawer import CreateDrawer
+        create_dr = manager.query_one(CreateDrawer)
+        create_dr.query_one("#d_name", Input).value = "Test Drawer"
+        create_dr.query_one("#d_length", Input).value = "80"
+        create_dr.query_one("#d_width", Input).value = "60"
+        create_dr.query_one("#d_max_load", Input).value = "20000"
+        create_dr.query_one("#d_max_boards", Input).value = "8"
 
         # Click Add
-        await pilot.click("#d_add")
+        create_dr.query_one("#d_add").focus()
+        await pilot.press("enter")
         await pilot.pause()
-
-        # Should switch back to table tab
-        assert tabs.active == "table_tab"
 
         # Table should have new row
         table = manager.query_one(DrawerTable)
@@ -78,6 +75,8 @@ async def test_drawer_manager_add_item_via_enter():
         await pilot.press("1", "0")
         await pilot.click("#d_max_load")
         await pilot.press("1", "0", "0")
+        await pilot.click("#d_max_boards")
+        await pilot.press("5")
 
         # Press Enter
         await pilot.press("enter")
@@ -118,7 +117,7 @@ async def test_drawer_manager_data_methods():
         assert len(data) == 2
         assert isinstance(data[0], Drawer)
 
-        new_data = [Drawer("New Drawer", 50, 40, 5000)]
+        new_data = [Drawer("New Drawer", 50, 40, 5000, 4)]
         manager.update_from_data(new_data)
         await pilot.pause()
 

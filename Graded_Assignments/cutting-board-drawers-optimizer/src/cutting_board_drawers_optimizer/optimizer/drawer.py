@@ -1,9 +1,10 @@
 class Drawer:
-    def __init__(self, name: str, length: int, width: int, max_load: int):
+    def __init__(self, name: str, length: int, width: int, max_load: int, max_boards: int):
         self.__name: str = name
         self.__length: int = length
         self.__width: int = width
         self.__max_load: int = max_load
+        self.__max_boards: int = max_boards
 
         self.__validate_construction_parameters()
 
@@ -18,6 +19,9 @@ class Drawer:
 
         if self.__max_load <= 0:
             invalid_parameters.append("max_load")
+
+        if self.__max_boards <= 0:
+            invalid_parameters.append("max_boards")
 
         if len(invalid_parameters) > 0:
             params = ", ".join(invalid_parameters)
@@ -35,3 +39,6 @@ class Drawer:
 
     def get_max_load_in_grams(self) -> int:
         return self.__max_load
+
+    def get_max_boards(self) -> int:
+        return self.__max_boards

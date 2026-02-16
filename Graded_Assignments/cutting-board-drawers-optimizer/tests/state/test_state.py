@@ -19,8 +19,9 @@ def get_drawers() -> list[Drawer]:
         length = random.randint(80, 200)
         width = random.randint(40, 160)
         max_load = random.randint(1000, 40_000)
+        max_boards = random.randint(1, 20)
 
-        drawers.append(Drawer(f"Drawer {i}", length, width, max_load))
+        drawers.append(Drawer(f"Drawer {i}", length, width, max_load, max_boards))
 
     return drawers
 
@@ -163,6 +164,7 @@ def test_state_can_be_loaded_from_disk_if_path_exists(get_drawers, get_cutting_b
         assert state.get_drawers()[idx].get_length_in_centimeters() == drawer.get_length_in_centimeters()
         assert state.get_drawers()[idx].get_width_in_centimeters() == drawer.get_width_in_centimeters()
         assert state.get_drawers()[idx].get_max_load_in_grams() == drawer.get_max_load_in_grams()
+        assert state.get_drawers()[idx].get_max_boards() == drawer.get_max_boards()
 
     for idx, cutting_board in enumerate(cutting_boards):
         assert state.get_cutting_boards()[idx].get_name() == cutting_board.get_name()
