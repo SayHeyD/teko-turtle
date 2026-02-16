@@ -1,5 +1,5 @@
 import pytest
-from textual.widgets import TabbedContent, Input
+from textual.widgets import TabbedContent, Input, Label
 from cutting_board_drawers_optimizer.ui.drawer_manager import DrawerManager
 from cutting_board_drawers_optimizer.ui.drawer_table import DrawerTable
 from unittest.mock import MagicMock, patch, PropertyMock
