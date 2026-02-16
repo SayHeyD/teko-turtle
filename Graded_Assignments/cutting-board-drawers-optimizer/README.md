@@ -24,14 +24,16 @@ hatch test
 
 ### Linting
 
+Fix issues automatically:
+
 ```shell
 hatch fmt
 ```
 
-Fix linting issues:
+Check only:
 
 ```shell
-hatch fmt --fix
+hatch fmt --check
 ```
 
 ### Type checking
