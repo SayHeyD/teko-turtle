@@ -1,7 +1,6 @@
 # Cutting Board Drawers Optimizer
 
-[![PyPI - Version](https://img.shields.io/pypi/v/cutting-board-drawers-optimizer.svg)](https://pypi.org/project/cutting-board-drawers-optimizer)
-[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/cutting-board-drawers-optimizer.svg)](https://pypi.org/project/cutting-board-drawers-optimizer)
+[![CI](https://github.com/SayHeyD/teko-turtle/actions/workflows/cutting-board-drawers-optimizer.yml/badge.svg)](https://github.com/SayHeyD/teko-turtle/actions/workflows/cutting-board-drawers-optimizer.yml)
 
 -----
 
