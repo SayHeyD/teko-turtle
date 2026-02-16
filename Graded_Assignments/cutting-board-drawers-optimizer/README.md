@@ -22,6 +22,24 @@ pip install cutting-board-drawers-optimizer
 hatch test
 ```
 
+### Linting
+
+```shell
+hatch fmt
+```
+
+Fix linting issues:
+
+```shell
+hatch fmt --fix
+```
+
+### Type checking
+
+```shell
+hatch run types:check
+```
+
 ## Run the application
 
 ```shell
