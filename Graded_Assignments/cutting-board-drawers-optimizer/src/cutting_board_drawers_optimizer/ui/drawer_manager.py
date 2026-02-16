@@ -10,8 +10,8 @@ from textual.widgets import (
 )
 
 from cutting_board_drawers_optimizer.optimizer import Drawer
-from cutting_board_drawers_optimizer.ui.drawer_table import DrawerTable
 from cutting_board_drawers_optimizer.ui.create_drawer import CreateDrawer
+from cutting_board_drawers_optimizer.ui.drawer_table import DrawerTable
 
 
 class DrawerManager(Widget):

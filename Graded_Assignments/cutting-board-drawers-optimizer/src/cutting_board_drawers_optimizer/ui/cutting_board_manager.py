@@ -2,17 +2,16 @@ from typing import ClassVar
 
 from textual.app import ComposeResult
 from textual.binding import Binding
-from textual.message import Message
 from textual.widget import Widget
 from textual.widgets import (
+    Input,
     TabbedContent,
     TabPane,
-    Input,
 )
 
 from cutting_board_drawers_optimizer.optimizer import CuttingBoard
-from cutting_board_drawers_optimizer.ui.cutting_board_table import CuttingBoardTable
 from cutting_board_drawers_optimizer.ui.create_cutting_board import CreateCuttingBoard
+from cutting_board_drawers_optimizer.ui.cutting_board_table import CuttingBoardTable
 
 
 class CuttingBoardManager(Widget):

@@ -7,6 +7,7 @@ from textual.widgets import (
 
 from cutting_board_drawers_optimizer.optimizer import CuttingBoard
 
+
 class CuttingBoardTable(DataTable):
     """Custom DataTable for cutting boards with delete binding."""
 
