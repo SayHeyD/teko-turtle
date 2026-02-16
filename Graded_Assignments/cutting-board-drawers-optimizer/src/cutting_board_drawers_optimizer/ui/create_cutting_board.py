@@ -66,6 +66,9 @@ class CreateCuttingBoard(Widget):
                 error_label.update("")
                 error_label.visible = False
                 self.post_message(self.Created(name, length, width, weight, price))
+                # Clear inputs after successful creation
+                for input_widget in self.query(Input):
+                    input_widget.value = ""
 
     def on_input_submitted(self) -> None:
         """Handle input submission (pressing Enter)."""
