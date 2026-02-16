@@ -41,7 +41,7 @@ class CuttingBoardTable(DataTable):
                 width = int(float(row[2]))
                 weight = int(float(row[3]))
                 price_val = float(row[4])
-                price_cents = round(price_val * 100)
+                price_cents = int(round(price_val * 100))
                 cutting_boards.append(CuttingBoard(name, length, width, weight, price_cents))
             except (ValueError, IndexError):
                 continue

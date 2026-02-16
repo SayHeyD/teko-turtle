@@ -1,0 +1,126 @@
+import pytest
+from textual.widgets import TabbedContent, Input, DataTable
+from cutting_board_drawers_optimizer.ui.cutting_board_manager import CuttingBoardManager
+from cutting_board_drawers_optimizer.ui.cutting_board_table import CuttingBoardTable
+from cutting_board_drawers_optimizer.ui.create_cutting_board import CreateCuttingBoard
+from cutting_board_drawers_optimizer.optimizer import CuttingBoard
+from cutting_board_drawers_optimizer.ui import CuttingBoardDrawersOptimizerApp
+
+@pytest.mark.asyncio
+async def test_cutting_board_manager_initial_population():
+    app = CuttingBoardDrawersOptimizerApp()
+    async with app.run_test() as pilot:
+        manager = app.query_one(CuttingBoardManager)
+        table = manager.query_one(CuttingBoardTable)
+        # 3 initial rows
+        assert table.row_count == 3
+        assert len(table.columns) == 5
+
+@pytest.mark.asyncio
+async def test_cutting_board_manager_add_item():
+    app = CuttingBoardDrawersOptimizerApp()
+    async with app.run_test() as pilot:
+        manager = app.query_one(CuttingBoardManager)
+        # Switch to cutting boards tab (it should be active by default, but let's be sure)
+        app.action_show_tab("cutting_boards")
+        await pilot.pause()
+
+        # Switch to create tab inside manager
+        manager.action_switch_to_create_tab()
+        await pilot.pause()
+        
+        tabs = manager.query_one("#cb_tabs", TabbedContent)
+        assert tabs.active == "create_tab"
+
+        # Fill form
+        await pilot.click("#cb_name")
+        await pilot.press("T", "e", "s", "t", " ", "B", "o", "a", "r", "d")
+        await pilot.click("#cb_length")
+        await pilot.press("5", "0")
+        await pilot.click("#cb_width")
+        await pilot.press("4", "0")
+        await pilot.click("#cb_weight")
+        await pilot.press("1", "0", "0", "0")
+        await pilot.click("#cb_price")
+        await pilot.press("2", "5", ".", "5", "0")
+        
+        # Click Add
+        await pilot.click("#cb_add")
+        await pilot.pause()
+
+        # Should switch back to table tab
+        assert tabs.active == "table_tab"
+        
+        # Table should have new row
+        table = manager.query_one(CuttingBoardTable)
+        assert table.row_count == 4
+        assert table.get_row_at(3)[0] == "Test Board"
+
+@pytest.mark.asyncio
+async def test_cutting_board_manager_add_item_via_enter():
+    app = CuttingBoardDrawersOptimizerApp()
+    async with app.run_test() as pilot:
+        manager = app.query_one(CuttingBoardManager)
+        app.action_show_tab("cutting_boards")
+        await pilot.pause()
+
+        # Switch to create tab
+        manager.action_switch_to_create_tab()
+        await pilot.pause()
+
+        # Fill form
+        await pilot.click("#cb_name")
+        await pilot.press("E", "n", "t", "e", "r", " ", "B", "o", "a", "r", "d")
+        await pilot.click("#cb_length")
+        await pilot.press("1", "0")
+        await pilot.click("#cb_width")
+        await pilot.press("1", "0")
+        await pilot.click("#cb_weight")
+        await pilot.press("1", "0", "0")
+        await pilot.click("#cb_price")
+        await pilot.press("5")
+        
+        # Press Enter
+        await pilot.press("enter")
+        await pilot.pause()
+
+        # Should switch back to table tab
+        tabs = manager.query_one("#cb_tabs", TabbedContent)
+        assert tabs.active == "table_tab"
+        
+        # Table should have new row
+        table = manager.query_one(CuttingBoardTable)
+        assert table.row_count == 4
+        assert table.get_row_at(3)[0] == "Enter Board"
+
+@pytest.mark.asyncio
+async def test_cutting_board_manager_delete_item():
+    app = CuttingBoardDrawersOptimizerApp()
+    async with app.run_test() as pilot:
+        manager = app.query_one(CuttingBoardManager)
+        table = manager.query_one(CuttingBoardTable)
+        initial_count = table.row_count
+        
+        # Focus table and delete first row
+        table.focus()
+        await pilot.press("ctrl+d")
+        await pilot.pause()
+        
+        assert table.row_count == initial_count - 1
+
+@pytest.mark.asyncio
+async def test_cutting_board_manager_data_methods():
+    app = CuttingBoardDrawersOptimizerApp()
+    async with app.run_test() as pilot:
+        manager = app.query_one(CuttingBoardManager)
+        data = manager.get_current_data()
+        assert len(data) == 3
+        assert isinstance(data[0], CuttingBoard)
+        
+        new_data = [CuttingBoard("New CB", 10, 20, 300, 1500)]
+        manager.update_from_data(new_data)
+        await pilot.pause()
+        
+        table = manager.query_one(CuttingBoardTable)
+        assert table.row_count == 1
+        assert table.get_row_at(0)[0] == "New CB"
