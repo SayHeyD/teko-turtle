@@ -3,6 +3,7 @@ from typing import ClassVar
 from textual.app import ComposeResult
 from textual.containers import Vertical
 from textual.widget import Widget
+from textual.message import Message
 from textual.widgets import (
     Button,
     DataTable,
@@ -31,7 +32,7 @@ class DrawerManager(Widget):
 
     def compose(self) -> ComposeResult:
         """Composition of the DrawerManager UI."""
-        with TabbedContent():
+        with TabbedContent(id="drawer_tabs"):
             with TabPane("Table", id="table_tab"):
                 yield DataTable(id="drawer_table")
             with TabPane("Create", id="create_tab"), Vertical(id="drawer_form"):
@@ -59,7 +60,6 @@ class DrawerManager(Widget):
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
         """Handle button presses."""
-
         # Add a new row to the table with the data from the form
         if event.button.id == "d_add":
             name = self.query_one("#d_name", Input).value or ""
@@ -67,6 +67,23 @@ class DrawerManager(Widget):
             width = self.query_one("#d_width", Input).value or ""
             max_load = self.query_one("#d_max_load", Input).value or ""
             self.query_one("#drawer_table", DataTable).add_row(name, length, width, max_load)
+            
+            # Switch back to the table tab
+            # self.query_one("#drawer_tabs", TabbedContent).active = "table_tab"
+            self.call_after_refresh(self.action_switch_to_table)
+
+    def action_switch_to_table(self) -> None:
+        tabs = self.query_one("#drawer_tabs", TabbedContent)
+        tabs.active = "table_tab"
+        self.query_one("#drawer_table", DataTable).focus()
+
+    def on_tabbed_content_tab_activated(self, event: TabbedContent.TabActivated) -> None:
+        """Handle tab activation within DrawerManager."""
+        if event.tabbed_content.id == "drawer_tabs":
+            if event.tab.id == "table_tab":
+                self.query_one("#drawer_table", DataTable).focus()
+            elif event.tab.id == "create_tab":
+                self.query_one("#d_name", Input).focus()
 
     def get_current_data(self) -> list[Drawer]:
         """Extract Drawer objects from the DataTable."""

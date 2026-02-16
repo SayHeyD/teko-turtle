@@ -3,11 +3,12 @@ from typing import ClassVar
 
 from textual.app import App, ComposeResult
 from textual.binding import Binding
-from textual.widgets import Footer, Header, TabbedContent, TabPane
+from textual.widgets import Footer, Header, TabbedContent, TabPane, DataTable
 
 from cutting_board_drawers_optimizer.state.loading_data_failed_error import LoadingDataFailedError
 from cutting_board_drawers_optimizer.state.saving_data_failed_error import SavingDataFailedError
 from cutting_board_drawers_optimizer.state.state import State
+from cutting_board_drawers_optimizer.ui.cutting_board_table import CuttingBoardTable
 from cutting_board_drawers_optimizer.ui.cutting_board_manager import CuttingBoardManager
 from cutting_board_drawers_optimizer.ui.drawer_manager import DrawerManager
 from cutting_board_drawers_optimizer.ui.load_dialog import LoadDialog
