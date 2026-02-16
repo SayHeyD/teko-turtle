@@ -46,8 +46,6 @@ async def test_cutting_board_manager_add_item():
         # Click Add
         await pilot.click("#cb_add")
         await pilot.pause()
-        await pilot.pause()
-        await pilot.pause()
 
         # Should switch back to table tab
         assert tabs.active == "table_tab"
@@ -243,7 +241,6 @@ async def test_create_cutting_board_validation():
         create_cb.query_one("#cb_weight", Input).value = "1000"
         create_cb.query_one("#cb_price", Input).value = "25.50"
         await pilot.press("enter")
-        await pilot.pause()
         await pilot.pause()
         assert error_label.visible is False
         assert tabs.active == "table_tab"
