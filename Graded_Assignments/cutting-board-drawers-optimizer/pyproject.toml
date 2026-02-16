@@ -53,7 +53,7 @@ extra-dependencies = [
 start = "python -m cutting_board_drawers_optimizer"
 
 [tool.hatch.envs.types.scripts]
-check = "mypy --install-types --non-interactive {args:src/cutting_board_drawers_optimizer tests}"
+check = "mypy --install-types --check-untyped-defs --non-interactive {args:src/cutting_board_drawers_optimizer tests}"
 
 [tool.hatch.envs.test]
 # Reuse your optional dependency group so pytest/pytest-cov are installed
