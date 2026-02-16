@@ -1,5 +1,5 @@
 import pytest
-from textual.widgets import TabbedContent
+from textual.widgets import Input, TabbedContent
 from cutting_board_drawers_optimizer.ui.drawer_manager import DrawerManager
 from cutting_board_drawers_optimizer.ui.drawer_table import DrawerTable
 from cutting_board_drawers_optimizer.ui import CuttingBoardDrawersOptimizerApp
@@ -26,10 +26,10 @@ async def test_drawer_manager_edit_item():
         assert tabs.active == "edit_tab"
 
         # Check if values are correctly populated
-        assert app.query_one("#de_name").value == "Main Kitchen Drawer"
-        assert app.query_one("#de_length").value == "60"
-        assert app.query_one("#de_width").value == "50"
-        assert app.query_one("#de_max_load").value == "10000"
+        assert app.query_one("#de_name", Input).value == "Main Kitchen Drawer"
+        assert app.query_one("#de_length", Input).value == "60"
+        assert app.query_one("#de_width", Input).value == "50"
+        assert app.query_one("#de_max_load", Input).value == "10000"
 
         # Edit values
         await pilot.click("#de_name")
