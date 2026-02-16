@@ -4,6 +4,7 @@ from textual.widgets import Input, TabbedContent
 from cutting_board_drawers_optimizer.ui.save_dialog import SaveDialog
 from cutting_board_drawers_optimizer.ui.load_dialog import LoadDialog
 from cutting_board_drawers_optimizer.ui.cutting_board_manager import CuttingBoardManager
+from cutting_board_drawers_optimizer.ui.drawer_manager import DrawerManager
 from cutting_board_drawers_optimizer.ui.cutting_board_table import CuttingBoardTable
 from cutting_board_drawers_optimizer.state.state import State
 
@@ -135,3 +136,40 @@ async def test_app_tab_switching():
         await pilot.press("c")
         await pilot.pause()
         assert tabs.active == "cutting_boards"
+
+
+@pytest.mark.asyncio
+async def test_app_tab_activation_focus():
+    app = CuttingBoardDrawersOptimizerApp()
+    async with app.run_test() as pilot:
+        # Initially, the first tab is active
+        tabs = app.query_one("#tabs", TabbedContent)
+        assert tabs.active == "cutting_boards"
+
+        # Switch to drawers tab via pilot to trigger events naturally
+        await pilot.press("d")
+        await pilot.pause()
+        assert tabs.active == "drawers"
+
+        # Instead of checking app.focused (which might be delegated deeper),
+        # we can verify the method was called or check the intermediate state.
+        # But wait, if I want to test on_tabbed_content_tab_activated specifically,
+        # I can just call it with a mock event.
+
+        from unittest.mock import MagicMock, patch
+        mock_event = MagicMock()
+        mock_event.tabbed_content.id = "tabs"
+
+        # Test cutting_boards focus
+        mock_event.tab.id = "cutting_boards"
+        cb_manager = app.query_one(CuttingBoardManager)
+        with patch.object(cb_manager, "focus") as mock_focus:
+            app.on_tabbed_content_tab_activated(mock_event)
+            mock_focus.assert_called_once()
+
+        # Test drawers focus
+        mock_event.tab.id = "drawers"
+        dr_manager = app.query_one(DrawerManager)
+        with patch.object(dr_manager, "focus") as mock_focus:
+            app.on_tabbed_content_tab_activated(mock_event)
+            mock_focus.assert_called_once()
