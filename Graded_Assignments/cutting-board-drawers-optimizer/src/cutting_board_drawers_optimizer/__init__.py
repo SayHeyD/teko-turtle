@@ -1,3 +1,3 @@
-# SPDX-FileCopyrightText: 2025-present David Docampo <david@docmapo.ch>
+# SPDX-FileCopyrightText: 2025-present David Docampo <david@docampo.ch>
 #
 # SPDX-License-Identifier: MIT
