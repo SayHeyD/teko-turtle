@@ -36,6 +36,7 @@ async def test_drawer_manager_add_item():
 
         # Fill form programmatically
         from cutting_board_drawers_optimizer.ui.create_drawer import CreateDrawer
+
         create_dr = manager.query_one(CreateDrawer)
         create_dr.query_one("#d_name", Input).value = "Test Drawer"
         create_dr.query_one("#d_length", Input).value = "80"

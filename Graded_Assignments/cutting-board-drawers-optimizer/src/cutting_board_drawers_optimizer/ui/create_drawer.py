@@ -54,7 +54,12 @@ class CreateDrawer(Widget):
             if not valid and err is not None:
                 errors.append(err)
 
-            for val, label in [(length, "Length"), (width, "Width"), (max_load, "Maximum Load"), (max_boards, "Max Boards")]:
+            for val, label in [
+                (length, "Length"),
+                (width, "Width"),
+                (max_load, "Maximum Load"),
+                (max_boards, "Max Boards"),
+            ]:
                 valid, err = Validator.is_positive_number(val, label)
                 if not valid and err is not None:
                     errors.append(err)
