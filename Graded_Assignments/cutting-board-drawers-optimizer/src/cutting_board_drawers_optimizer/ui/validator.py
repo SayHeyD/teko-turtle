@@ -15,6 +15,7 @@ class Validator:
             val = float(value)
             if val <= 0:
                 return False, f"{field_name} must be positive."
-            return True, None
         except ValueError:
             return False, f"{field_name} must be a number."
+        else:
+            return True, None

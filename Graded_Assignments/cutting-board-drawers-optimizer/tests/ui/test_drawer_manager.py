@@ -188,6 +188,7 @@ async def test_drawer_manager_tab_activation_branches():
         mock_event.tabbed_content.id = "irrelevant"
         manager.on_tabbed_content_tab_activated(mock_event)
 
+
 @pytest.mark.asyncio
 async def test_create_drawer_validation():
     app = CuttingBoardDrawersOptimizerApp()

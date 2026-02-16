@@ -204,6 +204,7 @@ async def test_cutting_board_manager_tab_activation_branches():
             manager.on_tabbed_content_tab_activated(mock_event)
             mock_focus.assert_not_called()
 
+
 @pytest.mark.asyncio
 async def test_create_cutting_board_validation():
     app = CuttingBoardDrawersOptimizerApp()

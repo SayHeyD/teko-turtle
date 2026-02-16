@@ -48,12 +48,12 @@ class CreateDrawer(Widget):
 
             # Use generalized Validator
             valid, err = Validator.is_valid_name(name)
-            if not valid:
+            if not valid and err is not None:
                 errors.append(err)
 
             for val, label in [(length, "Length"), (width, "Width"), (max_load, "Maximum Load")]:
                 valid, err = Validator.is_positive_number(val, label)
-                if not valid:
+                if not valid and err is not None:
                     errors.append(err)
 
             if errors:
