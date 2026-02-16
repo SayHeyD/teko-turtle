@@ -104,8 +104,7 @@ class CuttingBoardDrawersOptimizerApp(App):
 
                 # Update state with current UI data
                 self._state.set_data(
-                    drawers=dr_manager.get_current_data(),
-                    cutting_boards=cb_manager.get_current_data()
+                    drawers=dr_manager.get_current_data(), cutting_boards=cb_manager.get_current_data()
                 )
 
                 # Remove the file if it already exists

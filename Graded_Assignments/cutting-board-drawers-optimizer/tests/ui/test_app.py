@@ -32,6 +32,7 @@ async def test_that_app_has_footer():
         footer = app.query_one(Footer)
         assert footer is not None
 
+
 @pytest.mark.asyncio
 async def test_app_save_config_flow(tmp_path):
     app = CuttingBoardDrawersOptimizerApp()
@@ -53,6 +54,7 @@ async def test_app_save_config_flow(tmp_path):
         # Verify file exists
         assert os.path.exists(save_path)
         assert app._last_path == save_path
+
 
 @pytest.mark.asyncio
 async def test_app_load_config_flow(tmp_path):
@@ -106,6 +108,7 @@ async def test_app_load_config_flow(tmp_path):
         # 3 default + 1 loaded
         assert table.row_count == 4
         assert table.get_row_at(3)[0] == "Load Me"
+
 
 @pytest.mark.asyncio
 async def test_app_tab_switching():

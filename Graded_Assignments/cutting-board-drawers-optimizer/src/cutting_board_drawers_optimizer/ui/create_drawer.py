@@ -42,7 +42,7 @@ class CreateDrawer(Widget):
 
             self.post_message(self.Created(name, length, width, max_load))
 
-    def on_input_submitted(self, event: Input.Submitted) -> None:
+    def on_input_submitted(self) -> None:
         """Handle input submission (pressing Enter)."""
         # Trigger the same logic as clicking "Add"
         self.on_button_pressed(Button.Pressed(self.query_one("#d_add", Button)))

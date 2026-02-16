@@ -6,6 +6,7 @@ from cutting_board_drawers_optimizer.ui.create_drawer import CreateDrawer
 from cutting_board_drawers_optimizer.optimizer import Drawer
 from cutting_board_drawers_optimizer.ui import CuttingBoardDrawersOptimizerApp
 
+
 @pytest.mark.asyncio
 async def test_drawer_manager_initial_population():
     app = CuttingBoardDrawersOptimizerApp()
@@ -15,6 +16,7 @@ async def test_drawer_manager_initial_population():
         # 2 initial rows
         assert table.row_count == 2
         assert len(table.columns) == 4
+
 
 @pytest.mark.asyncio
 async def test_drawer_manager_add_item():
@@ -28,7 +30,7 @@ async def test_drawer_manager_add_item():
         # Switch to create tab
         manager.action_switch_to_create_tab()
         await pilot.pause()
-        
+
         tabs = manager.query_one("#drawer_tabs", TabbedContent)
         assert tabs.active == "create_tab"
 
@@ -41,18 +43,19 @@ async def test_drawer_manager_add_item():
         await pilot.press("6", "0")
         await pilot.click("#d_max_load")
         await pilot.press("2", "0", "0", "0", "0")
-        
+
         # Click Add
         await pilot.click("#d_add")
         await pilot.pause()
 
         # Should switch back to table tab
         assert tabs.active == "table_tab"
-        
+
         # Table should have new row
         table = manager.query_one(DrawerTable)
         assert table.row_count == 3
         assert table.get_row_at(2)[0] == "Test Drawer"
+
 
 @pytest.mark.asyncio
 async def test_drawer_manager_add_item_via_enter():
@@ -75,7 +78,7 @@ async def test_drawer_manager_add_item_via_enter():
         await pilot.press("1", "0")
         await pilot.click("#d_max_load")
         await pilot.press("1", "0", "0")
-        
+
         # Press Enter
         await pilot.press("enter")
         await pilot.pause()
@@ -83,11 +86,12 @@ async def test_drawer_manager_add_item_via_enter():
         # Should switch back to table tab
         tabs = manager.query_one("#drawer_tabs", TabbedContent)
         assert tabs.active == "table_tab"
-        
+
         # Table should have new row
         table = manager.query_one(DrawerTable)
         assert table.row_count == 3
         assert table.get_row_at(2)[0] == "Enter Drawer"
+
 
 @pytest.mark.asyncio
 async def test_drawer_manager_delete_item():
@@ -96,13 +100,14 @@ async def test_drawer_manager_delete_item():
         manager = app.query_one(DrawerManager)
         table = manager.query_one(DrawerTable)
         initial_count = table.row_count
-        
+
         # Focus table and delete first row
         table.focus()
         await pilot.press("ctrl+d")
         await pilot.pause()
-        
+
         assert table.row_count == initial_count - 1
+
 
 @pytest.mark.asyncio
 async def test_drawer_manager_data_methods():
@@ -112,11 +117,11 @@ async def test_drawer_manager_data_methods():
         data = manager.get_current_data()
         assert len(data) == 2
         assert isinstance(data[0], Drawer)
-        
+
         new_data = [Drawer("New Drawer", 50, 50, 10000)]
         manager.update_from_data(new_data)
         await pilot.pause()
-        
+
         table = manager.query_one(DrawerTable)
         assert table.row_count == 1
         assert table.get_row_at(0)[0] == "New Drawer"
