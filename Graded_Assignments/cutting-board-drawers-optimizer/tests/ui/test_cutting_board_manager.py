@@ -15,7 +15,7 @@ async def test_cutting_board_manager_initial_population():
         table = manager.query_one(CuttingBoardTable)
         # 3 initial rows
         assert table.row_count == 3
-        assert len(table.columns) == 5
+        assert len(table.columns) == 6
 
 
 @pytest.mark.asyncio

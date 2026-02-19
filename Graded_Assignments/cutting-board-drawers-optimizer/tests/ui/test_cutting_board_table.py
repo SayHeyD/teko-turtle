@@ -22,7 +22,7 @@ async def test_cutting_board_table_invalid_data_parsing():
     async with app.run_test() as pilot:
         table = app.query_one(CuttingBoardTable)
         # Add a row with invalid data
-        table.add_row("Bad Row", "not a number", "10", "10", "10")
+        table.add_row("Bad Row", "not a number", "10", "10", "10", "0")
         data = table.get_current_data()
         # Should skip the bad row
         assert len(data) == 3

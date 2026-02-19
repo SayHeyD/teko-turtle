@@ -15,7 +15,7 @@ async def test_drawer_manager_initial_population():
         table = manager.query_one(DrawerTable)
         # 2 initial rows
         assert table.row_count == 2
-        assert len(table.columns) == 5
+        assert len(table.columns) == 6
 
 
 @pytest.mark.asyncio

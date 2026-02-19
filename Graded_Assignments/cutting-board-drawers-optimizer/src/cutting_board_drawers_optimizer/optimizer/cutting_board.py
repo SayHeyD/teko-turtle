@@ -44,3 +44,7 @@ class CuttingBoard:
 
     def get_price_in_centime(self) -> int:
         return self.__price
+
+    @property
+    def area(self) -> int:
+        return self.__length * self.__width

@@ -25,11 +25,11 @@ class CuttingBoardManager(Widget):
     - A form to edit existing cutting boards
     """
 
-    ROWS: ClassVar[list[tuple[str, str, str, str, str]]] = [
-        ("Name", "Length", "Width", "Weight", "Price"),
-        ("Large Oak", "40", "30", "2000", "50.39"),
-        ("Medium Beech", "30", "20", "1500", "35.50"),
-        ("Small Plastic", "20", "15", "500", "12.00"),
+    ROWS: ClassVar[list[tuple[str, str, str, str, str, str]]] = [
+        ("Name", "Length", "Width", "Weight", "Price", "Area"),
+        ("Large Oak", "40", "30", "2000", "50.39", "1200"),
+        ("Medium Beech", "30", "20", "1500", "35.50", "600"),
+        ("Small Plastic", "20", "15", "500", "12.00", "300"),
     ]
 
     # Keybinds specific to the Cutting Board Manager
@@ -56,7 +56,8 @@ class CuttingBoardManager(Widget):
     def on_create_cutting_board_created(self, message: CreateCuttingBoard.Created) -> None:
         """Handle the creation of a new cutting board."""
         table = self.query_one(CuttingBoardTable)
-        table.add_row(message.name, message.length, message.width, message.weight, message.price)
+        area = int(message.length) * int(message.width)
+        table.add_row(message.name, message.length, message.width, message.weight, message.price, str(area))
         self.action_switch_to_table()
 
     def on_cutting_board_table_edit_requested(self, message: CuttingBoardTable.EditRequested) -> None:

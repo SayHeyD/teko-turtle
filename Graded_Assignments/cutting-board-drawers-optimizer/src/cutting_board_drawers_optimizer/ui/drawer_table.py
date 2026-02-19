@@ -46,7 +46,7 @@ class DrawerTable(DataTable):
                 )
             )
 
-    def populate(self, rows: list[tuple[str, str, str, str, str]]) -> None:
+    def populate(self, rows: list[tuple[str, str, str, str, str, str]]) -> None:
         """Populate the table with the provided rows."""
         header, *data_rows = rows
         # Force column width to be flexible
@@ -84,4 +84,5 @@ class DrawerTable(DataTable):
                 str(drawer.get_width_in_centimeters()),
                 str(drawer.get_max_load_in_grams()),
                 str(drawer.get_max_boards()),
+                str(drawer.area),
             )

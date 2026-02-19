@@ -53,3 +53,7 @@ def test_that_get_width_in_centimeters_returns_correct_float(get_cutting_board):
 
 def test_that_get_weight_in_grams_returns_correct_float(get_cutting_board):
     assert get_cutting_board.get_weight_in_grams() == 2560
+
+
+def test_that_area_returns_correct_value(get_cutting_board):
+    assert get_cutting_board.area == 65 * 24

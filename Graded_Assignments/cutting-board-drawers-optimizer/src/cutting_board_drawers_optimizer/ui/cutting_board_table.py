@@ -48,7 +48,7 @@ class CuttingBoardTable(DataTable):
                 )
             )
 
-    def populate(self, rows: list[tuple[str, str, str, str, str]]) -> None:
+    def populate(self, rows: list[tuple[str, str, str, str, str, str]]) -> None:
         """Populate the table with the provided rows."""
         header, *data_rows = rows
         # Force column width to be flexible
@@ -86,4 +86,5 @@ class CuttingBoardTable(DataTable):
                 str(cb.get_width_in_centimeters()),
                 str(cb.get_weight_in_grams()),
                 cb.get_price_in_chf(),
+                str(cb.area),
             )

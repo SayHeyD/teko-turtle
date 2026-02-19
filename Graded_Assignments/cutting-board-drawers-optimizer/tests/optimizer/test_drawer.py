@@ -42,3 +42,7 @@ def test_that_drawer_constructor_raises_value_error_if_max_boards_is_less_than_1
 
 def test_that_get_max_boards_returns_correct_value(get_drawer):
     assert get_drawer.get_max_boards() == 10
+
+
+def test_that_area_returns_correct_value(get_drawer):
+    assert get_drawer.area == 120 * 80

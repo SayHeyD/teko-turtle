@@ -24,10 +24,10 @@ class DrawerManager(Widget):
     - A form to edit existing drawers
     """
 
-    ROWS: ClassVar[list[tuple[str, str, str, str, str]]] = [
-        ("Name", "Length", "Width", "Maximum Load", "Max Boards"),
-        ("Main Kitchen Drawer", "60", "50", "10000", "5"),
-        ("Small Side Drawer", "40", "30", "5000", "3"),
+    ROWS: ClassVar[list[tuple[str, str, str, str, str, str]]] = [
+        ("Name", "Length", "Width", "Maximum Load", "Max Boards", "Area"),
+        ("Main Kitchen Drawer", "60", "50", "10000", "5", "3000"),
+        ("Small Side Drawer", "40", "30", "5000", "3", "1200"),
     ]
 
     # Keybinds specific to the Drawer Manager
@@ -54,7 +54,8 @@ class DrawerManager(Widget):
     def on_create_drawer_created(self, message: CreateDrawer.Created) -> None:
         """Handle the creation of a new drawer."""
         table = self.query_one(DrawerTable)
-        table.add_row(message.name, message.length, message.width, message.max_load, message.max_boards)
+        area = int(message.length) * int(message.width)
+        table.add_row(message.name, message.length, message.width, message.max_load, message.max_boards, str(area))
         self.call_after_refresh(self.action_switch_to_table)
 
     def on_drawer_table_edit_requested(self, message: DrawerTable.EditRequested) -> None:

@@ -42,3 +42,7 @@ class Drawer:
 
     def get_max_boards(self) -> int:
         return self.__max_boards
+
+    @property
+    def area(self) -> int:
+        return self.__length * self.__width
