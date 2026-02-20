@@ -6,6 +6,7 @@ from cutting_board_drawers_optimizer.ui.save_dialog import SaveDialog
 from cutting_board_drawers_optimizer.ui.load_dialog import LoadDialog
 from cutting_board_drawers_optimizer.ui.cutting_board_manager import CuttingBoardManager
 from cutting_board_drawers_optimizer.ui.drawer_manager import DrawerManager
+from cutting_board_drawers_optimizer.ui.optimize_manager import OptimizeManager
 from cutting_board_drawers_optimizer.ui import CuttingBoardDrawersOptimizerApp
 from cutting_board_drawers_optimizer.state.state import State
 
@@ -134,6 +135,10 @@ async def test_app_tab_switching():
         await pilot.press("c")
         await pilot.pause()
         assert tabs.active == "cutting_boards"
+        # Switch to optimize via keybind
+        await pilot.press("o")
+        await pilot.pause()
+        assert tabs.active == "optimize"
 
 
 @pytest.mark.asyncio
@@ -160,6 +165,12 @@ async def test_app_tab_activation_focus():
         mock_event.tab.id = "drawers"
         dr_manager = app.query_one(DrawerManager)
         with patch.object(dr_manager, "focus") as mock_focus:
+            app.on_tabbed_content_tab_activated(mock_event)
+            mock_focus.assert_called_once()
+        # Test optimize focus
+        mock_event.tab.id = "optimize"
+        opt_manager = app.query_one(OptimizeManager)
+        with patch.object(opt_manager, "focus") as mock_focus:
             app.on_tabbed_content_tab_activated(mock_event)
             mock_focus.assert_called_once()
 

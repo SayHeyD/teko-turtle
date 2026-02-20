@@ -11,6 +11,7 @@ from cutting_board_drawers_optimizer.state.state import State
 from cutting_board_drawers_optimizer.ui.cutting_board_manager import CuttingBoardManager
 from cutting_board_drawers_optimizer.ui.drawer_manager import DrawerManager
 from cutting_board_drawers_optimizer.ui.load_dialog import LoadDialog
+from cutting_board_drawers_optimizer.ui.optimize_manager import OptimizeManager
 from cutting_board_drawers_optimizer.ui.save_dialog import SaveDialog
 
 
@@ -36,7 +37,7 @@ class CuttingBoardDrawersOptimizerApp(App):
     }
 
     /* Make manager widgets fill their parent tab */
-    CuttingBoardManager, DrawerManager {
+    CuttingBoardManager, DrawerManager, OptimizeManager {
         height: 1fr;
     }
 
@@ -64,6 +65,7 @@ class CuttingBoardDrawersOptimizerApp(App):
         ("ctrl+o", "load_config", "Open Config"),
         ("c", 'show_tab("cutting_boards")', "Cutting Boards"),
         ("d", 'show_tab("drawers")', "Drawers"),
+        ("o", 'show_tab("optimize")', "Optimize"),
     ]
 
     # Initialize application state
@@ -86,6 +88,8 @@ class CuttingBoardDrawersOptimizerApp(App):
                 yield CuttingBoardManager()
             with TabPane("Drawers", id="drawers"):
                 yield DrawerManager()
+            with TabPane("Optimize", id="optimize"):
+                yield OptimizeManager()
 
         yield Footer()
 
@@ -179,3 +183,6 @@ class CuttingBoardDrawersOptimizerApp(App):
             elif event.tab.id == "drawers":
                 dr_manager = self.query_one(DrawerManager)
                 dr_manager.focus()
+            elif event.tab.id == "optimize":
+                opt_manager = self.query_one(OptimizeManager)
+                opt_manager.focus()
