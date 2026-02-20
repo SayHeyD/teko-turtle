@@ -26,7 +26,7 @@ def test_optimizer_properties_read_only():
 
     with pytest.raises(AttributeError):
         optimizer.drawers = []  # type: ignore[misc]
-    
+
     with pytest.raises(AttributeError):
         optimizer.cutting_boards = []  # type: ignore[misc]
 
@@ -42,7 +42,7 @@ def test_optimizer_fit_check():
     drawer1 = Drawer("Drawer 1", 60, 50, 10000, 5)
     # Drawer: 40x40
     drawer2 = Drawer("Drawer 2", 40, 40, 10000, 5)
-    
+
     # Fits in both orientations in Drawer 1, doesn't fit in Drawer 2
     board1 = CuttingBoard("Board 1", 45, 30, 1000, 2000)
     # Fits in Drawer 1 only when rotated (55x45 vs 60x50), doesn't fit in Drawer 2
@@ -56,7 +56,7 @@ def test_optimizer_fit_check():
 
     drawers = [drawer1, drawer2]
     cutting_boards = [board1, board2, board3, board4, board5]
-    
+
     optimizer = Optimizer(drawers, cutting_boards, 10000, 5)
     fits = optimizer.fit_check()
 

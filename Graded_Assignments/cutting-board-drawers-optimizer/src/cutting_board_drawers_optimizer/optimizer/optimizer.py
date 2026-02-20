@@ -48,10 +48,9 @@ class Optimizer:
                 drawer_wid = drawer.get_width_in_centimeters()
 
                 # Check original orientation
-                if board_len <= drawer_len and board_wid <= drawer_wid:
-                    fitting_drawers.append(drawer)
-                # Check 90-degree rotation
-                elif board_wid <= drawer_len and board_len <= drawer_wid:
+                if (board_len <= drawer_len and board_wid <= drawer_wid) or (
+                    board_wid <= drawer_len and board_len <= drawer_wid
+                ):
                     fitting_drawers.append(drawer)
 
             fits[board] = fitting_drawers
