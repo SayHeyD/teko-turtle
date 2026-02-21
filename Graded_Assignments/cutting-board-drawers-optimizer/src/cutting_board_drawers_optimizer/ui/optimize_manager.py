@@ -70,7 +70,7 @@ class OptimizeManager(Widget):
 
     def __run_optimization(self, budget_str: str, amount_str: str) -> None:
         """Run the optimization and display results."""
-        from cutting_board_drawers_optimizer.ui.app import CuttingBoardDrawersOptimizerApp
+        from cutting_board_drawers_optimizer.ui.app import CuttingBoardDrawersOptimizerApp  # noqa: PLC0415
 
         app = self.app
         if not isinstance(app, CuttingBoardDrawersOptimizerApp):

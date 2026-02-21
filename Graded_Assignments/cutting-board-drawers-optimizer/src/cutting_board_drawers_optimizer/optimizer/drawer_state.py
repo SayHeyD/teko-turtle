@@ -1,5 +1,9 @@
-from cutting_board_drawers_optimizer.optimizer.cutting_board import CuttingBoard
+from typing import TYPE_CHECKING
+
 from cutting_board_drawers_optimizer.optimizer.drawer import Drawer
+
+if TYPE_CHECKING:
+    from cutting_board_drawers_optimizer.optimizer.cutting_board import CuttingBoard
 
 
 class DrawerState:

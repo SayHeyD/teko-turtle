@@ -113,29 +113,26 @@ class Optimizer:
         area = board.area
 
         # Option 1: Try placing the board in each fitting drawer
-        any_placed = False
         for ds in drawer_states:
-            if ds.drawer in fits[board]:
-                if self.__can_place_board(ds, price, weight, current_cost):
-                    any_placed = True
-                    # Place board
-                    ds.current_load += weight
-                    ds.current_boards.append(board)
+            if ds.drawer in fits[board] and self.__can_place_board(ds, price, weight, current_cost):
+                # Place board
+                ds.current_load += weight
+                ds.current_boards.append(board)
 
-                    self.__solve(
-                        board_idx,
-                        eligible_boards,
-                        fits,
-                        drawer_states,
-                        current_area + area,
-                        current_cost + price,
-                        current_weight + weight,
-                        total_boards + 1,
-                    )
+                self.__solve(
+                    board_idx,
+                    eligible_boards,
+                    fits,
+                    drawer_states,
+                    current_area + area,
+                    current_cost + price,
+                    current_weight + weight,
+                    total_boards + 1,
+                )
 
-                    # Backtrack
-                    ds.current_boards.pop()
-                    ds.current_load -= weight
+                # Backtrack
+                ds.current_boards.pop()
+                ds.current_load -= weight
 
         # Option 2: Try skipping this board (move to next board type)
         self.__solve(
@@ -161,17 +158,13 @@ class Optimizer:
         self, current_area: int, current_cost: int, current_weight: int, drawer_states: list[DrawerState]
     ) -> None:
         """Compare current solution with the best one found so far and update if better."""
-        is_better = False
-        if current_area > self.__best_area:
-            is_better = True
-        elif current_area == self.__best_area:
-            if current_cost < self.__best_cost:
-                is_better = True
-            elif current_cost == self.__best_cost:
-                if current_weight < self.__best_weight:
-                    is_better = True
-
-        if is_better:
+        if current_area > self.__best_area or (
+            current_area == self.__best_area
+            and (
+                current_cost < self.__best_cost
+                or (current_cost == self.__best_cost and current_weight < self.__best_weight)
+            )
+        ):
             self.__best_area = current_area
             self.__best_cost = float(current_cost)
             self.__best_weight = float(current_weight)
