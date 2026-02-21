@@ -81,24 +81,21 @@ def test_optimizer_optimize_basic():
     # Board 1: 40x30, 2kg, 20 CHF (2000 cents), area 1200
     board1 = CuttingBoard("Board 1", 40, 30, 2000, 2000)
     # Board 2: 40x30, 2kg, 30 CHF (3000 cents), area 1200
-    board2 = CuttingBoard("Board 2", 40, 30, 2000, 3000)
+    board2 = CuttingBoard("Board 2", 41, 31, 2000, 3000)
     # Board 3: 40x30, 2kg, 25 CHF (2500 cents), area 1200
-    board3 = CuttingBoard("Board 3", 40, 30, 2000, 2500)
+    board3 = CuttingBoard("Board 3", 42, 32, 2000, 2500)
 
     # Max budget: 50 CHF (5000 cents)
     # Max boards: 3
-    # Target: Should pick Board 1 and Board 3 (Total area 2400, cost 4500)
-    # Over Board 1 and Board 2 (Total area 2400, cost 5000)
-    # Or Board 2 and Board 3 (Total area 2400, cost 5500 - exceeds budget)
+    # Target: Should pick Board 3 twice (Total area 1344*2 = 2688, cost 5000)
+    # Before it would pick Board 1 and Board 3 because it couldn't pick same board twice.
 
     optimizer = Optimizer([drawer], [board1, board2, board3], 5000, 3)
     result = optimizer.optimize()
 
     assigned_boards = result[drawer]
     assert len(assigned_boards) == 2
-    assert board1 in assigned_boards
-    assert board3 in assigned_boards
-    assert board2 not in assigned_boards
+    assert assigned_boards.count(board3) == 2
 
 
 def test_optimizer_optimize_constraints():
@@ -110,21 +107,23 @@ def test_optimizer_optimize_constraints():
     # Board 1: 45x35, 2000g, 10 CHF (only fits in D2)
     board1 = CuttingBoard("B1", 45, 35, 2000, 1000)
     # Board 2: 25x15, 500g, 5 CHF (fits in both, but only one drawer can take it)
-    board2 = CuttingBoard("B2", 25, 15, 500, 500)
+    board2 = CuttingBoard("B2", 25, 15, 501, 500)
     # Board 3: 25x15, 1200g, 5 CHF (fits in both, but too heavy for D1)
-    board3 = CuttingBoard("B3", 25, 15, 1200, 500)
+    board3 = CuttingBoard("B3", 26, 16, 1200, 500)
 
     optimizer = Optimizer([drawer1, drawer2], [board1, board2, board3], 10000, 10)
     result = optimizer.optimize()
 
     # Optimal should be:
     # B1 in D2 (Area 1575)
-    # B3 in D2 (Area 375)
+    # B1 in D2 (Area 1575)
     # B2 in D1 (Area 375)
-    # Total area: 2325
+    # Total area: 3525
+    # (Total Weight in D2: 4000 <= 5000)
+    # (Total Boards in D2: 2 <= 5)
+    # (Total Cost: 2500 <= 10000)
 
-    assert board1 in result[drawer2]
-    assert board3 in result[drawer2]
+    assert result[drawer2].count(board1) == 2
     assert board2 in result[drawer1]
 
 
@@ -149,3 +148,23 @@ def test_optimizer_optimize_tie_breaking():
     opt2 = Optimizer([drawer], [board1, board2], 10000, 1)
     res2 = opt2.optimize()
     assert res2[drawer] == [board2]
+
+
+def test_optimizer_optimize_multiple_selection():
+    # Drawer: Large enough for 2 boards
+    drawer = Drawer("D", 100, 100, 10000, 2)
+
+    # Board 1: Area 1000, Cost 10
+    board1 = CuttingBoard("B1", 50, 20, 100, 1000)
+    # Board 2: Area 500, Cost 5
+    board2 = CuttingBoard("B2", 25, 20, 100, 500)
+
+    # Target 2 boards, budget 2000.
+    # Should pick Board 1 twice (Total Area 2000, Cost 2000)
+    # if it only picked it once, it would pick Board 1 and Board 2 (Total Area 1500)
+    opt = Optimizer([drawer], [board1, board2], 2000, 2)
+    res = opt.optimize()
+
+    assigned = res[drawer]
+    assert len(assigned) == 2
+    assert assigned.count(board1) == 2

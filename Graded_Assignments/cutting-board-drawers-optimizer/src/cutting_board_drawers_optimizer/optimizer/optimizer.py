@@ -103,7 +103,7 @@ class Optimizer:
         Private recursive method to find the optimal board-to-drawer assignment.
         """
         # Base case: reached end of boards or reached maximum board limit
-        if board_idx == len(eligible_boards) or total_boards == self.__cutting_board_amount:
+        if total_boards == self.__cutting_board_amount or board_idx == len(eligible_boards):
             self.__update_best_solution(current_area, current_cost, current_weight, drawer_states)
             return
 
@@ -113,15 +113,17 @@ class Optimizer:
         area = board.area
 
         # Option 1: Try placing the board in each fitting drawer
+        any_placed = False
         for ds in drawer_states:
             if ds.drawer in fits[board]:
                 if self.__can_place_board(ds, price, weight, current_cost):
+                    any_placed = True
                     # Place board
                     ds.current_load += weight
                     ds.current_boards.append(board)
 
                     self.__solve(
-                        board_idx + 1,
+                        board_idx,
                         eligible_boards,
                         fits,
                         drawer_states,
@@ -135,7 +137,7 @@ class Optimizer:
                     ds.current_boards.pop()
                     ds.current_load -= weight
 
-        # Option 2: Try skipping this board
+        # Option 2: Try skipping this board (move to next board type)
         self.__solve(
             board_idx + 1,
             eligible_boards,

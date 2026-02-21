@@ -41,6 +41,12 @@ class CuttingBoardDrawersOptimizerApp(App):
         height: 1fr;
     }
 
+    /* Tree styling in Optimize tab */
+    #opt_result_tree {
+        height: 1fr;
+        border: solid green;
+    }
+
     /* Inside each manager, make their inner TabbedContent and tables fill space */
     CuttingBoardManager TabbedContent, DrawerManager TabbedContent {
         height: 1fr;
