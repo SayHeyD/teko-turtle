@@ -1,5 +1,6 @@
 from cutting_board_drawers_optimizer.optimizer.cutting_board import CuttingBoard
 from cutting_board_drawers_optimizer.optimizer.drawer import Drawer
+from cutting_board_drawers_optimizer.optimizer.drawer_state import DrawerState
 
 
 class Optimizer:
@@ -55,3 +56,121 @@ class Optimizer:
 
             fits[board] = fitting_drawers
         return fits
+
+    def optimize(self) -> dict[Drawer, list[CuttingBoard]]:
+        """
+        Maximizes the total area of selected cutting boards given:
+        - Total costs <= max_budget.
+        - Total selected boards <= cutting_board_amount.
+        - For each drawer: total weight <= drawer.max_load AND count <= drawer.max_boards.
+        - Boards must fit in assigned drawers.
+
+        Tie-breaking:
+        1. Lower total cost.
+        2. Lower total weight.
+
+        Returns:
+            A dictionary mapping each Drawer to a list of CuttingBoards placed in it.
+        """
+        fits = self.fit_check()
+        # Filter out boards that don't fit in any drawer
+        eligible_boards = [board for board in self.__cutting_boards if fits[board]]
+
+        # Current best solution tracking
+        self.__best_area = -1
+        self.__best_cost = float("inf")
+        self.__best_weight = float("inf")
+        self.__best_assignment: dict[Drawer, list[CuttingBoard]] = {d: [] for d in self.__drawers}
+
+        drawer_states = [DrawerState(d) for d in self.__drawers]
+
+        self.__solve(0, eligible_boards, fits, drawer_states, 0, 0, 0, 0)
+
+        return self.__best_assignment
+
+    def __solve(
+        self,
+        board_idx: int,
+        eligible_boards: list[CuttingBoard],
+        fits: dict[CuttingBoard, list[Drawer]],
+        drawer_states: list[DrawerState],
+        current_area: int,
+        current_cost: int,
+        current_weight: int,
+        total_boards: int,
+    ) -> None:
+        """
+        Private recursive method to find the optimal board-to-drawer assignment.
+        """
+        # Base case: reached end of boards or reached maximum board limit
+        if board_idx == len(eligible_boards) or total_boards == self.__cutting_board_amount:
+            self.__update_best_solution(current_area, current_cost, current_weight, drawer_states)
+            return
+
+        board = eligible_boards[board_idx]
+        price = board.get_price_in_centime()
+        weight = board.get_weight_in_grams()
+        area = board.area
+
+        # Option 1: Try placing the board in each fitting drawer
+        for ds in drawer_states:
+            if ds.drawer in fits[board]:
+                if self.__can_place_board(ds, price, weight, current_cost):
+                    # Place board
+                    ds.current_load += weight
+                    ds.current_boards.append(board)
+
+                    self.__solve(
+                        board_idx + 1,
+                        eligible_boards,
+                        fits,
+                        drawer_states,
+                        current_area + area,
+                        current_cost + price,
+                        current_weight + weight,
+                        total_boards + 1,
+                    )
+
+                    # Backtrack
+                    ds.current_boards.pop()
+                    ds.current_load -= weight
+
+        # Option 2: Try skipping this board
+        self.__solve(
+            board_idx + 1,
+            eligible_boards,
+            fits,
+            drawer_states,
+            current_area,
+            current_cost,
+            current_weight,
+            total_boards,
+        )
+
+    def __can_place_board(self, ds: DrawerState, price: int, weight: int, current_cost: int) -> bool:
+        """Check if a board can be placed in the given drawer state."""
+        return (
+            ds.current_load + weight <= ds.max_load
+            and len(ds.current_boards) + 1 <= ds.max_boards
+            and current_cost + price <= self.__max_budget
+        )
+
+    def __update_best_solution(
+        self, current_area: int, current_cost: int, current_weight: int, drawer_states: list[DrawerState]
+    ) -> None:
+        """Compare current solution with the best one found so far and update if better."""
+        is_better = False
+        if current_area > self.__best_area:
+            is_better = True
+        elif current_area == self.__best_area:
+            if current_cost < self.__best_cost:
+                is_better = True
+            elif current_cost == self.__best_cost:
+                if current_weight < self.__best_weight:
+                    is_better = True
+
+        if is_better:
+            self.__best_area = current_area
+            self.__best_cost = float(current_cost)
+            self.__best_weight = float(current_weight)
+            self.__best_assignment = {ds.drawer: list(ds.current_boards) for ds in drawer_states}
