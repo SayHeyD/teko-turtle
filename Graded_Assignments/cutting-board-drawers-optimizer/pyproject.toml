@@ -1,5 +1,5 @@
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling", "hatch-pyapp"]
 build-backend = "hatchling.build"
 
 [project]
@@ -43,22 +43,7 @@ Documentation = "https://github.com/David Docampo/cutting-board-drawers-optimize
 Issues = "https://github.com/SayHeyD/teko-turtle/issues"
 Source = "https://github.com/SayHeyD/teko-turtle"
 
-[tool.hatch.build.targets.binary]
-scripts = ["cutting-board-drawers-optimizer"]
-
-[tool.hatch.envs.build]
-detached = true
-[tool.hatch.envs.build.env-vars]
-PYAPP_DISTRIBUTION_EMBED = "true"
-PYAPP_PROJECT_PATH = "{root}/dist/cutting-board-drawers-optimizer.tar.gz"
-PYAPP_UV_ENABLED = "true"
-PYAPP_PYTHON_VERSION = "3.14"
-[tool.hatch.envs.build.scripts]
-binary = [
-  "hatch build -c -t sdist",
-  "mv {root}/dist/cutting-board-drawers-optimizer-*.tar.gz {root}/dist/cutting-board-drawers-optimizer.tar.gz",
-  "hatch build -t binary"
-]
+[tool.hatch.build.targets.pyapp]
 
 [tool.hatch.version]
 path = "src/cutting_board_drawers_optimizer/__about__.py"
