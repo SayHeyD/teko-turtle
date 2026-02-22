@@ -92,7 +92,7 @@ async def test_app_load_config_flow(tmp_path):
         # Verify it was added to the table
         cb_manager.action_switch_to_table()
         await pilot.pause()
-        assert cb_manager.query_one(CuttingBoardTable).row_count == 4
+        assert cb_manager.query_one(CuttingBoardTable).row_count == 1
 
         # Save the current state
         await pilot.press("ctrl+s")
@@ -115,9 +115,9 @@ async def test_app_load_config_flow(tmp_path):
         # Verify data is loaded
         cb_manager = app_to_load.query_one(CuttingBoardManager)
         table = cb_manager.query_one(CuttingBoardTable)
-        # 3 default + 1 loaded
-        assert table.row_count == 4
-        assert table.get_row_at(3)[0] == "Load Me"
+        # 0 default + 1 loaded
+        assert table.row_count == 1
+        assert table.get_row_at(0)[0] == "Load Me"
 
 
 @pytest.mark.asyncio

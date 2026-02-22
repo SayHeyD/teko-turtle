@@ -13,8 +13,8 @@ async def test_drawer_manager_initial_population():
     async with app.run_test() as pilot:
         manager = app.query_one(DrawerManager)
         table = manager.query_one(DrawerTable)
-        # 2 initial rows
-        assert table.row_count == 2
+        # 0 initial rows
+        assert table.row_count == 0
         assert len(table.columns) == 6
 
 
@@ -51,12 +51,12 @@ async def test_drawer_manager_add_item():
 
         # Table should have new row
         table = manager.query_one(DrawerTable)
-        assert table.row_count == 3
-        assert table.get_row_at(2)[0] == "Test Drawer"
-        assert table.get_row_at(2)[1] == "80 cm"
-        assert table.get_row_at(2)[2] == "60 cm"
-        assert table.get_row_at(2)[3] == "20000 g"
-        assert table.get_row_at(2)[5] == "4800 cm²"
+        assert table.row_count == 1
+        assert table.get_row_at(0)[0] == "Test Drawer"
+        assert table.get_row_at(0)[1] == "80 cm"
+        assert table.get_row_at(0)[2] == "60 cm"
+        assert table.get_row_at(0)[3] == "20000 g"
+        assert table.get_row_at(0)[5] == "4800 cm²"
 
 
 @pytest.mark.asyncio
@@ -93,12 +93,12 @@ async def test_drawer_manager_add_item_via_enter():
 
         # Table should have new row
         table = manager.query_one(DrawerTable)
-        assert table.row_count == 3
-        assert table.get_row_at(2)[0] == "Enter Drawer"
-        assert table.get_row_at(2)[1] == "10 cm"
-        assert table.get_row_at(2)[2] == "10 cm"
-        assert table.get_row_at(2)[3] == "100 g"
-        assert table.get_row_at(2)[5] == "100 cm²"
+        assert table.row_count == 1
+        assert table.get_row_at(0)[0] == "Enter Drawer"
+        assert table.get_row_at(0)[1] == "10 cm"
+        assert table.get_row_at(0)[2] == "10 cm"
+        assert table.get_row_at(0)[3] == "100 g"
+        assert table.get_row_at(0)[5] == "100 cm²"
 
 
 @pytest.mark.asyncio
@@ -107,6 +107,10 @@ async def test_drawer_manager_delete_item():
     async with app.run_test() as pilot:
         manager = app.query_one(DrawerManager)
         table = manager.query_one(DrawerTable)
+
+        # Add a row first
+        manager.update_from_data([Drawer("Test Delete", 10, 10, 100, 5)])
+        await pilot.pause()
         initial_count = table.row_count
 
         # Focus table and delete first row
@@ -122,9 +126,9 @@ async def test_drawer_manager_data_methods():
     app = CuttingBoardDrawersOptimizerApp()
     async with app.run_test() as pilot:
         manager = app.query_one(DrawerManager)
+        # Initially empty
         data = manager.get_current_data()
-        assert len(data) == 2
-        assert isinstance(data[0], Drawer)
+        assert len(data) == 0
 
         new_data = [Drawer("New Drawer", 50, 40, 5000, 4)]
         manager.update_from_data(new_data)

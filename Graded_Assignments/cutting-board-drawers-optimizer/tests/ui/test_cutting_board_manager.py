@@ -13,8 +13,8 @@ async def test_cutting_board_manager_initial_population():
     async with app.run_test() as pilot:
         manager = app.query_one(CuttingBoardManager)
         table = manager.query_one(CuttingBoardTable)
-        # 3 initial rows
-        assert table.row_count == 3
+        # 0 initial rows
+        assert table.row_count == 0
         assert len(table.columns) == 6
 
 
@@ -58,13 +58,13 @@ async def test_cutting_board_manager_add_item():
 
         # Table should have new row
         table = manager.query_one(CuttingBoardTable)
-        assert table.row_count == 4
-        assert table.get_row_at(3)[0] == "Test Board"
-        assert table.get_row_at(3)[1] == "50 cm"
-        assert table.get_row_at(3)[2] == "40 cm"
-        assert table.get_row_at(3)[3] == "1000 g"
-        assert table.get_row_at(3)[4] == "25.50 CHF"
-        assert table.get_row_at(3)[5] == "2000 cm²"
+        assert table.row_count == 1
+        assert table.get_row_at(0)[0] == "Test Board"
+        assert table.get_row_at(0)[1] == "50 cm"
+        assert table.get_row_at(0)[2] == "40 cm"
+        assert table.get_row_at(0)[3] == "1000 g"
+        assert table.get_row_at(0)[4] == "25.50 CHF"
+        assert table.get_row_at(0)[5] == "2000 cm²"
 
 
 @pytest.mark.asyncio
@@ -101,13 +101,13 @@ async def test_cutting_board_manager_add_item_via_enter():
 
         # Table should have new row
         table = manager.query_one(CuttingBoardTable)
-        assert table.row_count == 4
-        assert table.get_row_at(3)[0] == "Enter Board"
-        assert table.get_row_at(3)[1] == "10 cm"
-        assert table.get_row_at(3)[2] == "10 cm"
-        assert table.get_row_at(3)[3] == "100 g"
-        assert table.get_row_at(3)[4] == "5.00 CHF"
-        assert table.get_row_at(3)[5] == "100 cm²"
+        assert table.row_count == 1
+        assert table.get_row_at(0)[0] == "Enter Board"
+        assert table.get_row_at(0)[1] == "10 cm"
+        assert table.get_row_at(0)[2] == "10 cm"
+        assert table.get_row_at(0)[3] == "100 g"
+        assert table.get_row_at(0)[4] == "5.00 CHF"
+        assert table.get_row_at(0)[5] == "100 cm²"
 
 
 @pytest.mark.asyncio
@@ -116,6 +116,10 @@ async def test_cutting_board_manager_delete_item():
     async with app.run_test() as pilot:
         manager = app.query_one(CuttingBoardManager)
         table = manager.query_one(CuttingBoardTable)
+
+        # Add a row first
+        manager.update_from_data([CuttingBoard("Test Delete", 10, 10, 100, 500)])
+        await pilot.pause()
         initial_count = table.row_count
 
         # Focus table and delete first row
@@ -131,9 +135,9 @@ async def test_cutting_board_manager_data_methods():
     app = CuttingBoardDrawersOptimizerApp()
     async with app.run_test() as pilot:
         manager = app.query_one(CuttingBoardManager)
+        # Initially empty
         data = manager.get_current_data()
-        assert len(data) == 3
-        assert isinstance(data[0], CuttingBoard)
+        assert len(data) == 0
 
         new_data = [CuttingBoard("New CB", 10, 20, 300, 1500)]
         manager.update_from_data(new_data)

@@ -1,5 +1,6 @@
 import pytest
 from textual.widgets import Input, TabbedContent, Label
+from cutting_board_drawers_optimizer.optimizer import CuttingBoard
 from cutting_board_drawers_optimizer.ui.cutting_board_manager import CuttingBoardManager
 from cutting_board_drawers_optimizer.ui.cutting_board_table import CuttingBoardTable
 from cutting_board_drawers_optimizer.ui.edit_cutting_board import EditCuttingBoard
@@ -12,6 +13,10 @@ async def test_cutting_board_manager_edit_item():
     async with app.run_test() as pilot:
         manager = app.query_one(CuttingBoardManager)
         app.action_show_tab("cutting_boards")
+        await pilot.pause()
+
+        # Add data to edit
+        manager.update_from_data([CuttingBoard("Standard CB", 40, 30, 2000, 5039)])
         await pilot.pause()
 
         table = manager.query_one(CuttingBoardTable)

@@ -1,6 +1,9 @@
 import pytest
 from textual.widgets import Input, Label, Button, Tree, Static
+from cutting_board_drawers_optimizer.optimizer import CuttingBoard, Drawer
 from cutting_board_drawers_optimizer.ui.app import CuttingBoardDrawersOptimizerApp
+from cutting_board_drawers_optimizer.ui.cutting_board_manager import CuttingBoardManager
+from cutting_board_drawers_optimizer.ui.drawer_manager import DrawerManager
 from cutting_board_drawers_optimizer.ui.optimize_manager import OptimizeManager
 
 
@@ -48,7 +51,14 @@ async def test_optimize_manager_calculation():
         tree = manager.query_one("#opt_result_tree", Tree)
         result_label = manager.query_one("#opt_result_label", Static)
 
-        # Use default data (already in managers)
+        # Add data for optimization
+        cb_manager = app.query_one(CuttingBoardManager)
+        dr_manager = app.query_one(DrawerManager)
+        cb_manager.update_from_data([CuttingBoard("Standard CB", 40, 30, 2000, 5039)])
+        dr_manager.update_from_data([Drawer("Main Kitchen Drawer", 60, 50, 10000, 5)])
+        await pilot.pause()
+
+        # Use valid parameters
         budget_input.focus()
         budget_input.value = "1000"
         amount_input.value = "10"

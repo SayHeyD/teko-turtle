@@ -1,5 +1,6 @@
 import pytest
 from textual.widgets import Input, TabbedContent, Label
+from cutting_board_drawers_optimizer.optimizer import Drawer
 from cutting_board_drawers_optimizer.ui.drawer_manager import DrawerManager
 from cutting_board_drawers_optimizer.ui.drawer_table import DrawerTable
 from cutting_board_drawers_optimizer.ui import CuttingBoardDrawersOptimizerApp
@@ -12,6 +13,10 @@ async def test_drawer_manager_edit_item():
         manager = app.query_one(DrawerManager)
         # Switch to drawers tab
         app.action_show_tab("drawers")
+        await pilot.pause()
+
+        # Add data to edit
+        manager.update_from_data([Drawer("Main Kitchen Drawer", 60, 50, 10000, 5)])
         await pilot.pause()
 
         table = manager.query_one(DrawerTable)

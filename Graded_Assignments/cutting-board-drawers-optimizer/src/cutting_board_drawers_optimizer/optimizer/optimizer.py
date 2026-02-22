@@ -31,10 +31,10 @@ class Optimizer:
         self.__cutting_board_amount = cutting_board_amount
 
         # Field initialization
-        self.__best_assignment = None
-        self.__best_weight = None
-        self.__best_cost = None
-        self.__best_area = None
+        self.__best_assignment: dict[Drawer, list[CuttingBoard]] = {}
+        self.__best_weight: float = float("inf")
+        self.__best_cost: float = float("inf")
+        self.__best_area: int = -1
 
     @property
     def drawers(self) -> list[Drawer]:
@@ -120,7 +120,7 @@ class Optimizer:
         self.__best_cost = float("inf")
         self.__best_weight = float("inf")
         # Generator statement create an emtpy array for each drawer
-        self.__best_assignment: dict[Drawer, list[CuttingBoard]] = {d: [] for d in self.__drawers}
+        self.__best_assignment = {d: [] for d in self.__drawers}
 
         # Initialize the internal state for each drawer to track the current load during the search
         # Generator statement create a DrawerState object for each drawer

@@ -24,7 +24,7 @@ async def test_drawer_table_invalid_data_parsing():
         # Add a row with invalid data
         table.add_row("Bad Row", "not a number", "10", "10", "5", "0")
         data = table.get_current_data()
-        # Should skip the bad row (2 initial valid rows)
-        assert len(data) == 2
+        # Initially 0, plus 1 invalid row skipped = 0
+        assert len(data) == 0
         for item in data:
             assert item.get_name() != "Bad Row"
