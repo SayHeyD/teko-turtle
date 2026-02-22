@@ -1,14 +1,33 @@
 # Cutting Board Drawers Optimizer
 
+An application for calculating which cutting boards optimally fit into which kitchen drawers.
+
 [![CI](https://github.com/SayHeyD/teko-turtle/actions/workflows/cutting-board-drawers-optimizer.yml/badge.svg)](https://github.com/SayHeyD/teko-turtle/actions/workflows/cutting-board-drawers-optimizer.yml)
 
 -----
 
 ## Table of Contents
 
-- [Prerequisites](#prerequisites)   
+- [Usage](#usage)
+- [Keyboard Shortcuts](#keyboard-shortcuts)
+- [Prerequisites](#prerequisites)
 - [Installation](#installation)
+- [Development](#development)
 - [License](#license)
+
+## Keyboard Shortcuts
+
+| Shortcut   | Action                                        |
+|:-----------|:----------------------------------------------|
+| `c`        | Switch to **Cutting Boards** tab              |
+| `d`        | Switch to **Drawers** tab                     |
+| `o`        | Switch to **Optimize** tab                    |
+| `Ctrl + S` | **Save** current configuration to JSON        |
+| `Ctrl + O` | **Open** a configuration from JSON            |
+| `Ctrl + N` | Switch to the **Create** tab within a manager |
+| `Ctrl + E` | **Edit** the selected row in a table          |
+| `Ctrl + D` | **Delete** the selected row in a table        |
+| `Enter`    | Submit a form or confirm an action            |
 
 ## Prerequisites
 
@@ -18,6 +37,14 @@
 
 ```shell
 pip install cutting-board-drawers-optimizer
+```
+
+## Development
+
+### Run the application
+
+```shell
+hatch run start
 ```
 
 ### Run tests
@@ -44,12 +71,6 @@ hatch fmt --check
 
 ```shell
 hatch run types:check
-```
-
-## Run the application
-
-```shell
-hatch run start
 ```
 
 ## Cleanup envs
