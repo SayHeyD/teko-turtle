@@ -59,12 +59,9 @@ jobs:
         path: Graded_Assignments/cutting-board-drawers-optimizer/cover/
 
   build:
-    name: Build (${{ matrix.os }})
+    name: Build
     needs: [lint, test]
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: Graded_Assignments/cutting-board-drawers-optimizer
@@ -76,10 +73,10 @@ jobs:
         python-version: "3.14"
     - name: Install Hatch
       run: pip install --upgrade hatch
-    - name: Build with PyApp
-      run: hatch build -t pyapp
+    - name: Build package
+      run: hatch build
     - name: Upload Build Output
       uses: actions/upload-artifact@v4
       with:
-        name: build-output-${{ matrix.os }}
+        name: build-output
         path: Graded_Assignments/cutting-board-drawers-optimizer/dist/
