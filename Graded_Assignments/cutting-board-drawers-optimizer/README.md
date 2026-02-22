@@ -8,11 +8,11 @@ An application for calculating which cutting boards optimally fit into which kit
 
 ## Table of Contents
 
-- [Usage](#usage)
 - [Keyboard Shortcuts](#keyboard-shortcuts)
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
 - [Development](#development)
+- [Usage](#usage)
 - [License](#license)
 
 ## Keyboard Shortcuts
@@ -81,10 +81,6 @@ Can be necessary after e.g. homebrew upgrades of python versions:
 hatch env remove test
 ```
 
-## License
-
-`cutting-board-drawers-optimizer` is distributed under the terms of the [MIT](https://spdx.org/licenses/MIT.html) license.
-
 ## Usage
 
 First of all, add some drawers and cutting boards.
@@ -106,3 +102,7 @@ Then you can input your budget and total number of boards.
 After confirming, you will be shown the results.
 
 ![Results](./docs/results.png)
+
+## License
+
+`cutting-board-drawers-optimizer` is distributed under the terms of the [MIT](https://spdx.org/licenses/MIT.html) license.
