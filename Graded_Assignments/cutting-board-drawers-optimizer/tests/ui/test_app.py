@@ -121,6 +121,43 @@ async def test_app_load_config_flow(tmp_path):
 
 
 @pytest.mark.asyncio
+async def test_app_save_load_optimization_params(tmp_path):
+    config_path = str(tmp_path / "opt_params.json")
+    app = CuttingBoardDrawersOptimizerApp()
+    async with app.run_test() as pilot:
+        # Switch to optimize tab
+        await pilot.press("o")
+        await pilot.pause()
+
+        opt_manager = app.query_one(OptimizeManager)
+        opt_manager.query_one("#opt_budget", Input).value = "123.45"
+        opt_manager.query_one("#opt_amount", Input).value = "42"
+
+        # Save
+        await pilot.press("ctrl+s")
+        await pilot.pause()
+        app.screen.query_one("#path_input", Input).value = config_path
+        await pilot.click("#confirm")
+        await pilot.pause()
+
+    # Load in new app
+    app_new = CuttingBoardDrawersOptimizerApp()
+    async with app_new.run_test() as pilot:
+        await pilot.press("ctrl+o")
+        await pilot.pause()
+        app_new.screen.query_one("#path_input", Input).value = config_path
+        await pilot.click("#open")
+        await pilot.pause()
+
+        # Check values
+        await pilot.press("o")
+        await pilot.pause()
+        opt_manager = app_new.query_one(OptimizeManager)
+        assert opt_manager.query_one("#opt_budget", Input).value == "123.45"
+        assert opt_manager.query_one("#opt_amount", Input).value == "42"
+
+
+@pytest.mark.asyncio
 async def test_app_tab_switching():
     app = CuttingBoardDrawersOptimizerApp()
     async with app.run_test() as pilot:

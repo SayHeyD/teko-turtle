@@ -9,14 +9,20 @@ from cutting_board_drawers_optimizer.state.saving_data_failed_error import Savin
 
 
 class State:
-    def __init__(self, drawers: list[Drawer] | None = None, cutting_boards: list[CuttingBoard] | None = None):
+    def __init__(
+        self,
+        drawers: list[Drawer] | None = None,
+        cutting_boards: list[CuttingBoard] | None = None,
+        budget_cents: int | None = None,
+        cutting_board_amount: int | None = None,
+    ):
         if drawers is None:
             drawers = []
 
         if cutting_boards is None:
             cutting_boards = []
 
-        self.set_data(drawers, cutting_boards)
+        self.set_data(drawers, cutting_boards, budget_cents, cutting_board_amount)
 
     def _get_data(self) -> StateData:
         return self.__data
@@ -27,8 +33,20 @@ class State:
     def get_cutting_boards(self) -> list[CuttingBoard]:
         return self.__data.get_cutting_boards()
 
-    def set_data(self, drawers: list[Drawer], cutting_boards: list[CuttingBoard]) -> None:
-        self.__data = StateData(drawers, cutting_boards)
+    def get_budget_cents(self) -> int | None:
+        return self.__data.get_budget_cents()
+
+    def get_cutting_board_amount(self) -> int | None:
+        return self.__data.get_cutting_board_amount()
+
+    def set_data(
+        self,
+        drawers: list[Drawer],
+        cutting_boards: list[CuttingBoard],
+        budget_cents: int | None = None,
+        cutting_board_amount: int | None = None,
+    ) -> None:
+        self.__data = StateData(drawers, cutting_boards, budget_cents, cutting_board_amount)
 
     def load(self, file_path: str) -> Self:
         if not os.path.exists(file_path):

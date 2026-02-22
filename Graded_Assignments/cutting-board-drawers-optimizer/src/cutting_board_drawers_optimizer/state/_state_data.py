@@ -2,15 +2,29 @@ from cutting_board_drawers_optimizer.optimizer import CuttingBoard, Drawer
 
 
 class StateData:
-    def __init__(self, drawers: list[Drawer], cutting_boards: list[CuttingBoard]):
+    def __init__(
+        self,
+        drawers: list[Drawer],
+        cutting_boards: list[CuttingBoard],
+        budget_cents: int | None = None,
+        cutting_board_amount: int | None = None,
+    ):
         self.__drawers = drawers
         self.__cutting_boards = cutting_boards
+        self.__budget_cents = budget_cents
+        self.__cutting_board_amount = cutting_board_amount
 
     def get_drawers(self) -> list[Drawer]:
         return self.__drawers
 
     def get_cutting_boards(self) -> list[CuttingBoard]:
         return self.__cutting_boards
+
+    def get_budget_cents(self) -> int | None:
+        return self.__budget_cents
+
+    def get_cutting_board_amount(self) -> int | None:
+        return self.__cutting_board_amount
 
     def to_dict(self) -> dict:
         return {
@@ -35,6 +49,8 @@ class StateData:
                 }
                 for cutting_boards in self.__cutting_boards
             ],
+            "budget_cents": self.__budget_cents,
+            "cutting_board_amount": self.__cutting_board_amount,
         }
 
     @classmethod
@@ -59,4 +75,6 @@ class StateData:
             )
             for cutting_board in data.get("cutting_boards", [])
         ]
-        return cls(drawers, cutting_boards)
+        budget_cents = data.get("budget_cents")
+        cutting_board_amount = data.get("cutting_board_amount")
+        return cls(drawers, cutting_boards, budget_cents, cutting_board_amount)

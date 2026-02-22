@@ -54,10 +54,15 @@ class CreateCuttingBoard(Widget):
             if not valid and err is not None:
                 errors.append(err)
 
-            for val, label in [(length, "Length"), (width, "Width"), (weight, "Weight"), (price, "Price")]:
+            for val, label in [(length, "Length"), (width, "Width"), (weight, "Weight")]:
                 valid, err = Validator.is_positive_number(val, label)
                 if not valid and err is not None:
                     errors.append(err)
+
+            # Validate price as currency
+            valid_price, err_price = Validator.is_valid_currency(price, "Price")
+            if not valid_price and err_price is not None:
+                errors.append(err_price)
 
             if errors:
                 error_label.update(" ".join(errors))

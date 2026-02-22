@@ -48,3 +48,20 @@ def test_state_data_returns_correct_cutting_boards(get_drawers, get_cutting_boar
     state_data = StateData(get_drawers, get_cutting_boards)
 
     assert state_data.get_cutting_boards() == get_cutting_boards
+
+
+def test_state_data_persistence(get_drawers, get_cutting_boards):
+    budget = 10000
+    amount = 5
+    state_data = StateData(get_drawers, get_cutting_boards, budget, amount)
+
+    assert state_data.get_budget_cents() == budget
+    assert state_data.get_cutting_board_amount() == amount
+
+    as_dict = state_data.to_dict()
+    assert as_dict["budget_cents"] == budget
+    assert as_dict["cutting_board_amount"] == amount
+
+    reloaded = StateData.from_dict(as_dict)
+    assert reloaded.get_budget_cents() == budget
+    assert reloaded.get_cutting_board_amount() == amount

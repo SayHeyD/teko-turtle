@@ -51,13 +51,15 @@ class OptimizeManager(Widget):
             error_label = self.query_one("#opt_error", Label)
             errors = []
 
-            for val, label in [
-                (budget_str, "Budget"),
-                (amount_str, "Amount of Cutting Boards"),
-            ]:
-                valid, err = Validator.is_positive_number(val, label)
-                if not valid and err is not None:
-                    errors.append(err)
+            # Validate budget as currency
+            valid_budget, err_budget = Validator.is_valid_currency(budget_str, "Budget")
+            if not valid_budget and err_budget is not None:
+                errors.append(err_budget)
+
+            # Validate amount as positive number
+            valid_amount, err_amount = Validator.is_positive_number(amount_str, "Amount of Cutting Boards")
+            if not valid_amount and err_amount is not None:
+                errors.append(err_amount)
 
             if errors:
                 error_label.update(" ".join(errors))
@@ -141,3 +143,24 @@ class OptimizeManager(Widget):
         """Handle input submission (pressing Enter)."""
         # Trigger the same logic as clicking "Confirm"
         self.on_button_pressed(Button.Pressed(self.query_one("#opt_confirm", Button)))
+
+    def get_current_data(self) -> tuple[str, str]:
+        """Return the current budget and amount as strings."""
+        budget = self.query_one("#opt_budget", Input).value.strip()
+        amount = self.query_one("#opt_amount", Input).value.strip()
+        return budget, amount
+
+    def update_from_data(self, budget_cents: int | None, amount: int | None) -> None:
+        """Update the input fields with the provided data."""
+        budget_input = self.query_one("#opt_budget", Input)
+        amount_input = self.query_one("#opt_amount", Input)
+
+        if budget_cents is not None:
+            budget_input.value = f"{budget_cents / 100:.2f}"
+        else:
+            budget_input.value = ""
+
+        if amount is not None:
+            amount_input.value = str(amount)
+        else:
+            amount_input.value = ""

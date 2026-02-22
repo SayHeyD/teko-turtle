@@ -1,3 +1,4 @@
+import contextlib
 import os
 from typing import ClassVar
 
@@ -118,10 +119,26 @@ class CuttingBoardDrawersOptimizerApp(App):
                 # Sync UI data to state before saving
                 cb_manager = self.query_one(CuttingBoardManager)
                 dr_manager = self.query_one(DrawerManager)
+                opt_manager = self.query_one(OptimizeManager)
 
                 # Update state with current UI data
+                budget_str, amount_str = opt_manager.get_current_data()
+
+                budget_cents = None
+                if budget_str:
+                    with contextlib.suppress(ValueError):
+                        budget_cents = int(float(budget_str) * 100)
+
+                amount = None
+                if amount_str:
+                    with contextlib.suppress(ValueError):
+                        amount = int(amount_str)
+
                 self._state.set_data(
-                    drawers=dr_manager.get_current_data(), cutting_boards=cb_manager.get_current_data()
+                    drawers=dr_manager.get_current_data(),
+                    cutting_boards=cb_manager.get_current_data(),
+                    budget_cents=budget_cents,
+                    cutting_board_amount=amount,
                 )
 
                 # Remove the file if it already exists
@@ -166,10 +183,12 @@ class CuttingBoardDrawersOptimizerApp(App):
                 # Get the UI components
                 cb_manager = self.query_one(CuttingBoardManager)
                 dr_manager = self.query_one(DrawerManager)
+                opt_manager = self.query_one(OptimizeManager)
 
                 # Update the UI components with the loaded data
                 cb_manager.update_from_data(self._state.get_cutting_boards())
                 dr_manager.update_from_data(self._state.get_drawers())
+                opt_manager.update_from_data(self._state.get_budget_cents(), self._state.get_cutting_board_amount())
 
             except (FileNotFoundError, LoadingDataFailedError) as e:
                 # If an error occurs, write a message to the log
