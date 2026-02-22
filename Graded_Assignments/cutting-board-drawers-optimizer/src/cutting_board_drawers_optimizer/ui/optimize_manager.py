@@ -21,9 +21,8 @@ class OptimizeManager(Widget):
     def compose(self) -> ComposeResult:
         """Compose the OptimizeManager UI."""
         with Vertical(id="optimize_form"):
-            yield Label("Optimization Settings")
             yield Label("Budget (CHF)")
-            yield Input(placeholder="Budget", id="opt_budget")
+            yield Input(placeholder="Budget (CHF)", id="opt_budget")
             yield Label("Amount of Cutting Boards")
             yield Input(placeholder="Amount of Cutting Boards", id="opt_amount")
             yield Label("", id="opt_error", classes="error")
@@ -88,15 +87,17 @@ class OptimizeManager(Widget):
         optimizer = Optimizer(drawers, cutting_boards, budget_cents, amount)
         result = optimizer.optimize()
 
-        self.__display_results(result)
+        self.__display_results(result, budget_cents, amount)
 
-    def __display_results(self, result: dict) -> None:
+    def __display_results(self, result: dict, budget_limit_cents: int, board_limit: int) -> None:
         """Display the optimization results in the Tree."""
         tree = self.query_one("#opt_result_tree", Tree)
         result_label = self.query_one("#opt_result_label", Static)
 
         tree.clear()
         any_assigned = False
+        total_global_cost_cents = 0
+        total_global_boards = 0
 
         for drawer, boards in result.items():
             if boards:
@@ -106,19 +107,31 @@ class OptimizeManager(Widget):
                 total_cost_cents = sum(b.get_price_in_centime() for b in boards)
                 total_cost_chf = f"{total_cost_cents / 100:.2f}"
 
-                drawer_node = tree.root.add(
-                    f"[bold]{drawer.get_name()}[/bold] (Area: {total_area}, Weight: {total_weight}, Cost: {total_cost_chf} CHF)",
-                    expand=True,
+                total_global_cost_cents += total_cost_cents
+                total_global_boards += len(boards)
+
+                drawer_label = (
+                    f"[bold]{drawer.get_name()}[/bold] (Area: {total_area} cm², "
+                    f"Weight: {total_weight}/{drawer.get_max_load_in_grams()} g, "
+                    f"Boards: {len(boards)}/{drawer.get_max_boards()}, "
+                    f"Cost: {total_cost_chf} CHF)"
                 )
+                drawer_node = tree.root.add(drawer_label, expand=True)
                 for board in boards:
                     drawer_node.add_leaf(
-                        f"{board.get_name()} (Area: {board.area}, Weight: {board.get_weight_in_grams()}, Price: {board.get_price_in_chf()} CHF)"
+                        f"{board.get_name()} (Area: {board.area} cm², Weight: {board.get_weight_in_grams()} g, Price: {board.get_price_in_chf()} CHF)"
                     )
 
         if not any_assigned:
             result_label.update("No cutting boards could be assigned with the given constraints.")
             tree.display = False
         else:
+            total_global_cost_chf = f"{total_global_cost_cents / 100:.2f}"
+            budget_limit_chf = f"{budget_limit_cents / 100:.2f}"
+            tree.root.label = (
+                f"Total Cost: {total_global_cost_chf}/{budget_limit_chf} CHF, "
+                f"Total Boards: {total_global_boards}/{board_limit})"
+            )
             result_label.update("Optimization Result:")
             tree.display = True
 

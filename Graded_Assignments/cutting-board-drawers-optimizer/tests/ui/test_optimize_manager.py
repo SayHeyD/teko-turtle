@@ -61,3 +61,18 @@ async def test_optimize_manager_calculation():
         assert result_label.display is True
         # Tree root + at least one drawer node
         assert len(tree.root.children) > 0
+
+        # Verify units in root label
+        assert "CHF" in str(tree.root.label)
+        # Verify area unit cm² in first drawer node label
+        assert "cm²" in str(tree.root.children[0].label)
+        # Verify weight unit g in first drawer node label
+        assert " g" in str(tree.root.children[0].label)
+        # Verify cost unit CHF in first drawer node label
+        assert "CHF" in str(tree.root.children[0].label)
+        # Verify area unit cm² in first board node label
+        assert "cm²" in str(tree.root.children[0].children[0].label)
+        # Verify weight unit g in first board node label
+        assert " g" in str(tree.root.children[0].children[0].label)
+        # Verify price unit CHF in first board node label
+        assert "CHF" in str(tree.root.children[0].children[0].label)

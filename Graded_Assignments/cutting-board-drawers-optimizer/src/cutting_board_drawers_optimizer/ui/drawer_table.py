@@ -63,11 +63,11 @@ class DrawerTable(DataTable):
         for row_index in range(self.row_count):
             row = self.get_row_at(row_index)
             try:
-                # We expect: name, length, width, max_load
+                # We expect: name, length, width, max_load, max_boards
                 name = str(row[0])
-                length = int(float(row[1]))
-                width = int(float(row[2]))
-                max_load = int(float(row[3]))
+                length = int(float(str(row[1]).split(" ")[0]))
+                width = int(float(str(row[2]).split(" ")[0]))
+                max_load = int(float(str(row[3]).split(" ")[0]))
                 max_boards = int(float(row[4]))
                 drawers.append(Drawer(name, length, width, max_load, max_boards))
             except (ValueError, IndexError):
@@ -80,9 +80,9 @@ class DrawerTable(DataTable):
         for drawer in drawers:
             self.add_row(
                 drawer.get_name(),
-                str(drawer.get_length_in_centimeters()),
-                str(drawer.get_width_in_centimeters()),
-                str(drawer.get_max_load_in_grams()),
+                f"{drawer.get_length_in_centimeters()} cm",
+                f"{drawer.get_width_in_centimeters()} cm",
+                f"{drawer.get_max_load_in_grams()} g",
                 str(drawer.get_max_boards()),
-                str(drawer.area),
+                f"{drawer.area} cm²",
             )

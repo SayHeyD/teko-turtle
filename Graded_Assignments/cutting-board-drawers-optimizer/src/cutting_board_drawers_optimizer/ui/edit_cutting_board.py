@@ -30,20 +30,20 @@ class EditCuttingBoard(Widget):
         with Vertical(id="cutting_board_edit_form"):
             yield Label("Edit Cutting Board")
             yield Input(placeholder="Name", id="cbe_name")
-            yield Input(placeholder="Length", id="cbe_length")
-            yield Input(placeholder="Width", id="cbe_width")
-            yield Input(placeholder="Weight", id="cbe_weight")
-            yield Input(placeholder="Price", id="cbe_price")
+            yield Input(placeholder="Length (cm)", id="cbe_length")
+            yield Input(placeholder="Width (cm)", id="cbe_width")
+            yield Input(placeholder="Weight (g)", id="cbe_weight")
+            yield Input(placeholder="Price (CHF)", id="cbe_price")
             yield Label("", id="cbe_error", classes="error")
             yield Button("Save", id="cbe_save", variant="primary")
 
     def set_values(self, name: str, length: str, width: str, weight: str, price: str) -> None:
         """Set the values of the input fields."""
         self.query_one("#cbe_name", Input).value = name
-        self.query_one("#cbe_length", Input).value = length
-        self.query_one("#cbe_width", Input).value = width
-        self.query_one("#cbe_weight", Input).value = weight
-        self.query_one("#cbe_price", Input).value = price
+        self.query_one("#cbe_length", Input).value = length.replace(" cm", "")
+        self.query_one("#cbe_width", Input).value = width.replace(" cm", "")
+        self.query_one("#cbe_weight", Input).value = weight.replace(" g", "")
+        self.query_one("#cbe_price", Input).value = price.replace(" CHF", "")
         self.query_one("#cbe_error", Label).update("")
         self.query_one("#cbe_error", Label).visible = False
 

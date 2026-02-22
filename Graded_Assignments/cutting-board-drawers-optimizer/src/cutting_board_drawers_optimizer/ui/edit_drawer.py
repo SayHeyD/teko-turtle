@@ -30,9 +30,9 @@ class EditDrawer(Widget):
         with Vertical(id="drawer_edit_form"):
             yield Label("Edit Drawer")
             yield Input(placeholder="Name", id="de_name")
-            yield Input(placeholder="Length", id="de_length")
-            yield Input(placeholder="Width", id="de_width")
-            yield Input(placeholder="Maximum Load", id="de_max_load")
+            yield Input(placeholder="Length (cm)", id="de_length")
+            yield Input(placeholder="Width (cm)", id="de_width")
+            yield Input(placeholder="Maximum Load (g)", id="de_max_load")
             yield Input(placeholder="Max Boards", id="de_max_boards")
             yield Label("", id="de_error", classes="error")
             yield Button("Save", id="de_save", variant="primary")
@@ -40,9 +40,9 @@ class EditDrawer(Widget):
     def set_values(self, name: str, length: str, width: str, max_load: str, max_boards: str) -> None:
         """Set the values of the input fields."""
         self.query_one("#de_name", Input).value = name
-        self.query_one("#de_length", Input).value = length
-        self.query_one("#de_width", Input).value = width
-        self.query_one("#de_max_load", Input).value = max_load
+        self.query_one("#de_length", Input).value = length.replace(" cm", "")
+        self.query_one("#de_width", Input).value = width.replace(" cm", "")
+        self.query_one("#de_max_load", Input).value = max_load.replace(" g", "")
         self.query_one("#de_max_boards", Input).value = max_boards
         self.query_one("#de_error", Label).update("")
         self.query_one("#de_error", Label).visible = False

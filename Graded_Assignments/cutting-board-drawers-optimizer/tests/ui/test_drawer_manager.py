@@ -53,6 +53,10 @@ async def test_drawer_manager_add_item():
         table = manager.query_one(DrawerTable)
         assert table.row_count == 3
         assert table.get_row_at(2)[0] == "Test Drawer"
+        assert table.get_row_at(2)[1] == "80 cm"
+        assert table.get_row_at(2)[2] == "60 cm"
+        assert table.get_row_at(2)[3] == "20000 g"
+        assert table.get_row_at(2)[5] == "4800 cm²"
 
 
 @pytest.mark.asyncio
@@ -91,6 +95,10 @@ async def test_drawer_manager_add_item_via_enter():
         table = manager.query_one(DrawerTable)
         assert table.row_count == 3
         assert table.get_row_at(2)[0] == "Enter Drawer"
+        assert table.get_row_at(2)[1] == "10 cm"
+        assert table.get_row_at(2)[2] == "10 cm"
+        assert table.get_row_at(2)[3] == "100 g"
+        assert table.get_row_at(2)[5] == "100 cm²"
 
 
 @pytest.mark.asyncio

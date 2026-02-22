@@ -60,6 +60,11 @@ async def test_cutting_board_manager_add_item():
         table = manager.query_one(CuttingBoardTable)
         assert table.row_count == 4
         assert table.get_row_at(3)[0] == "Test Board"
+        assert table.get_row_at(3)[1] == "50 cm"
+        assert table.get_row_at(3)[2] == "40 cm"
+        assert table.get_row_at(3)[3] == "1000 g"
+        assert table.get_row_at(3)[4] == "25.50 CHF"
+        assert table.get_row_at(3)[5] == "2000 cm²"
 
 
 @pytest.mark.asyncio
@@ -98,6 +103,11 @@ async def test_cutting_board_manager_add_item_via_enter():
         table = manager.query_one(CuttingBoardTable)
         assert table.row_count == 4
         assert table.get_row_at(3)[0] == "Enter Board"
+        assert table.get_row_at(3)[1] == "10 cm"
+        assert table.get_row_at(3)[2] == "10 cm"
+        assert table.get_row_at(3)[3] == "100 g"
+        assert table.get_row_at(3)[4] == "5.00 CHF"
+        assert table.get_row_at(3)[5] == "100 cm²"
 
 
 @pytest.mark.asyncio
@@ -132,6 +142,11 @@ async def test_cutting_board_manager_data_methods():
         table = manager.query_one(CuttingBoardTable)
         assert table.row_count == 1
         assert table.get_row_at(0)[0] == "New CB"
+        assert table.get_row_at(0)[1] == "10 cm"
+        assert table.get_row_at(0)[2] == "20 cm"
+        assert table.get_row_at(0)[3] == "300 g"
+        assert table.get_row_at(0)[4] == "15.00 CHF"
+        assert table.get_row_at(0)[5] == "200 cm²"
 
 
 @pytest.mark.asyncio

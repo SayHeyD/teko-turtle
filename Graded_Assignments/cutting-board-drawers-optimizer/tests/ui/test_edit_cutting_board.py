@@ -35,10 +35,10 @@ async def test_cutting_board_manager_edit_item():
 
         # Check if the selected row's values are correctly populated
         assert app.query_one("#cbe_name", Input).value == str(expected_row[0])
-        assert app.query_one("#cbe_length", Input).value == str(expected_row[1])
-        assert app.query_one("#cbe_width", Input).value == str(expected_row[2])
-        assert app.query_one("#cbe_weight", Input).value == str(expected_row[3])
-        assert app.query_one("#cbe_price", Input).value == str(expected_row[4])
+        assert app.query_one("#cbe_length", Input).value == str(expected_row[1]).replace(" cm", "")
+        assert app.query_one("#cbe_width", Input).value == str(expected_row[2]).replace(" cm", "")
+        assert app.query_one("#cbe_weight", Input).value == str(expected_row[3]).replace(" g", "")
+        assert app.query_one("#cbe_price", Input).value == str(expected_row[4]).replace(" CHF", "")
 
         # Edit values programmatically (click+type is unreliable in headless mode)
         edit_form = manager.query_one(EditCuttingBoard)
@@ -54,4 +54,4 @@ async def test_cutting_board_manager_edit_item():
         # Verify the row was updated
         row = table.get_row_at(selected_index)
         assert row[0] == "Updated CB"
-        assert row[4] == "60.00"
+        assert row[4] == "60.00 CHF"

@@ -26,8 +26,8 @@ class DrawerManager(Widget):
 
     ROWS: ClassVar[list[tuple[str, str, str, str, str, str]]] = [
         ("Name", "Length", "Width", "Maximum Load", "Max Boards", "Area"),
-        ("Main Kitchen Drawer", "60", "50", "10000", "5", "3000"),
-        ("Small Side Drawer", "40", "30", "5000", "3", "1200"),
+        ("Main Kitchen Drawer", "60 cm", "50 cm", "10000 g", "5", "3000 cm²"),
+        ("Small Side Drawer", "40 cm", "30 cm", "5000 g", "3", "1200 cm²"),
     ]
 
     # Keybinds specific to the Drawer Manager
@@ -55,7 +55,14 @@ class DrawerManager(Widget):
         """Handle the creation of a new drawer."""
         table = self.query_one(DrawerTable)
         area = int(message.length) * int(message.width)
-        table.add_row(message.name, message.length, message.width, message.max_load, message.max_boards, str(area))
+        table.add_row(
+            message.name,
+            f"{message.length} cm",
+            f"{message.width} cm",
+            f"{message.max_load} g",
+            message.max_boards,
+            f"{area} cm²",
+        )
         self.call_after_refresh(self.action_switch_to_table)
 
     def on_drawer_table_edit_requested(self, message: DrawerTable.EditRequested) -> None:

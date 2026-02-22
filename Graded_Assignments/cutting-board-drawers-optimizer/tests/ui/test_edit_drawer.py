@@ -47,4 +47,4 @@ async def test_drawer_manager_edit_item():
 
         # Table should have updated row
         assert table.get_row_at(0)[0] == "Updated Drawer"
-        assert table.get_row_at(0)[1] == "75"
+        assert table.get_row_at(0)[1] == "75 cm"

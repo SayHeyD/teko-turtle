@@ -30,9 +30,9 @@ class CreateDrawer(Widget):
         with Vertical(id="drawer_form"):
             yield Label("Create Drawer")
             yield Input(placeholder="Name", id="d_name")
-            yield Input(placeholder="Length", id="d_length")
-            yield Input(placeholder="Width", id="d_width")
-            yield Input(placeholder="Maximum Load", id="d_max_load")
+            yield Input(placeholder="Length (cm)", id="d_length")
+            yield Input(placeholder="Width (cm)", id="d_width")
+            yield Input(placeholder="Maximum Load (g)", id="d_max_load")
             yield Input(placeholder="Max Boards", id="d_max_boards")
             yield Label("", id="d_error", classes="error")
             yield Button("Add", id="d_add", variant="primary")

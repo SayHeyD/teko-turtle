@@ -30,10 +30,10 @@ class CreateCuttingBoard(Widget):
         with Vertical(id="cutting_board_form"):
             yield Label("Create Cutting Board")
             yield Input(placeholder="Name", id="cb_name")
-            yield Input(placeholder="Length", id="cb_length")
-            yield Input(placeholder="Width", id="cb_width")
-            yield Input(placeholder="Weight", id="cb_weight")
-            yield Input(placeholder="Price", id="cb_price")
+            yield Input(placeholder="Length (cm)", id="cb_length")
+            yield Input(placeholder="Width (cm)", id="cb_width")
+            yield Input(placeholder="Weight (g)", id="cb_weight")
+            yield Input(placeholder="Price (CHF)", id="cb_price")
             yield Label("", id="cb_error", classes="error")
             yield Button("Add", id="cb_add", variant="primary")
 

@@ -27,9 +27,9 @@ class CuttingBoardManager(Widget):
 
     ROWS: ClassVar[list[tuple[str, str, str, str, str, str]]] = [
         ("Name", "Length", "Width", "Weight", "Price", "Area"),
-        ("Large Oak", "40", "30", "2000", "50.39", "1200"),
-        ("Medium Beech", "30", "20", "1500", "35.50", "600"),
-        ("Small Plastic", "20", "15", "500", "12.00", "300"),
+        ("Large Oak", "40 cm", "30 cm", "2000 g", "50.39 CHF", "1200 cm²"),
+        ("Medium Beech", "30 cm", "20 cm", "1500 g", "35.50 CHF", "600 cm²"),
+        ("Small Plastic", "20 cm", "15 cm", "500 g", "12.00 CHF", "300 cm²"),
     ]
 
     # Keybinds specific to the Cutting Board Manager
@@ -57,7 +57,15 @@ class CuttingBoardManager(Widget):
         """Handle the creation of a new cutting board."""
         table = self.query_one(CuttingBoardTable)
         area = int(message.length) * int(message.width)
-        table.add_row(message.name, message.length, message.width, message.weight, message.price, str(area))
+        price_val = float(message.price)
+        table.add_row(
+            message.name,
+            f"{message.length} cm",
+            f"{message.width} cm",
+            f"{message.weight} g",
+            f"{price_val:.2f} CHF",
+            f"{area} cm²",
+        )
         self.action_switch_to_table()
 
     def on_cutting_board_table_edit_requested(self, message: CuttingBoardTable.EditRequested) -> None:

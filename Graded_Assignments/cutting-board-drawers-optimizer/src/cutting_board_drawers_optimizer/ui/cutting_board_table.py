@@ -66,10 +66,10 @@ class CuttingBoardTable(DataTable):
             row = self.get_row_at(row_index)
             try:
                 name = str(row[0])
-                length = int(float(row[1]))
-                width = int(float(row[2]))
-                weight = int(float(row[3]))
-                price_val = float(row[4])
+                length = int(float(str(row[1]).split(" ")[0]))
+                width = int(float(str(row[2]).split(" ")[0]))
+                weight = int(float(str(row[3]).split(" ")[0]))
+                price_val = float(str(row[4]).split(" ")[0])
                 price_cents = round(price_val * 100)
                 cutting_boards.append(CuttingBoard(name, length, width, weight, price_cents))
             except (ValueError, IndexError):
@@ -82,9 +82,9 @@ class CuttingBoardTable(DataTable):
         for cb in cutting_boards:
             self.add_row(
                 cb.get_name(),
-                str(cb.get_length_in_centimeters()),
-                str(cb.get_width_in_centimeters()),
-                str(cb.get_weight_in_grams()),
-                cb.get_price_in_chf(),
-                str(cb.area),
+                f"{cb.get_length_in_centimeters()} cm",
+                f"{cb.get_width_in_centimeters()} cm",
+                f"{cb.get_weight_in_grams()} g",
+                f"{cb.get_price_in_chf()} CHF",
+                f"{cb.area} cm²",
             )
