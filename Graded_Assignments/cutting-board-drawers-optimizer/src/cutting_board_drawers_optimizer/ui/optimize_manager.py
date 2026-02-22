@@ -139,7 +139,7 @@ class OptimizeManager(Widget):
 
         result_label.display = True
 
-    def on_input_submitted(self) -> None:
+    def on_input_submitted(self, _event: Input.Submitted) -> None:
         """Handle input submission (pressing Enter)."""
         # Trigger the same logic as clicking "Confirm"
         self.on_button_pressed(Button.Pressed(self.query_one("#opt_confirm", Button)))

@@ -155,6 +155,12 @@ async def test_drawer_manager_tab_activation_branches():
             manager.on_tabbed_content_tab_activated(mock_event)
             mock_focus.assert_called_once()
 
+        # Test edit_tab (from coverage gaps)
+        mock_event.tab.id = "edit_tab"
+        with patch.object(manager.query_one("#de_name", Input), "focus") as mock_focus:
+            manager.on_tabbed_content_tab_activated(mock_event)
+            mock_focus.assert_called_once()
+
         # Test irrelevant tab
         mock_event.tab.id = "other"
         with patch.object(manager.query_one(DrawerTable), "focus") as mock_focus:

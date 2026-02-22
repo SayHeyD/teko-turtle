@@ -82,7 +82,7 @@ class EditDrawer(Widget):
                 error_label.visible = False
                 self.post_message(self.Saved(name, length, width, max_load, max_boards))
 
-    def on_input_submitted(self) -> None:
+    def on_input_submitted(self, _event: Input.Submitted) -> None:
         """Handle input submission (pressing Enter)."""
         # Trigger the same logic as clicking "Save"
         self.on_button_pressed(Button.Pressed(self.query_one("#de_save", Button)))

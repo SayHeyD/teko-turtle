@@ -76,3 +76,27 @@ async def test_optimize_manager_calculation():
         assert " g" in str(tree.root.children[0].children[0].label)
         # Verify price unit CHF in first board node label
         assert "CHF" in str(tree.root.children[0].children[0].label)
+
+
+@pytest.mark.asyncio
+async def test_optimize_manager_no_results_and_enter():
+    app = CuttingBoardDrawersOptimizerApp()
+    async with app.run_test() as pilot:
+        app.action_show_tab("optimize")
+        await pilot.pause()
+        opt_manager = app.query_one(OptimizeManager)
+
+        # Very small budget to ensure no results
+        opt_manager.query_one("#opt_budget", Input).value = "0.01"
+        opt_manager.query_one("#opt_amount", Input).value = "1"
+
+        # Press Enter on input
+        opt_manager.query_one("#opt_budget", Input).focus()
+        await pilot.press("enter")
+        await pilot.pause()
+
+        result_label = opt_manager.query_one("#opt_result_label", Static)
+        assert result_label.display is True
+        # Check text content of the label
+        assert "No cutting boards could be assigned" in str(result_label.render())
+        assert opt_manager.query_one("#opt_result_tree", Tree).display is False

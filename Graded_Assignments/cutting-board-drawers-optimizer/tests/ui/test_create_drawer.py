@@ -114,3 +114,32 @@ async def test_clear_inputs_after_adding_drawer():
         assert create_dr.query_one("#d_width", Input).value == ""
         assert create_dr.query_one("#d_max_load", Input).value == ""
         assert create_dr.query_one("#d_max_boards", Input).value == ""
+
+
+@pytest.mark.asyncio
+async def test_create_drawer_input_submission_via_enter():
+    app = CuttingBoardDrawersOptimizerApp()
+    async with app.run_test() as pilot:
+        manager = app.query_one(DrawerManager)
+        app.action_show_tab("drawers")
+        await pilot.pause()
+
+        tabs = manager.query_one("#drawer_tabs", TabbedContent)
+        tabs.active = "create_tab"
+        await pilot.pause()
+
+        create_dr = app.query_one(CreateDrawer)
+        create_dr.query_one("#d_name", Input).value = "New Test Drawer"
+        create_dr.query_one("#d_length", Input).value = "50"
+        create_dr.query_one("#d_width", Input).value = "50"
+        create_dr.query_one("#d_max_load", Input).value = "5000"
+        create_dr.query_one("#d_max_boards", Input).value = "5"
+
+        # Focus name and press enter
+        create_dr.query_one("#d_name", Input).focus()
+        await pilot.press("enter")
+        await pilot.pause()
+
+        # Should be cleared and message posted (switches tab to table)
+        assert create_dr.query_one("#d_name", Input).value == ""
+        assert tabs.active == "table_tab"

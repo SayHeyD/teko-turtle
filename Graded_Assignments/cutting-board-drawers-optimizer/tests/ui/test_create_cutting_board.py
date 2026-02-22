@@ -102,3 +102,34 @@ async def test_clear_inputs_after_adding_cutting_board():
         assert create_cb.query_one("#cb_width", Input).value == ""
         assert create_cb.query_one("#cb_weight", Input).value == ""
         assert create_cb.query_one("#cb_price", Input).value == ""
+
+
+@pytest.mark.asyncio
+async def test_create_cutting_board_input_submission_via_enter():
+    app = CuttingBoardDrawersOptimizerApp()
+    async with app.run_test() as pilot:
+        manager = app.query_one(CuttingBoardManager)
+        app.action_show_tab("cutting_boards")
+        await pilot.pause()
+
+        from textual.widgets import TabbedContent
+
+        tabs = manager.query_one("#cb_tabs", TabbedContent)
+        tabs.active = "create_tab"
+        await pilot.pause()
+
+        create_cb = app.query_one(CreateCuttingBoard)
+        create_cb.query_one("#cb_name", Input).value = "New Test Board"
+        create_cb.query_one("#cb_length", Input).value = "10"
+        create_cb.query_one("#cb_width", Input).value = "10"
+        create_cb.query_one("#cb_weight", Input).value = "100"
+        create_cb.query_one("#cb_price", Input).value = "5.00"
+
+        # Focus name and press enter
+        create_cb.query_one("#cb_name", Input).focus()
+        await pilot.press("enter")
+        await pilot.pause()
+
+        # Should be cleared and message posted (which switches tab to table)
+        assert create_cb.query_one("#cb_name", Input).value == ""
+        assert tabs.active == "table_tab"

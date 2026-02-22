@@ -1,5 +1,5 @@
 import pytest
-from textual.widgets import Input, TabbedContent
+from textual.widgets import Input, TabbedContent, Label
 from cutting_board_drawers_optimizer.ui.cutting_board_manager import CuttingBoardManager
 from cutting_board_drawers_optimizer.ui.cutting_board_table import CuttingBoardTable
 from cutting_board_drawers_optimizer.ui.edit_cutting_board import EditCuttingBoard
@@ -55,3 +55,31 @@ async def test_cutting_board_manager_edit_item():
         row = table.get_row_at(selected_index)
         assert row[0] == "Updated CB"
         assert row[4] == "60.00 CHF"
+
+
+@pytest.mark.asyncio
+async def test_edit_cutting_board_invalid_data_and_enter():
+    app = CuttingBoardDrawersOptimizerApp()
+    async with app.run_test() as pilot:
+        app.action_show_tab("cutting_boards")
+        await pilot.pause()
+
+        manager = app.query_one(CuttingBoardManager)
+        tabs = manager.query_one("#cb_tabs", TabbedContent)
+        # Force switch to edit tab
+        tabs.active = "edit_tab"
+        await pilot.pause()
+
+        edit_cb = app.query_one(EditCuttingBoard)
+        # Invalid data
+        edit_cb.query_one("#cbe_name", Input).value = ""
+        edit_cb.query_one("#cbe_length", Input).value = "-10"
+        edit_cb.query_one("#cbe_price", Input).value = "invalid"
+
+        # Focus name and press enter
+        edit_cb.query_one("#cbe_name", Input).focus()
+        await pilot.press("enter")
+        await pilot.pause()
+
+        error_label = edit_cb.query_one("#cbe_error", Label)
+        assert error_label.visible is True

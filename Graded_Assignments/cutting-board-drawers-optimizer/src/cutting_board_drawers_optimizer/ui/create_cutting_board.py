@@ -75,7 +75,7 @@ class CreateCuttingBoard(Widget):
                 for input_widget in self.query(Input):
                     input_widget.value = ""
 
-    def on_input_submitted(self) -> None:
+    def on_input_submitted(self, _event: Input.Submitted) -> None:
         """Handle input submission (pressing Enter)."""
         # Trigger the same logic as clicking "Add"
         self.on_button_pressed(Button.Pressed(self.query_one("#cb_add", Button)))

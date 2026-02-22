@@ -82,7 +82,7 @@ class EditCuttingBoard(Widget):
                 error_label.visible = False
                 self.post_message(self.Saved(name, length, width, weight, price))
 
-    def on_input_submitted(self) -> None:
+    def on_input_submitted(self, _event: Input.Submitted) -> None:
         """Handle input submission (pressing Enter)."""
         # Trigger the same logic as clicking "Save"
         self.on_button_pressed(Button.Pressed(self.query_one("#cbe_save", Button)))

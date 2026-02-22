@@ -1,5 +1,5 @@
 import pytest
-from textual.widgets import Input, TabbedContent
+from textual.widgets import Input, TabbedContent, Label
 from cutting_board_drawers_optimizer.ui.drawer_manager import DrawerManager
 from cutting_board_drawers_optimizer.ui.drawer_table import DrawerTable
 from cutting_board_drawers_optimizer.ui import CuttingBoardDrawersOptimizerApp
@@ -48,3 +48,32 @@ async def test_drawer_manager_edit_item():
         # Table should have updated row
         assert table.get_row_at(0)[0] == "Updated Drawer"
         assert table.get_row_at(0)[1] == "75 cm"
+
+
+@pytest.mark.asyncio
+async def test_edit_drawer_invalid_data_and_enter():
+    app = CuttingBoardDrawersOptimizerApp()
+    async with app.run_test() as pilot:
+        app.action_show_tab("drawers")
+        await pilot.pause()
+
+        manager = app.query_one(DrawerManager)
+        tabs = manager.query_one("#drawer_tabs", TabbedContent)
+        # Force switch to edit tab
+        tabs.active = "edit_tab"
+        await pilot.pause()
+
+        from cutting_board_drawers_optimizer.ui.edit_drawer import EditDrawer
+
+        edit_dr = app.query_one(EditDrawer)
+        # Invalid data
+        edit_dr.query_one("#de_name", Input).value = ""
+        edit_dr.query_one("#de_length", Input).value = "abc"
+
+        # Submit via Enter
+        edit_dr.query_one("#de_name", Input).focus()
+        await pilot.press("enter")
+        await pilot.pause()
+
+        error_label = edit_dr.query_one("#de_error", Label)
+        assert error_label.visible is True
