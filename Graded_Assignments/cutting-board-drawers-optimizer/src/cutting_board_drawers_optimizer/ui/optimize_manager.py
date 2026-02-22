@@ -16,10 +16,14 @@ from cutting_board_drawers_optimizer.ui.validator import Validator
 
 
 class OptimizeManager(Widget):
-    """Manager widget for optimization calculations."""
+    """
+    Manager widget for the 'Optimize' tab.
+    Allows users to input a budget and the desired number of cutting boards,
+    triggers the optimization calculation, and displays the results in a hierarchical tree.
+    """
 
     def compose(self) -> ComposeResult:
-        """Compose the OptimizeManager UI."""
+        """Composes the UI layout for the Optimize tab."""
         with Vertical(id="optimize_form"):
             yield Label("Budget (CHF)")
             yield Input(placeholder="Budget (CHF)", id="opt_budget")
@@ -31,7 +35,7 @@ class OptimizeManager(Widget):
             yield Tree("Results", id="opt_result_tree")
 
     def on_mount(self) -> None:
-        """Initialize UI elements on mount."""
+        """Initializes the visibility of result elements upon mounting."""
         error_label = self.query_one("#opt_error", Label)
         error_label.display = False
 
@@ -43,7 +47,10 @@ class OptimizeManager(Widget):
         tree.root.expand()
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
-        """Handle the confirm button press."""
+        """
+        Handles the 'Confirm' button click.
+        Validates inputs before starting the calculation.
+        """
         if event.button.id == "opt_confirm":
             budget_str = self.query_one("#opt_budget", Input).value.strip()
             amount_str = self.query_one("#opt_amount", Input).value.strip()
@@ -51,12 +58,12 @@ class OptimizeManager(Widget):
             error_label = self.query_one("#opt_error", Label)
             errors = []
 
-            # Validate budget as currency
+            # Validate budget as currency (max 2 decimals, positive)
             valid_budget, err_budget = Validator.is_valid_currency(budget_str, "Budget")
             if not valid_budget and err_budget is not None:
                 errors.append(err_budget)
 
-            # Validate amount as positive number
+            # Validate board amount as positive integer
             valid_amount, err_amount = Validator.is_positive_number(amount_str, "Amount of Cutting Boards")
             if not valid_amount and err_amount is not None:
                 errors.append(err_amount)
@@ -70,29 +77,39 @@ class OptimizeManager(Widget):
                 self.__run_optimization(budget_str, amount_str)
 
     def __run_optimization(self, budget_str: str, amount_str: str) -> None:
-        """Run the optimization and display results."""
+        """
+        Gathers current data from other managers, executes the Optimizer,
+        and triggers the results display.
+        """
+        # Local import to avoid circular dependency
         from cutting_board_drawers_optimizer.ui.app import CuttingBoardDrawersOptimizerApp  # noqa: PLC0415
 
         app = self.app
         if not isinstance(app, CuttingBoardDrawersOptimizerApp):
             return
 
+        # Get the latest data from the other two tabs
         cb_manager = app.query_one(CuttingBoardManager)
         dr_manager = app.query_one(DrawerManager)
 
         drawers = dr_manager.get_current_data()
         cutting_boards = cb_manager.get_current_data()
 
+        # Convert strings to numeric values for the Optimizer
         budget_cents = int(float(budget_str) * 100)
         amount = int(float(amount_str))
 
+        # Perform the actual calculation
         optimizer = Optimizer(drawers, cutting_boards, budget_cents, amount)
         result = optimizer.optimize()
 
         self.__display_results(result, budget_cents, amount)
 
     def __display_results(self, result: dict, budget_limit_cents: int, board_limit: int) -> None:
-        """Display the optimization results in the Tree."""
+        """
+        Updates the Tree widget to show which boards go into which drawers.
+        Also displays a global summary (total cost, total boards).
+        """
         tree = self.query_one("#opt_result_tree", Tree)
         result_label = self.query_one("#opt_result_label", Static)
 
@@ -101,6 +118,7 @@ class OptimizeManager(Widget):
         total_global_cost_cents = 0
         total_global_boards = 0
 
+        # Iterate over results (mapping: Drawer -> List[CuttingBoard])
         for drawer, boards in result.items():
             if boards:
                 any_assigned = True
@@ -112,6 +130,7 @@ class OptimizeManager(Widget):
                 total_global_cost_cents += total_cost_cents
                 total_global_boards += len(boards)
 
+                # Create a parent node for the drawer with its summary
                 drawer_label = (
                     f"[bold]{drawer.get_name()}[/bold] (Area: {total_area} cm², "
                     f"Weight: {total_weight}/{drawer.get_max_load_in_grams()} g, "
@@ -119,6 +138,7 @@ class OptimizeManager(Widget):
                     f"Cost: {total_cost_chf} CHF)"
                 )
                 drawer_node = tree.root.add(drawer_label, expand=True)
+                # Add each assigned board as a child node
                 for board in boards:
                     drawer_node.add_leaf(
                         f"{board.get_name()} (Area: {board.area} cm², Weight: {board.get_weight_in_grams()} g, Price: {board.get_price_in_chf()} CHF)"
@@ -128,6 +148,7 @@ class OptimizeManager(Widget):
             result_label.update("No cutting boards could be assigned with the given constraints.")
             tree.display = False
         else:
+            # Update the root node with global totals
             total_global_cost_chf = f"{total_global_cost_cents / 100:.2f}"
             budget_limit_chf = f"{budget_limit_cents / 100:.2f}"
             tree.root.label = (
@@ -140,18 +161,17 @@ class OptimizeManager(Widget):
         result_label.display = True
 
     def on_input_submitted(self, _event: Input.Submitted) -> None:
-        """Handle input submission (pressing Enter)."""
-        # Trigger the same logic as clicking "Confirm"
+        """Allows triggering the calculation by pressing 'Enter' in the input fields."""
         self.on_button_pressed(Button.Pressed(self.query_one("#opt_confirm", Button)))
 
     def get_current_data(self) -> tuple[str, str]:
-        """Return the current budget and amount as strings."""
+        """Returns the raw string values for persistence."""
         budget = self.query_one("#opt_budget", Input).value.strip()
         amount = self.query_one("#opt_amount", Input).value.strip()
         return budget, amount
 
     def update_from_data(self, budget_cents: int | None, amount: int | None) -> None:
-        """Update the input fields with the provided data."""
+        """Populates the input fields with values loaded from state."""
         budget_input = self.query_one("#opt_budget", Input)
         amount_input = self.query_one("#opt_amount", Input)
 

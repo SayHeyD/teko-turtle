@@ -12,10 +12,13 @@ from cutting_board_drawers_optimizer.ui.validator import Validator
 
 
 class EditDrawer(Widget):
-    """Widget for editing an existing drawer."""
+    """
+    Form widget for editing an existing drawer.
+    Similar to CreateDrawer but used for modification.
+    """
 
     class Saved(Message):
-        """Message sent when a drawer is saved."""
+        """Custom message containing the updated data."""
 
         def __init__(self, name: str, length: str, width: str, max_load: str, max_boards: str) -> None:
             self.name = name
@@ -26,7 +29,7 @@ class EditDrawer(Widget):
             super().__init__()
 
     def compose(self) -> ComposeResult:
-        """Compose the editing form."""
+        """Compose the editing form layout."""
         with Vertical(id="drawer_edit_form"):
             yield Label("Edit Drawer")
             yield Input(placeholder="Name", id="de_name")
@@ -38,7 +41,10 @@ class EditDrawer(Widget):
             yield Button("Save", id="de_save", variant="primary")
 
     def set_values(self, name: str, length: str, width: str, max_load: str, max_boards: str) -> None:
-        """Set the values of the input fields."""
+        """
+        Populates the form fields with the current values of the selected drawer.
+        Strips units (e.g., ' cm') before populating the inputs.
+        """
         self.query_one("#de_name", Input).value = name
         self.query_one("#de_length", Input).value = length.replace(" cm", "")
         self.query_one("#de_width", Input).value = width.replace(" cm", "")
@@ -48,7 +54,10 @@ class EditDrawer(Widget):
         self.query_one("#de_error", Label).visible = False
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
-        """Handle the save button press."""
+        """
+        Handles the 'Save' button click.
+        Validates inputs and sends a 'Saved' message if valid.
+        """
         if event.button.id == "de_save":
             name = self.query_one("#de_name", Input).value.strip()
             length = self.query_one("#de_length", Input).value.strip()
@@ -59,11 +68,12 @@ class EditDrawer(Widget):
             error_label = self.query_one("#de_error", Label)
             errors = []
 
-            # Use generalized Validator
+            # 1. Validate name
             valid, err = Validator.is_valid_name(name)
             if not valid and err is not None:
                 errors.append(err)
 
+            # 2. Validate all numeric constraints
             for val, label in [
                 (length, "Length"),
                 (width, "Width"),
@@ -83,6 +93,5 @@ class EditDrawer(Widget):
                 self.post_message(self.Saved(name, length, width, max_load, max_boards))
 
     def on_input_submitted(self, _event: Input.Submitted) -> None:
-        """Handle input submission (pressing Enter)."""
-        # Trigger the same logic as clicking "Save"
+        """Enables saving by pressing 'Enter' in any input field."""
         self.on_button_pressed(Button.Pressed(self.query_one("#de_save", Button)))

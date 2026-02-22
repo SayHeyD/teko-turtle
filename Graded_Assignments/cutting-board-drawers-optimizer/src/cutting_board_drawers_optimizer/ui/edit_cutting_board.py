@@ -12,10 +12,13 @@ from cutting_board_drawers_optimizer.ui.validator import Validator
 
 
 class EditCuttingBoard(Widget):
-    """Widget for editing an existing cutting board."""
+    """
+    Form widget for editing an existing cutting board.
+    Similar to CreateCuttingBoard but used for modification.
+    """
 
     class Saved(Message):
-        """Message sent when a cutting board is saved."""
+        """Custom message containing the updated data."""
 
         def __init__(self, name: str, length: str, width: str, weight: str, price: str) -> None:
             self.name = name
@@ -26,7 +29,7 @@ class EditCuttingBoard(Widget):
             super().__init__()
 
     def compose(self) -> ComposeResult:
-        """Compose the editing form."""
+        """Compose the editing form layout."""
         with Vertical(id="cutting_board_edit_form"):
             yield Label("Edit Cutting Board")
             yield Input(placeholder="Name", id="cbe_name")
@@ -38,7 +41,10 @@ class EditCuttingBoard(Widget):
             yield Button("Save", id="cbe_save", variant="primary")
 
     def set_values(self, name: str, length: str, width: str, weight: str, price: str) -> None:
-        """Set the values of the input fields."""
+        """
+        Populates the form fields with the current values of the selected board.
+        Strips units (e.g., ' cm') before populating the inputs.
+        """
         self.query_one("#cbe_name", Input).value = name
         self.query_one("#cbe_length", Input).value = length.replace(" cm", "")
         self.query_one("#cbe_width", Input).value = width.replace(" cm", "")
@@ -48,7 +54,10 @@ class EditCuttingBoard(Widget):
         self.query_one("#cbe_error", Label).visible = False
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
-        """Handle the save button press."""
+        """
+        Handles the 'Save' button click.
+        Validates inputs and sends a 'Saved' message if valid.
+        """
         if event.button.id == "cbe_save":
             name = self.query_one("#cbe_name", Input).value.strip()
             length = self.query_one("#cbe_length", Input).value.strip()
@@ -59,17 +68,18 @@ class EditCuttingBoard(Widget):
             error_label = self.query_one("#cbe_error", Label)
             errors = []
 
-            # Use generalized Validator
+            # 1. Validate name
             valid, err = Validator.is_valid_name(name)
             if not valid and err is not None:
                 errors.append(err)
 
+            # 2. Validate dimensions and weight
             for val, label in [(length, "Length"), (width, "Width"), (weight, "Weight")]:
                 valid, err = Validator.is_positive_number(val, label)
                 if not valid and err is not None:
                     errors.append(err)
 
-            # Validate price as currency
+            # 3. Validate price
             valid_price, err_price = Validator.is_valid_currency(price, "Price")
             if not valid_price and err_price is not None:
                 errors.append(err_price)
@@ -83,6 +93,5 @@ class EditCuttingBoard(Widget):
                 self.post_message(self.Saved(name, length, width, weight, price))
 
     def on_input_submitted(self, _event: Input.Submitted) -> None:
-        """Handle input submission (pressing Enter)."""
-        # Trigger the same logic as clicking "Save"
+        """Enables saving by pressing 'Enter' in any input field."""
         self.on_button_pressed(Button.Pressed(self.query_one("#cbe_save", Button)))

@@ -12,10 +12,13 @@ from cutting_board_drawers_optimizer.ui.validator import Validator
 
 
 class CreateDrawer(Widget):
-    """Widget for creating a new drawer."""
+    """
+    Form widget for defining a new drawer.
+    Validates inputs and sends a 'Created' message to the parent manager.
+    """
 
     class Created(Message):
-        """Message sent when a drawer is created."""
+        """Custom message containing the data for the new drawer."""
 
         def __init__(self, name: str, length: str, width: str, max_load: str, max_boards: str) -> None:
             self.name = name
@@ -26,7 +29,7 @@ class CreateDrawer(Widget):
             super().__init__()
 
     def compose(self) -> ComposeResult:
-        """Compose the creation form."""
+        """Compose the layout of the creation form."""
         with Vertical(id="drawer_form"):
             yield Label("Create Drawer")
             yield Input(placeholder="Name", id="d_name")
@@ -38,8 +41,12 @@ class CreateDrawer(Widget):
             yield Button("Add", id="d_add", variant="primary")
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
-        """Handle the add button press."""
+        """
+        Handles the 'Add' button click.
+        Validates all fields before creating the drawer.
+        """
         if event.button.id == "d_add":
+            # Extract values and trim whitespace
             name = self.query_one("#d_name", Input).value.strip()
             length = self.query_one("#d_length", Input).value.strip()
             width = self.query_one("#d_width", Input).value.strip()
@@ -49,11 +56,12 @@ class CreateDrawer(Widget):
             error_label = self.query_one("#d_error", Label)
             errors = []
 
-            # Use generalized Validator
+            # 1. Validate name
             valid, err = Validator.is_valid_name(name)
             if not valid and err is not None:
                 errors.append(err)
 
+            # 2. Validate all numeric constraints
             for val, label in [
                 (length, "Length"),
                 (width, "Width"),
@@ -65,17 +73,18 @@ class CreateDrawer(Widget):
                     errors.append(err)
 
             if errors:
+                # Show all validation errors in the error label
                 error_label.update(" ".join(errors))
                 error_label.visible = True
             else:
+                # Success: notify parent manager and clear form
                 error_label.update("")
                 error_label.visible = False
                 self.post_message(self.Created(name, length, width, max_load, max_boards))
-                # Clear inputs after successful creation
+                # Clear all input fields for the next entry
                 for input_widget in self.query(Input):
                     input_widget.value = ""
 
     def on_input_submitted(self, _event: Input.Submitted) -> None:
-        """Handle input submission (pressing Enter)."""
-        # Trigger the same logic as clicking "Add"
+        """Enables submitting the form by pressing 'Enter' in any input field."""
         self.on_button_pressed(Button.Pressed(self.query_one("#d_add", Button)))

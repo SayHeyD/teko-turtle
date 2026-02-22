@@ -7,15 +7,24 @@ from textual.widgets import Button, Input, Label
 
 
 class LoadDialog(ModalScreen[str | None]):
-    """Minimal load dialog with a single text input for the file path to open."""
+    """
+    Minimalistic modal dialog for selecting a file path to load a configuration.
+    Displays a text input and 'Open'/'Cancel' buttons.
+    Returns the path as a string upon confirmation, or None if canceled.
+    """
 
     def __init__(self, start_path: str | None = None) -> None:
-        """Initialize the LoadDialog."""
+        """
+        Initialize the LoadDialog.
+
+        Args:
+            start_path: The directory or file path to show by default.
+        """
         super().__init__()
         self._start_path: str = start_path or os.getcwd()
 
     def compose(self) -> ComposeResult:
-        """Compose the LoadDialog UI."""
+        """Composes the modal dialog UI layout."""
         default_path = self._start_path
         yield Vertical(
             Label("Enter the full path of the config file to load"),
@@ -28,12 +37,12 @@ class LoadDialog(ModalScreen[str | None]):
         )
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
-        """Handle button presses."""
+        """Handles button clicks within the modal."""
         if event.button.id == "cancel":
-            # Dismiss the dialog with no path
+            # Close the modal without returning a path
             self.dismiss(None)
             return
         if event.button.id == "open":
-            # Dismiss the dialog with the returned result being the path
+            # Return the entered path to the calling app
             path = self.query_one("#path_input", Input).value.strip()
             self.dismiss(path or None)
