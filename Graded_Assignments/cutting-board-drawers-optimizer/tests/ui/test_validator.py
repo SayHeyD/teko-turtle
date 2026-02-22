@@ -40,3 +40,34 @@ def test_validator_is_positive_number():
     valid, error = Validator.is_positive_number("-5", "Field")
     assert valid is False
     assert error == "Field must be positive."
+
+
+def test_validator_is_valid_currency():
+    # Valid currency values
+    assert Validator.is_valid_currency("10", "Price")[0] is True
+    assert Validator.is_valid_currency("10.5", "Price")[0] is True
+    assert Validator.is_valid_currency("10.55", "Price")[0] is True
+    assert Validator.is_valid_currency("0.01", "Price")[0] is True
+
+    # Invalid non-numeric values
+    valid, error = Validator.is_valid_currency("abc", "Price")
+    assert valid is False
+    assert error == "Price must be a number."
+
+    # Invalid zero and negative values
+    valid, error = Validator.is_valid_currency("0", "Price")
+    assert valid is False
+    assert error == "Price must be positive."
+
+    valid, error = Validator.is_valid_currency("-5", "Price")
+    assert valid is False
+    assert error == "Price must be positive."
+
+    # Invalid decimal places
+    valid, error = Validator.is_valid_currency("10.555", "Price")
+    assert valid is False
+    assert error == "Price can have at most 2 decimal places."
+
+    valid, error = Validator.is_valid_currency("0.001", "Price")
+    assert valid is False
+    assert error == "Price can have at most 2 decimal places."
