@@ -103,6 +103,17 @@ After confirming, you will be shown the results.
 
 ![Results](./docs/results.png)
 
+* You can also edit the drawers and cutting boards by selecting them in the table and using the keyboard shortcut 
+`Ctrl + E`.
+
+* You can also delete the drawers and cutting boards by selecting them in the table and using the keyboard shortcut 
+`Ctrl + D`.
+
+* You can also save the current configuration by using the keyboard shortcut `Ctrl + S`.
+If the provided file already exists, it will be overwritten.
+* You can also open a configuration by using the keyboard shortcut `Ctrl + O`.
+
+
 ## License
 
 `cutting-board-drawers-optimizer` is distributed under the terms of the [MIT](https://spdx.org/licenses/MIT.html) license.
