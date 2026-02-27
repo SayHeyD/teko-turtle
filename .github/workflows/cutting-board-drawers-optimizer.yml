@@ -18,7 +18,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: "3.14"
+        python-version: "3.13"
     - name: Install Hatch
       run: pip install --upgrade hatch
     - name: Run linting (ruff)
@@ -37,7 +37,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: "3.14"
+        python-version: "3.13"
     - name: Install Hatch
       run: pip install --upgrade hatch
     - name: Run tests with coverage
@@ -70,7 +70,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: "3.14"
+        python-version: "3.13"
     - name: Install Hatch
       run: pip install --upgrade hatch
     - name: Build package
