@@ -18,9 +18,11 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: "3.13"
+        python-version: "3.14"
     - name: Install Hatch
-      run: pip install --upgrade hatch
+      run: pip install --upgrade hatch virtualenv
+    - name: Ensure virtualenv is compatible
+      run: pip install --upgrade "virtualenv<20.26.6"
     - name: Run linting (ruff)
       run: hatch fmt --check
     - name: Run type checking (mypy)
@@ -37,9 +39,11 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: "3.13"
+        python-version: "3.14"
     - name: Install Hatch
-      run: pip install --upgrade hatch
+      run: pip install --upgrade hatch virtualenv
+    - name: Ensure virtualenv is compatible
+      run: pip install --upgrade "virtualenv<20.26.6"
     - name: Run tests with coverage
       run: hatch run test:run-cov --junitxml=report.xml
     - name: Combine coverage data
@@ -70,9 +74,11 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: "3.13"
+        python-version: "3.14"
     - name: Install Hatch
-      run: pip install --upgrade hatch
+      run: pip install --upgrade hatch virtualenv
+    - name: Ensure virtualenv is compatible
+      run: pip install --upgrade "virtualenv<20.26.6"
     - name: Build package
       run: hatch build
     - name: Upload Build Output
