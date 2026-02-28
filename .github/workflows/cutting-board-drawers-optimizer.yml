@@ -26,7 +26,7 @@ jobs:
     - name: Run linting (ruff)
       run: hatch fmt --check
     - name: Run type checking (mypy)
-      run: hatch run types:check || true # Acknowledging current type errors for now
+      run: hatch run types:check
 
   test:
     name: Test
