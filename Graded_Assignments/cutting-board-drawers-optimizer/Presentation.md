@@ -33,6 +33,8 @@ Somit sind auch Dinge wie das Löschen oder Bearbeiten von Schubladen und Brette
 3. Implementierung der Datenstruktur & Benutzeroberfläche
 4. Implementierung des Lösungsalgorithmus
 
+<img src="./docs/algorithm.png" alt="lösungsalgorithmus" height="800">
+
 ## Schlussergebnis
 
 Kurze Demo des Programms.
