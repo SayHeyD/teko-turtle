@@ -6,6 +6,8 @@
 - [Ablauf](#ablauf)
   - [Grob](#grob)
   - [Implementierung & Aufbau](#implementierung--aufbau)
+    - [Algorithmus](#algorithmus)
+    - [Recursive Backtracking Lösungsbaum](#recursive-backtracking-lösungsbaum)
 - [Schlussergebnis](#schlussergebnis)
 - [QR-Code & Links](#qr-code--links)
 
@@ -33,7 +35,13 @@ Somit sind auch Dinge wie das Löschen oder Bearbeiten von Schubladen und Brette
 3. Implementierung der Datenstruktur & Benutzeroberfläche
 4. Implementierung des Lösungsalgorithmus
 
+#### Algorithmus
+
 <img src="./docs/algorithm.png" alt="lösungsalgorithmus" height="800">
+
+#### Recursive Backtracking Lösungsbaum
+
+<img src="./docs/recursive_backtrack_diagram.png" alt="recursive backtracking solution tree" height="600">
 
 ## Schlussergebnis
 
